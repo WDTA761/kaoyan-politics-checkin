@@ -157,6 +157,55 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 .chip.on{background:var(--ok-bg);color:#1E7B47;border-color:#A5DEBF}
 .chip small{opacity:.75;font-weight:500;margin-left:5px}
 
+/* ---------- 陪伴模式 ---------- */
+.taskrow{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);
+  border-radius:16px;padding:14px 15px;text-align:left;width:100%;transition:.18s}
+.taskrow:active{transform:scale(.985)}
+.taskrow .tbx{flex:0 0 auto;width:26px;height:26px;border-radius:99px;border:2px solid #EEDCE2;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;transition:.2s}
+.taskrow .ttx{flex:1;font-size:15.5px;font-weight:600;color:var(--ink2)}
+.taskrow.on{background:linear-gradient(180deg,#F0FBF5,#E7F7EE);border-color:#A5DEBF}
+.taskrow.on .tbx{background:var(--ok);border-color:var(--ok);box-shadow:0 0 0 4px rgba(63,169,107,.14)}
+.taskrow.on .ttx{color:#1E7B47}
+.moods{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.mood{padding:14px 8px;border-radius:16px;background:#FFFCFD;border:1.5px solid var(--line);
+  font-size:15px;font-weight:700;min-height:54px;transition:.18s}
+.mood:active{transform:scale(.97)}
+.mood.on{background:linear-gradient(135deg,#EE7C9D,#D9557E);color:#fff;border-color:transparent;
+  box-shadow:0 5px 16px rgba(217,85,126,.3)}
+.mstrip{display:flex;gap:8px}
+.mstrip .md{flex:1;text-align:center;padding:10px 2px;border-radius:14px;background:#FCFAFB;
+  border:1.5px solid var(--line)}
+.mstrip .md b{display:block;font-size:15px;font-weight:800;color:var(--ink2)}
+.mstrip .md span{font-size:10.5px;color:var(--sub)}
+.mstrip .md.dn{border-color:#B9E3CB}
+.mstrip .md.m1{background:#E6F6EC;border-color:#A5DEBF}
+.mstrip .md.m2{background:#FDF3DC;border-color:#F0DCA8}
+.mstrip .md.m3{background:#F3F1F2;border-color:#E3DEE1}
+.mstrip .md.m4{background:#FDE8EE;border-color:#F3C6D5}
+.calhead{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px}
+.calhead span{text-align:center;font-size:11.5px;font-weight:800;color:var(--sub)}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.calcell{aspect-ratio:1/1;border-radius:12px;background:#FCFAFB;border:1.5px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.calcell b{font-size:13px;font-weight:800;color:var(--ink2)}
+.calcell i{font-style:normal;font-size:9px;color:var(--ok);font-weight:900}
+.calcell.ph{background:transparent;border-color:transparent}
+.calcell.fut{opacity:.45}
+.calcell.dn{border-color:#B9E3CB}
+.calcell.m1{background:#E6F6EC;border-color:#A5DEBF}
+.calcell.m2{background:#FDF3DC;border-color:#F0DCA8}
+.calcell.m3{background:#F3F1F2;border-color:#E3DEE1}
+.calcell.m4{background:#FDE8EE;border-color:#F3C6D5}
+.calcell.today{box-shadow:inset 0 0 0 2px var(--rose)}
+.callegend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:12px;color:var(--sub);font-weight:600}
+.callegend span{display:flex;align-items:center;gap:5px}
+.callegend .sw{width:12px;height:12px;border-radius:4px;display:block;background:#F3F1F2}
+.callegend .sw.m1{background:#A5DEBF}
+.callegend .sw.m2{background:#F0DCA8}
+.callegend .sw.m3{background:#E3DEE1}
+.callegend .sw.m4{background:#F3C6D5}
+
 .duecard{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#FFF6F9,#FDEDF3);
   border:1.5px solid #F8DCE6;border-radius:20px;padding:16px;box-shadow:var(--shadow)}
 .duecard .big{font-size:30px;font-weight:900;color:var(--rose-d);line-height:1}
@@ -213,7 +262,9 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 
 .love-item{display:flex;gap:13px;padding:14px;border-radius:18px;margin-bottom:10px;
   background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
-.love-item.locked{background:#FCFAFB;border-style:dashed;box-shadow:none;opacity:.62}
+.love-item.locked{background:#FCFAFB;border-style:dashed;box-shadow:none;opacity:.62;padding:11px 14px}
+.love-item.locked .n{flex:0 0 32px;height:32px;border-radius:10px;font-size:12px}
+.love-item.locked .t{font-size:13.5px;color:var(--sub)}
 .love-item .n{flex:0 0 40px;height:40px;border-radius:13px;display:flex;align-items:center;
   justify-content:center;font-weight:900;font-size:13px;color:#fff;
   background:linear-gradient(135deg,var(--pink),var(--rose))}
@@ -354,11 +405,11 @@ nav button.on .ic{transform:translateY(-2px) scale(1.14)}
 <main id="view"></main>
 
 <nav>
-  <button data-tab="today" class="on"><span class="ic">☀️</span>今日</button>
-  <button data-tab="plan"><span class="ic">📖</span>计划</button>
-  <button data-tab="love"><span class="ic">💌</span><span id="navLove">小纸条</span></button>
-  <button data-tab="notes"><span class="ic">✏️</span>错题</button>
-  <button data-tab="me"><span class="ic">🐾</span>我的</button>
+  <button data-tab="today" class="on"><span class="ic">☀️</span><span class="lb">今日</span></button>
+  <button data-tab="plan"><span class="ic">📖</span><span class="lb">计划</span></button>
+  <button data-tab="love"><span class="ic">💌</span><span class="lb" id="navLove">小纸条</span></button>
+  <button data-tab="notes"><span class="ic">✏️</span><span class="lb">错题</span></button>
+  <button data-tab="me"><span class="ic">🐾</span><span class="lb">我的</span></button>
 </nav>
 
 <div id="modal"></div>
@@ -1922,6 +1973,132 @@ const LOVE = [
 ];
 
 /* =====================================================================
+   考后陪伴模式的内容
+   ===================================================================== */
+/* 每天从这 15 件小事里轮换 3 件 */
+const SMALL = [
+  '好好吃一顿饭',
+  '睡够 7 小时',
+  '出门走 20 分钟，晒点太阳',
+  '喝够 8 杯水',
+  '拉伸一下肩颈',
+  '读 20 分钟闲书（不为考试）',
+  '给一个朋友发条消息',
+  '收拾一下桌子',
+  '听一首喜欢的歌，什么都不做',
+  '提前半小时放下手机',
+  '认真洗个热水澡',
+  '吃点水果',
+  '写下今天的一件小事',
+  '对自己说一句「今天辛苦了」',
+  '抬头看看天'
+];
+
+/* 考后的小纸条 */
+const LOVE_LIFE = [
+"考完第一天。今天什么都不用背，先睡到自然醒。",
+"早上没有闹钟的日子，是不是有点不习惯？",
+"那本背了几十遍的手册可以合上了。我更想看看你今天的样子。",
+"今天想做什么就做什么，我批准了。",
+"你终于可以把「等考完」这三个字从待办里划掉了。",
+"无论结果怎样，先去吃顿好的。",
+"有点空落落的吧？正常，我陪你慢慢缓。",
+"今天的任务只有一个：好好吃饭。别的都算加餐。",
+"出分那天我陪你看，手可以借你捏。",
+"你已经把最难的部分做完了——坚持了整整 68 天。",
+"今天可以什么都不干，发呆也算完成。",
+"我认识的你，从来不是靠一场考试定义的。",
+"早上照镜子的时候，替我说一句「你今天很好看」。",
+"该收拾收拾自己了，考完也该轮到你了。",
+"想去哪里走走？记下来，我们攒着。",
+"今天有没有笑？没笑的话，就看这一条。",
+"那 68 天的努力不会消失，它已经长在你身上了。",
+"别急着问「考得怎么样」，先问问自己「今天累不累」。",
+"有些日子就是用来休息的，比如今天。",
+"你终于有空看剧了，别看太晚。",
+"我今天也在想你，和考试没关系。",
+"见面的时候，我要先抱你三十秒。",
+"今天的三件小事做到了吗？做到就能看下一张。",
+"你不是「考完就没事了」的人，你是「终于能喘口气」的人。",
+"未来的计划可以慢慢想，今天先不想。",
+"有什么想吃的吗？去吃。",
+"今天的你只需要做一件事：对自己好一点。",
+"我偷偷觉得，你考完那天的表情一定很好看。",
+"睡饱的人，运气不会太差。",
+"半夜要是睡不着，就想想我——想想就困了（开玩笑的）。",
+"今天也谢谢你，好好地活着。",
+"别去对答案了，考完就让它过去。",
+"你已经把该做的都做了，剩下的交给时间。",
+"今天有个小任务：出门晒十分钟太阳。",
+"我把「以后」准备得很足，可以慢慢用。",
+"有点想哭也可以，考完的情绪总是要还的。",
+"你还欠我一顿饭，别忘了。",
+"今天的你，不用向任何人证明什么。",
+"我数了数，我们已经一起过了很多天。以后还长。",
+"今天记得多喝水。",
+"开心的时候记一下，以后能拿出来看。",
+"不开心也记一下，我陪你看。",
+"你今天要是懒了一整天，那也很好。",
+"考试只占了这一年的一小段，你占了我的全部。",
+"明年这个时候，你会笑着讲起现在。",
+"今天可以晚点睡，但别熬到天亮。",
+"我想给你的不是鼓励，是「你本来就很好」。",
+"有点迷茫是对的，路本来就是走出来的。",
+"今天的小事：给妈妈打个电话。她比你还紧张。",
+"你已经很久没有「不为了什么」地待着了。",
+"想买什么就买，犒劳一下自己。",
+"我有时候会想，能陪着你真好。",
+"今天也可以只看这一条：我在。",
+"你不需要马上变好，慢慢来。",
+"有人等你的日子不是负担，是我愿意。",
+"今天的风如果很舒服，就当是我在抱你。",
+"别嫌自己矫情，考完的人都这样。",
+"你今天要是想发脾气，冲我来。",
+"我们很久没好好聊天了，说点什么吧。",
+"今天的任务：找一件小事，认真做完。",
+"你已经跨过一座山了，可以坐下来看看风景。",
+"我想你的时候会写这些，你也算在看我。",
+"今天有没有觉得，日子突然安静了？",
+"安静一点也好，你太累了。",
+"把这段日子写下来吧，以后会很珍贵。",
+"你做题的样子我记住了，放松的样子也让我看看。",
+"明天的太阳也是新的。",
+"我准备了很多张纸条，够你看很久。",
+"今天的小事：整理一下书桌，把那本手册收进抽屉。",
+"别把它扔了，那是你努力过的证据。",
+"你今天笑起来了吗？没有的话，我欠你一个。",
+"考完不是终点，但今天可以是。",
+"我想和你去很多地方，慢慢来。",
+"你今天很闲吧？那就闲一整天。",
+"有些日子就是用来浪费的，比如今天。",
+"读到这一条的时候，摸摸头。",
+"我这个人不怎么会浪漫，但我会一直在。",
+"今天的你，值得被好好对待。",
+"天冷了，多穿一件。",
+"你专心休息的样子，我也喜欢。",
+"今天有没有想起我？我猜有。",
+"你走的每一步我都记得。",
+"我们慢慢来，来得及。",
+"今天的任务：什么都不做，好好休息。",
+"你不需要成为谁，你已经是了。",
+"一年后的今天，我们再来看这一条。",
+"你现在的样子就很好。",
+"我想把你所有的「累」都接过来。接不了那么多，就接一点。",
+"今天要是无聊，就翻翻前面的纸条。",
+"每一张都是我当天想对你说的。",
+"你今天有没有好好吃饭？这是第 N 次问了。",
+"我承认，我写这些的时候一直在笑。",
+"有人惦记着你，这件事别忘了。",
+"今天早点睡，明天也早点睡。",
+"我们还有很多个普通的日子要过。",
+"普通的日子最难得，你终于有了。",
+"你要快乐，这是我唯一的 KPI。",
+"今天这张只有一句：我喜欢你。",
+"明天见，斐斐。",
+"这一叠也会有最后一张，但不是现在。"
+];
+
+/* =====================================================================
    工具
    ===================================================================== */
 const D = s => { const a = s.split('-').map(Number); return new Date(Date.UTC(a[0], a[1]-1, a[2])); };
@@ -1966,7 +2143,8 @@ const BY_NO = {}; DAYS.forEach(x => BY_NO[x.d] = x);
 const LS = 'kaoyan2027_politics_v2';
 
 function blank(){
-  return {v:2, start:START_DEFAULT, nick:NICK_DEFAULT, days:{}, notes:[], revs:{}, cards:{}, log:{}};
+  return {v:2, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'',
+          days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
 }
 function load(){
   try{
@@ -1988,6 +2166,7 @@ const doneCount = () => DAYS.filter(x => isDone(x.d)).length;
 const todayNo = () => diffDays(S.start, todayStr()) + 1;
 
 function streak(){
+  if (isLife()) return lifeStreak();
   let cur = todayStr();
   if (!isDone(todayNo())) cur = addDays(cur,-1);
   let c = 0;
@@ -2010,9 +2189,51 @@ function toggleReviewed(n){
   if (i >= 0) S.revs[t].splice(i,1); else S.revs[t].push(n);
   save();
 }
-const loveOf = d => LOVE[(d - 1) % LOVE.length];
-const unlockedLove = () => DAYS.filter(x => isDone(x.d) && x.d <= LOVE.length).length;
 const daysLeft = () => Math.max(0, diffDays(todayStr(), EXAM));
+const examPassed = () => diffDays(EXAM, todayStr()) >= 0;      /* 今天 >= 考试日 */
+
+/* ---------- 模式：study（考研期）/ life（考后陪伴） ---------- */
+function mode(){
+  if (S.mode === 'study' || S.mode === 'life') return S.mode;
+  return examPassed() ? 'life' : 'study';
+}
+const isLife = () => mode() === 'life';
+
+/* ---------- 小纸条：考研期 68 张 + 考后一批，序号连续不重复 ---------- */
+function noteByNo(k){
+  if (k <= LOVE.length) return LOVE[k - 1];
+  return LOVE_LIFE[(k - LOVE.length - 1) % LOVE_LIFE.length];
+}
+const TOTAL_NOTES = LOVE.length + LOVE_LIFE.length;
+const unlockedLove = () => DAYS.filter(x => isDone(x.d) && x.d <= LOVE.length).length;
+
+/* ---------- 考后：每天三件小事 ---------- */
+function todaysSmall(date){
+  const k = Math.floor(diffDays('2000-01-01', date));
+  return [0, 1, 2].map(i => (k * 3 + i * 5) % SMALL.length);
+}
+function lifeOf(date){ return S.life[date] || (S.life[date] = {t: [], mood: 0}); }
+function lifeDone(date){ const l = S.life[date]; return !!(l && l.t && l.t.length >= 3); }
+function lifeStreak(){
+  let cur = todayStr();
+  if (!lifeDone(cur)) cur = addDays(cur, -1);
+  let c = 0;
+  for (let i = 0; i < 400; i++){ if (!lifeDone(cur)) break; c++; cur = addDays(cur, -1); }
+  return c;
+}
+function notesEarned(){
+  let n = DAYS.filter(x => x.d <= LOVE.length && isDone(x.d)).length;
+  Object.keys(S.life).forEach(d => { if (lifeDone(d)) n++; });
+  return n;
+}
+/* 陪伴模式当天的纸条序号（考后第 d 天 → 68 + d + 1；提前手动切模式也不会算出负数） */
+function lifeSerial(date){
+  const d = Math.max(0, diffDays(EXAM, date));
+  return LOVE.length + d + 1;
+}
+const togetherDays = () => S.together ? (diffDays(S.together, todayStr()) + 1) : 0;
+const noteNoToday = () => examPassed() ? (LOVE.length + diffDays(EXAM, todayStr()) + 1)
+                                       : (todayNo() >= 1 && todayNo() <= LOVE.length ? todayNo() : 0);
 
 /* ---- 卡片级间隔重复（Leitner：不会→1 天，模糊→2 天，会了→3/7/14/30/60 天） ---- */
 const INT = [1,3,7,14,30,60];
@@ -2054,7 +2275,28 @@ const ratedCount = () => Object.keys(S.cards).length;
 const masteredCount = () => Object.values(S.cards).filter(c => (c.lv||0) >= 3).length;
 
 function badgeList(){
-  const dn = doneCount(), st = streak(), lv = unlockedLove(), ms = masteredCount();
+  const lv = notesEarned();
+  if (isLife()){
+    const st = lifeStreak(), dn = Object.keys(S.life).filter(lifeDone).length;
+    const moodDays = Object.keys(S.life).filter(d => S.life[d].mood).length;
+    return [
+      {e:'🌱', t:'第一天', ok: dn >= 1},
+      {e:'🔥', t:'连续 3 天', ok: st >= 3},
+      {e:'💪', t:'连续 7 天', ok: st >= 7},
+      {e:'🏅', t:'连续 30 天', ok: st >= 30},
+      {e:'👑', t:'连续 100 天', ok: st >= 100},
+      {e:'📅', t:'打卡 10 天', ok: dn >= 10},
+      {e:'📗', t:'打卡 30 天', ok: dn >= 30},
+      {e:'🎓', t:'打卡 100 天', ok: dn >= 100},
+      {e:'💌', t:'收下 10 张', ok: lv >= 10},
+      {e:'💝', t:'收下 50 张', ok: lv >= 50},
+      {e:'💞', t:'收下 100 张', ok: lv >= 100},
+      {e:'🙂', t:'记心情 7 天', ok: moodDays >= 7},
+      {e:'🌈', t:'记心情 30 天', ok: moodDays >= 30},
+      {e:'🍀', t:'在一起 100 天', ok: togetherDays() >= 100}
+    ];
+  }
+  const dn = doneCount(), st = streak(), ms = masteredCount();
   return [
     {e:'🌱', t:'开始第一步', ok: dn >= 1},
     {e:'🔥', t:'连续 3 天', ok: st >= 3},
@@ -2088,14 +2330,32 @@ function greeting(){
 }
 function renderHeader(){
   document.getElementById('hHi').textContent = greeting() + '，' + (S.nick || NICK_DEFAULT) + ' 🎀';
-  document.getElementById('hSub').innerHTML =
-    '距离考试还有 <b>' + daysLeft() + '</b> 天 · 已坚持 <b>' + doneCount() + '</b>/' + DAYS.length + ' 天';
-  document.getElementById('hBar').style.width = (doneCount()/DAYS.length*100).toFixed(1) + '%';
+  const t = todayStr();
+  if (isLife()){
+    const d = md(t).replace('/', ' 月 ') + ' 日';
+    const td = togetherDays();
+    document.getElementById('hSub').innerHTML = (td > 0 ? '在一起第 <b>' + td + '</b> 天 · ' : '')
+      + '已收下 <b>' + notesEarned() + '</b> 张小纸条';
+    document.getElementById('hBar').style.width = (notesEarned()/TOTAL_NOTES*100).toFixed(1) + '%';
+  } else {
+    document.getElementById('hSub').innerHTML =
+      '距离考试还有 <b>' + daysLeft() + '</b> 天 · 已坚持 <b>' + doneCount() + '</b>/' + DAYS.length + ' 天';
+    document.getElementById('hBar').style.width = (doneCount()/DAYS.length*100).toFixed(1) + '%';
+  }
 }
 function render(){
   renderHeader();
+  const navs = isLife() ? ['today','mood','love','notes','me'] : ['today','plan','love','notes','me'];
+  const labels = isLife() ? {today:'今日', mood:'心情', love:WORD, notes:'碎碎念', me:'我的'}
+                          : {today:'今日', plan:'计划', love:WORD, notes:'错题', me:'我的'};
+  document.querySelectorAll('nav button').forEach((b,i) => {
+    b.dataset.tab = navs[i];
+    b.querySelector('.lb').textContent = labels[navs[i]];
+  });
+  if (navs.indexOf(TAB) < 0) TAB = 'today';
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === TAB));
   const v = document.getElementById('view');
-  v.innerHTML = TAB === 'today' ? viewToday() : TAB === 'plan' ? viewPlan()
+  v.innerHTML = TAB === 'today' ? viewToday() : TAB === 'plan' ? viewPlan() : TAB === 'mood' ? viewMood()
               : TAB === 'love' ? viewLove() : TAB === 'notes' ? viewNotes() : viewMe();
   bind();
   const top = () => { window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; };
@@ -2130,13 +2390,108 @@ function dayCard(x, full){
   }
   return h + '</div>';
 }
-function loveCard(n){
+function loveCard(k, dateStr){
+  const label = (k <= LOVE.length) ? ('第 ' + k + ' 张') : (md(dateStr || addDays(EXAM, k - LOVE.length - 1)) + ' 的这张');
   return '<div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
-    + '<div class="sec-title" style="margin:0 0 8px">今天的'+WORD+' 💌<span>第 '+n+' 张</span></div>'
-    + '<div style="font-size:17px;font-weight:700;line-height:1.72">'+esc(loveOf(n))+'</div>'
-    + '<div class="row-btn"><button class="btn ghost sm" data-relove="'+n+'">再看一遍动画 ✨</button></div></div>';
+    + '<div class="sec-title" style="margin:0 0 8px">今天的'+WORD+' 💌<span>'+label+'</span></div>'
+    + '<div style="font-size:17px;font-weight:700;line-height:1.72">'+esc(noteByNo(k))+'</div>'
+    + '<div class="row-btn"><button class="btn ghost sm" data-relove="'+k+'" data-rdate="'+(dateStr||'')+'">再看一遍动画 ✨</button></div></div>';
 }
+
+/* ---------- 陪伴模式：今天 ---------- */
+function viewLifeToday(){
+  const t = todayStr(), l = lifeOf(t), idx = todaysSmall(t);
+  const all = l.t.length >= 3;
+  const serial = lifeSerial(t);
+  let h = '';
+  if (all) h += loveCard(serial, t);
+
+  h += '<div class="sec-title">今天的三件小事<span>'+l.t.length+' / 3</span></div>'
+    + '<div class="card"><div class="plist">'
+    + idx.map(si => {
+        const on = l.t.indexOf(si) >= 0;
+        return '<button class="taskrow'+(on?' on':'')+'" data-task="'+si+'">'
+          + '<span class="tbx">'+(on?'✓':'')+'</span>'
+          + '<span class="ttx">'+esc(SMALL[si])+'</span></button>';
+      }).join('')
+    + '</div>'
+    + (all ? '<div class="rated" style="margin-top:14px">✓ 今天的三件都做到了，明天见 🐾</div>'
+           : '<p class="focus" style="margin:12px 0 0;color:var(--sub);font-size:13px">三件都勾上，今天的'+WORD+'就解锁了</p>')
+    + '</div>';
+
+  const moods = ['😄 超好','🙂 不错','😐 一般','😔 低落'];
+  h += '<div class="sec-title">今天的心情<span>'+(l.mood ? '已记录' : '点一个')+'</span></div>'
+    + '<div class="card"><div class="moods">'
+    + moods.map((m,i) => '<button class="mood'+(l.mood === i+1 ? ' on' : '')+'" data-mood="'+(i+1)+'">'+m+'</button>').join('')
+    + '</div>'
+    + (l.mood ? '<div class="rated" style="margin-top:14px">已记下：'+moods[l.mood-1]+'。谢谢你告诉我。</div>' : '')
+    + '</div>';
+
+  h += '<div class="sec-title">最近<span>心情与打卡</span></div>' + moodStrip(7);
+  return h;
+}
+
+function moodStrip(n){
+  let h = '<div class="card"><div class="mstrip">';
+  for (let i = n-1; i >= 0; i--){
+    const d = addDays(todayStr(), -i);
+    const m = (S.life[d] || {}).mood || 0;
+    const dn = lifeDone(d) ? ' dn' : '';
+    h += '<div class="md'+(m ? ' m'+m : '')+dn+'"><b>'+Number(d.slice(8))+'</b>'
+      + '<span>周'+'日一二三四五六'[D(d).getUTCDay()]+'</span></div>';
+  }
+  return h + '</div></div>';
+}
+
+/* ---------- 陪伴模式：心情日历 ---------- */
+function viewMood(){
+  const t = todayStr();
+  const y = Number(t.slice(0,4)), mo = Number(t.slice(5,7));
+  const daysIn = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+  const startDow = (D(y+'-'+pad(mo)+'-01').getUTCDay() + 6) % 7;
+  let cells = '', stat = [0,0,0,0], doneN = 0, moodN = 0;
+  for (let i = 0; i < startDow; i++) cells += '<div class="calcell ph"></div>';
+  for (let d = 1; d <= daysIn; d++){
+    const ds = y+'-'+pad(mo)+'-'+pad(d), l = S.life[ds] || {};
+    const mood = l.mood || 0;
+    if (mood){ stat[mood-1]++; moodN++; }
+    const dn = lifeDone(ds); if (dn) doneN++;
+    cells += '<div class="calcell'+(mood ? ' m'+mood : '')+(dn ? ' dn' : '')
+      + (ds === t ? ' today' : '') + (diffDays(t, ds) > 0 ? ' fut' : '') + '">'
+      + '<b>'+d+'</b>'+(dn ? '<i>✓</i>' : '')+'</div>';
+  }
+  const moods = ['😄 超好','🙂 不错','😐 一般','😔 低落'];
+
+  let h = '<div class="sec-title">'+mo+' 月心情日历<span>'+doneN+' 天打卡 · '+moodN+' 天记了心情</span></div>'
+    + '<div class="card"><div class="calhead">'
+    + ['一','二','三','四','五','六','日'].map(w => '<span>'+w+'</span>').join('')
+    + '</div><div class="calgrid">'+cells+'</div>'
+    + '<div class="callegend">'
+    + moods.map((m,i) => '<span><i class="sw m'+(i+1)+'"></i>'+m.slice(2)+' '+stat[i]+' 天</span>').join('')
+    + '</div></div>';
+
+  const lifeDays = Object.keys(S.life).filter(lifeDone).length;
+  h += '<div class="sec-title">总览</div><div class="grid2">'
+    + '<div class="stat"><b>'+lifeDays+'</b><span>累计打卡天数</span></div>'
+    + '<div class="stat"><b>'+lifeStreak()+'</b><span>连续打卡（天）</span></div>'
+    + '<div class="stat"><b>'+moodN+'</b><span>记过心情的天数</span></div>'
+    + '<div class="stat"><b>'+notesEarned()+'</b><span>收下的小纸条</span></div>'
+    + '</div>';
+  if (togetherDays() > 0){
+    h += '<div class="card" style="text-align:center;background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
+      + '<div class="love-hero"><div class="big">第 '+togetherDays()+' 天</div>'
+      + '<div style="font-size:13px;color:var(--sub);margin-top:6px">从 '+S.together.replace(/-/g,'/')+' 算起</div></div></div>';
+  }
+  return h;
+}
+
+function noteRow(k, ok, sub){
+  return '<div class="love-item'+(ok?'':' locked')+'"><div class="n">'+k+'</div>'
+    + '<div class="t">'+(ok ? esc(noteByNo(k))+'<span class="d">'+sub+' · 已收下</span>' : sub)+'</div></div>';
+}
+
 function viewToday(){
+  if (isLife()) return viewLifeToday();
   const t = todayNo(), today = todayStr();
   if (t < 1){
     return '<div class="card"><div class="day-head"><div class="day-no">预备期</div></div>'
@@ -2225,26 +2580,41 @@ function viewPlan(){
   return h;
 }
 function viewLove(){
-  const un = unlockedLove();
-  let h = '<div class="card love-hero"><div class="big">'+un+' / '+LOVE.length+'</div>'
-    + '<div style="font-size:13.5px;color:var(--sub);margin-top:6px">每天完成打卡，解锁一张只写给你的'+WORD+'</div>'
-    + '<div class="pbar" style="margin:14px 0 0"><i style="width:'+(un/LOVE.length*100).toFixed(1)+'%"></i></div></div>'
-    + '<div class="sec-title">'+WORD+'收集册</div>';
-  for (let d = 1; d <= DAYS.length; d++){
-    const ok = isDone(d);
-    h += '<div class="love-item'+(ok?'':' locked')+'"><div class="n">'+d+'</div>'
-      + '<div class="t">'+(ok ? esc(loveOf(d)) + '<span class="d">'+(BY_NO[d]?dateOf(BY_NO[d]):'')+' · 已收集</span>'
-                              : '完成第 '+d+' 天就能看到 🔒') + '</div></div>';
+  const earned = notesEarned();
+  let h = '<div class="card love-hero"><div class="big">'+earned+' / '+TOTAL_NOTES+'</div>'
+    + '<div style="font-size:13.5px;color:var(--sub);margin-top:6px">每天完成当天的事，解锁一张只写给你的'+WORD+'</div>'
+    + '<div class="pbar" style="margin:14px 0 0"><i style="width:'+(earned/TOTAL_NOTES*100).toFixed(1)+'%"></i></div></div>';
+
+  h += '<div class="sec-title">考研那 68 天<span>'+unlockedLove()+' / '+LOVE.length+'</span></div>';
+  for (let k = 1; k <= LOVE.length; k++){
+    const ok = isDone(k);
+    h += noteRow(k, ok, ok ? md(dateOf(BY_NO[k])) : '完成第 '+k+' 天解锁 🔒');
+  }
+
+  const lifeStarted = isLife() || Object.keys(S.life).some(d => lifeDone(d));
+  if (lifeStarted){
+    const lifeEarned = Object.keys(S.life).filter(lifeDone).length;
+    h += '<div class="sec-title">考完以后<span>'+lifeEarned+' / '+LOVE_LIFE.length+'</span></div>';
+    let preview = 0;
+    for (let k = LOVE.length + 1; k <= TOTAL_NOTES; k++){
+      const dt = addDays(EXAM, k - LOVE.length - 1);
+      const ok = lifeDone(dt);
+      if (!ok && preview >= 7) continue;
+      if (!ok) preview++;
+      h += noteRow(k, ok, ok ? md(dt) : md(dt) + ' 解锁 🔒');
+    }
   }
   return h;
 }
 function viewNotes(){
+  const life = isLife();
+  const title = life ? '碎碎念' : '错题 / 易混点';
   if (!S.notes.length){
-    return '<div class="empty"><div>✏️</div>还没有记录<br>在「今日」点「记一笔」，把错题、易混点存下来</div>'
+    return '<div class="empty"><div>✏️</div>还没有记录<br>在「今日」点「记一笔」，随手写一句</div>'
       + '<div class="row-btn"><button class="btn rose" data-newnote="1">＋ 新增一条</button></div>';
   }
   const list = S.notes.slice().sort((a,b) => b.ts - a.ts);
-  return '<div class="sec-title">错题 / 易混点<span>共 '+list.length+' 条</span></div>'
+  return '<div class="sec-title">'+title+'<span>共 '+list.length+' 条</span></div>'
     + '<div class="row-btn" style="margin:0 0 13px"><button class="btn rose" data-newnote="1">＋ 新增一条</button></div>'
     + list.map(n => '<div class="note"><div class="nh"><span>'+(n.tag?esc(n.tag)+' · ':'')+'Day '+(n.day||'-')+' · '+n.date+'</span>'
       + '<button class="del" data-delnote="'+n.id+'">删除</button></div>'
@@ -2266,32 +2636,57 @@ function heatmap(){
   return cells.join('');
 }
 function viewMe(){
-  const done = doneCount(), total = DAYS.length, t = todayStr();
+  const t = todayStr(), life = isLife();
   const dow = (new Date().getDay()+6)%7, mon = addDays(t, -dow);
   let weekDone = 0;
-  for (let i=0;i<7;i++){ const n = diffDays(S.start, addDays(mon,i))+1; if (n>=1 && n<=total && isDone(n)) weekDone++; }
+  for (let i=0;i<7;i++){
+    const ds = addDays(mon, i);
+    if (life){ if (lifeDone(ds)) weekDone++; }
+    else { const n = diffDays(S.start, ds)+1; if (n>=1 && n<=DAYS.length && isDone(n)) weekDone++; }
+  }
   const weekNotes = S.notes.filter(n => n.date >= mon && n.date <= t).length;
-  const ms = masteredCount(), rated = ratedCount(), bl = badgeList();
+  const bl = badgeList();
+  const big4 = life
+    ? [[Object.keys(S.life).filter(lifeDone).length, '累计打卡天数'],
+       [lifeStreak(), '连续打卡（天）'],
+       [Object.keys(S.life).filter(d => S.life[d].mood).length, '记过心情的天数'],
+       [notesEarned(), '收下的小纸条']]
+    : [[doneCount(), '已完成天数 / ' + DAYS.length],
+       [streak(), '连续打卡（天）'],
+       [(ratedCount() ? Math.round(masteredCount()/ratedCount()*100) : 0) + '%', '已自测卡片掌握率'],
+       [masteredCount(), '掌握的知识点']];
   return '<div class="sec-title">总览</div>'
-   + '<div class="grid2">'
-   + '<div class="stat"><b>'+done+'</b><span>已完成天数 / '+total+'</span></div>'
-   + '<div class="stat"><b>'+streak()+'</b><span>连续打卡（天）</span></div>'
-   + '<div class="stat"><b>'+(rated?Math.round(ms/rated*100):0)+'%</b><span>已自测卡片掌握率</span></div>'
-   + '<div class="stat"><b>'+ms+'</b><span>掌握的知识点</span></div>'
-   + '</div>'
-   + '<div class="sec-title">打卡热力图<span>近 8 周</span></div>'
-   + '<div class="card"><div class="heat">'+heatmap()+'</div>'
-   + '<div style="font-size:11.5px;color:var(--sub);margin-top:10px">格子越深，那天学得越多</div></div>'
+   + '<div class="grid2">' + big4.map(v => '<div class="stat"><b>'+v[0]+'</b><span>'+v[1]+'</span></div>').join('') + '</div>'
+   + (life ? '' :
+      '<div class="sec-title">打卡热力图<span>近 8 周</span></div>'
+      + '<div class="card"><div class="heat">'+heatmap()+'</div>'
+      + '<div style="font-size:11.5px;color:var(--sub);margin-top:10px">格子越深，那天学得越多</div></div>')
    + '<div class="sec-title">徽章<span>'+bl.filter(b=>b.ok).length+' / '+bl.length+'</span></div>'
    + '<div class="card"><div class="badges">'
    + bl.map(b => '<div class="badge'+(b.ok?' got':'')+'"><span class="e">'+b.e+'</span><span class="t">'+b.t+'</span></div>').join('')
    + '</div></div>'
    + '<div class="sec-title">本周<span>'+md(mon)+' – '+md(t)+'</span></div>'
    + '<div class="card">'
-   + '<div class="kv"><span>完成整日打卡</span><b>'+weekDone+' 天</b></div>'
-   + '<div class="kv"><span>已建档复习卡片</span><b>'+rated+' 张</b></div>'
-   + '<div class="kv"><span>新增错题记录</span><b>'+weekNotes+' 条</b></div>'
+   + '<div class="kv"><span>'+(life?'完成打卡':'完成整日打卡')+'</span><b>'+weekDone+' 天</b></div>'
+   + (life ? '<div class="kv"><span>这周的'+WORD+'</span><b>'+Object.keys(S.life).filter(d => d>=mon && d<=t && lifeDone(d)).length+' 张</b></div>'
+           : '<div class="kv"><span>已建档复习卡片</span><b>'+ratedCount()+' 张</b></div>')
+   + '<div class="kv"><span>新增碎碎念</span><b>'+weekNotes+' 条</b></div>'
    + '<div class="row-btn"><button class="btn line" data-report="1">📋 生成并复制周报</button></div>'
+   + '</div>'
+   + '<div class="sec-title">模式</div><div class="card">'
+   + '<div class="kv"><span>当前是</span><b>'+(life?'陪伴模式':'考研模式')+'</b></div>'
+   + '<div class="seg">'
+   + [['auto','自动'],['study','一直考研'],['life','一直陪伴']].map(v =>
+       '<button data-mode="'+v[0]+'"'+((S.mode||'auto')===v[0]?' class="on"':'')+'>'+v[1]+'</button>').join('')
+   + '</div>'
+   + '<p class="focus" style="margin:12px 0 0;font-size:13px;color:var(--sub)">默认「自动」：12/26 考试结束后，自己切换成陪伴模式。</p>'
+   + '</div>'
+   + '<div class="sec-title">在一起</div><div class="card">'
+   + '<div class="kv"><span>在一起的日子</span><b>'+(S.together ? S.together.replace(/-/g,'/') : '未设置')+'</b></div>'
+   + (togetherDays() > 0 ? '<div class="kv"><span>今天是在一起第</span><b>'+togetherDays()+' 天 💗</b></div>' : '')
+   + '<div class="row-btn"><input type="date" id="tgdate" value="'+(S.together||'')+'" '
+   + 'style="flex:1;min-width:150px;min-height:48px;border:1.5px solid var(--line);border-radius:15px;'
+   + 'padding:0 14px;font-size:15px;background:#fff"><button class="btn rose" id="tgsave">保存</button></div>'
    + '</div>'
    + '<div class="sec-title">设置</div><div class="card">'
    + '<div class="kv"><span>昵称</span><b>'+(S.nick||NICK_DEFAULT)+'</b></div>'
@@ -2421,8 +2816,10 @@ function renderReview(){
 /* =====================================================================
    彩蛋
    ===================================================================== */
-function celebrate(n){
+function celebrate(n, dateStr){
   const fx = document.getElementById('fx');
+  const label = (n <= LOVE.length) ? ('第 ' + n + ' 天 · 完成 ✓')
+                                   : (md(dateStr || addDays(EXAM, n - LOVE.length - 1)) + ' · 完成 ✓');
   const glyphs = ['💗','💕','🎀','✨','🌸','🐾','💖','⭐'];
   let parts = '';
   for (let i = 0; i < 30; i++){
@@ -2441,9 +2838,9 @@ function celebrate(n){
     + '<span class="spark s1">✨</span><span class="spark s2">✨</span>'
     + '<span class="spark s3">🎀</span><span class="spark s4">💗</span>'
     + '<div class="cat">'+CAT+'</div>'
-    + '<div class="daytag">第 '+n+' 天 · 完成 ✓</div>'
-    + '<p class="msg">'+esc(loveOf(n))+'</p>'
-    + '<div class="collect">已收下 '+unlockedLove()+' / '+LOVE.length+' 张'+WORD+'</div>'
+    + '<div class="daytag">'+label+'</div>'
+    + '<p class="msg">'+esc(noteByNo(n))+'</p>'
+    + '<div class="collect">已收下 '+notesEarned()+' / '+TOTAL_NOTES+' 张'+WORD+'</div>'
     + '<button class="btn rose big" id="celclose">收下 ♡</button>'
     + '</div></div>';
   document.getElementById('celclose').onclick = () => { fx.innerHTML = ''; };
@@ -2465,15 +2862,16 @@ function openDay(n){ showSheet(dayCard(BY_NO[n], true), bind); }
 
 function openNote(dayNo){
   const d = dayNo || (todayNo() >= 1 && todayNo() <= DAYS.length ? todayNo() : 1);
-  const html = '<h3>记一笔</h3><p class="hint">错题、易混点、背不下来的地方 —— 一句话就够。</p>'
+  const tags = isLife() ? ['日常','心情','想说的','灵感'] : ['错题','易混','难点','灵感'];
+  const html = '<h3>记一笔</h3><p class="hint">'+(isLife()?'今天想说什么都可以，一句话就够。':'错题、易混点、背不下来的地方 —— 一句话就够。')+'</p>'
     + '<div class="seg" id="tagseg">'
-    + ['错题','易混','难点','灵感'].map((t,i)=>'<button data-tag="'+t+'"'+(i===0?' class="on"':'')+'>'+t+'</button>').join('')
+    + tags.map((t,i)=>'<button data-tag="'+t+'"'+(i===0?' class="on"':'')+'>'+t+'</button>').join('')
     + '</div>'
-    + '<textarea id="notetx" placeholder="例：马原·劳动二重性 ≠ 商品二因素，别记反"></textarea>'
+    + '<textarea id="notetx" placeholder="'+(isLife()?'例：今天终于睡到自然醒，很爽':'例：马原·劳动二重性 ≠ 商品二因素，别记反')+'"></textarea>'
     + '<div class="row-btn"><button class="btn line" data-close="1">取消</button>'
     + '<button class="btn rose" id="savenote">保存</button></div>';
   showSheet(html, () => {
-    let tag = '错题';
+    let tag = tags[0];
     document.querySelectorAll('#tagseg button').forEach(b => b.onclick = () => {
       tag = b.dataset.tag;
       document.querySelectorAll('#tagseg button').forEach(o => o.classList.toggle('on', o === b));
@@ -2502,13 +2900,35 @@ function bind(){
   document.querySelectorAll('[data-rev]').forEach(b => b.onclick = () => { toggleReviewed(+b.dataset.rev); render(); });
   document.querySelectorAll('[data-dayview]').forEach(b => b.onclick = () => openDay(+b.dataset.dayview));
   document.querySelectorAll('[data-content]').forEach(b => b.onclick = () => openContent(+b.dataset.content));
-  document.querySelectorAll('[data-relove]').forEach(b => b.onclick = () => celebrate(+b.dataset.relove));
+  document.querySelectorAll('[data-relove]').forEach(b => b.onclick = () => celebrate(+b.dataset.relove, b.dataset.rdate || ''));
   const rv = document.querySelector('[data-review]'); if (rv) rv.onclick = startReview;
   document.querySelectorAll('[data-stage]').forEach(b => b.onclick = () => {
     const i = +b.dataset.stage;
     OPEN_STAGE = (OPEN_STAGE === i) ? -1 : i;
     render();
   });
+
+  /* ---- 陪伴模式 ---- */
+  document.querySelectorAll('[data-task]').forEach(b => b.onclick = () => {
+    const t = todayStr(), si = +b.dataset.task, l = lifeOf(t);
+    const was = lifeDone(t);
+    const i = l.t.indexOf(si);
+    if (i >= 0) l.t.splice(i,1); else { l.t.push(si); bump('steps'); }
+    save(); render();
+    if (!was && lifeDone(t)) setTimeout(() => celebrate(lifeSerial(t), t), 240);
+  });
+  document.querySelectorAll('[data-mood]').forEach(b => b.onclick = () => {
+    lifeOf(todayStr()).mood = +b.dataset.mood;
+    save(); render();
+  });
+  document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => {
+    S.mode = b.dataset.mode; TAB = 'today'; save(); render();
+  });
+  const tgs = document.getElementById('tgsave');
+  if (tgs) tgs.onclick = () => {
+    const el = document.getElementById('tgdate');
+    S.together = el ? el.value : ''; save(); render();
+  };
   document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
   const nn = document.querySelector('[data-newnote]'); if (nn) nn.onclick = () => openNote(null);
   document.querySelectorAll('[data-delnote]').forEach(b => b.onclick = () => {
@@ -2566,13 +2986,21 @@ function importData(){
 }
 function copyReport(){
   const t = todayStr(), dow = (new Date().getDay()+6)%7, mon = addDays(t,-dow);
+  const life = isLife();
   let wd = 0;
-  for (let i=0;i<7;i++){ const n = diffDays(S.start, addDays(mon,i))+1; if (n>=1 && n<=DAYS.length && isDone(n)) wd++; }
-  const txt = '【背诵手册周报】'+md(mon)+'–'+md(t)+'\n'
+  for (let i=0;i<7;i++){
+    const ds = addDays(mon,i);
+    if (life){ if (lifeDone(ds)) wd++; }
+    else { const n = diffDays(S.start, ds)+1; if (n>=1 && n<=DAYS.length && isDone(n)) wd++; }
+  }
+  const txt = '【'+(life?'陪伴打卡':'背诵手册')+'周报】'+md(mon)+'–'+md(t)+'\n'
     + '本周打卡：'+wd+' 天（完成率 '+(wd/7*100).toFixed(0)+'%）\n'
-    + '累计完成：'+doneCount()+'/'+DAYS.length+' 天，连续 '+streak()+' 天\n'
-    + '已掌握知识点：'+masteredCount()+' 条　'+WORD+'：'+unlockedLove()+'/'+LOVE.length+'\n'
-    + '今天要背：'+(BY_NO[todayNo()] ? 'Day '+todayNo()+' '+BY_NO[todayNo()].task : '冲刺阶段');
+    + (life
+        ? '累计打卡：'+Object.keys(S.life).filter(lifeDone).length+' 天，连续 '+lifeStreak()+' 天\n'
+          + '收下'+WORD+'：'+notesEarned()+' / '+TOTAL_NOTES+' 张'
+        : '累计完成：'+doneCount()+'/'+DAYS.length+' 天，连续 '+streak()+' 天\n'
+          + '已掌握知识点：'+masteredCount()+' 条　'+WORD+'：'+notesEarned()+' / '+TOTAL_NOTES+' 张\n'
+          + '今天要背：'+(BY_NO[todayNo()] ? 'Day '+todayNo()+' '+BY_NO[todayNo()].task : '冲刺阶段'));
   if (navigator.clipboard) navigator.clipboard.writeText(txt).then(
     ()=>alert('周报已复制，可以粘贴给他 🐾'), ()=>prompt('复制下面这段：', txt));
   else prompt('复制下面这段：', txt);
