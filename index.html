@@ -131,6 +131,25 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 .pbar{height:6px;border-radius:9px;background:#F5ECEF;overflow:hidden;margin:0 6px 10px}
 .pbar i{display:block;height:100%;border-radius:9px;
   background:linear-gradient(90deg,var(--pink),var(--rose));transition:width .5s}
+.stagehead{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px 15px;
+  box-shadow:var(--shadow);margin-top:2px;text-align:left;transition:.2s}
+.stagehead:active{transform:scale(.985)}
+.stagehead .sh-l b{display:block;font-size:15px;font-weight:800;color:var(--ink)}
+.stagehead .sh-l span{font-size:11.5px;color:var(--sub);font-weight:600}
+.stagehead .sh-r{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:800;color:var(--rose-d)}
+.stagehead .caret{font-style:normal;font-size:18px;color:var(--sub);line-height:1;transition:transform .22s}
+.stagehead.open{border-color:#F3D3DF;background:linear-gradient(180deg,#FFFBFD,#FDF3F7)}
+.stagehead.open .caret{transform:rotate(90deg)}
+.stagehead.cur{border-color:#F0C7D6}
+.stagehead .here{font-size:10.5px;font-weight:800;color:#fff;background:var(--rose);
+  border-radius:99px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.todaybox{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#FFF6F9,#FDEDF3);
+  border:1.5px solid #F8DCE6;border-radius:20px;padding:15px 16px;box-shadow:var(--shadow)}
+.todaybox .n{flex:0 0 auto;font-size:26px;font-weight:900;color:var(--rose-d);line-height:1}
+.todaybox .t{flex:1;min-width:0}
+.todaybox .t b{display:block;font-size:15px;font-weight:800}
+.todaybox .t span{font-size:12.5px;color:var(--sub)}
 
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:9px 14px;border-radius:13px;background:var(--gold-l);color:#8A5A06;font-size:13.5px;
@@ -337,7 +356,7 @@ nav button.on .ic{transform:translateY(-2px) scale(1.14)}
 <nav>
   <button data-tab="today" class="on"><span class="ic">☀️</span>今日</button>
   <button data-tab="plan"><span class="ic">📖</span>计划</button>
-  <button data-tab="love"><span class="ic">💌</span>情话</button>
+  <button data-tab="love"><span class="ic">💌</span><span id="navLove">小纸条</span></button>
   <button data-tab="notes"><span class="ic">✏️</span>错题</button>
   <button data-tab="me"><span class="ic">🐾</span>我的</button>
 </nav>
@@ -1771,6 +1790,8 @@ CONTENT[40] = {
 const START_DEFAULT = '2026-10-19';
 const EXAM = '2026-12-26';
 const NICK_DEFAULT = '斐斐';
+/* 打卡解锁的那句话，叫什么名字就在这一行改（页签、标题、统计都会跟着变） */
+const WORD = '小纸条';
 
 const PLAN = [
 {d:1, sub:'马原', task:'导论 + 第一章·第一节 世界的物质性', focus:['物质定义','物质与意识的辩证关系','主观能动性与客观规律性']},
@@ -2043,9 +2064,9 @@ function badgeList(){
     {e:'📗', t:'完成 10 天', ok: dn >= 10},
     {e:'📘', t:'完成 20 天', ok: dn >= 20},
     {e:'🎓', t:'完成 40 天', ok: dn >= 40},
-    {e:'💌', t:'收集 10 条', ok: lv >= 10},
-    {e:'💝', t:'收集 30 条', ok: lv >= 30},
-    {e:'💞', t:'收集 68 条', ok: lv >= 68},
+    {e:'💌', t:'收下 10 张', ok: lv >= 10},
+    {e:'💝', t:'收下 30 张', ok: lv >= 30},
+    {e:'💞', t:'收下 68 张', ok: lv >= 68},
     {e:'🧠', t:'掌握 100 条', ok: ms >= 100},
     {e:'🌟', t:'掌握 300 条', ok: ms >= 300},
     {e:'🍀', t:'掌握 600 条', ok: ms >= 600}
@@ -2104,15 +2125,14 @@ function dayCard(x, full){
     if (CONTENT[x.d]) h += '<div class="row-btn"><button class="btn rose big" data-content="'+x.d+'">📖 背这一天的内容</button></div>';
     h += stepBtns(x);
     h += '<div class="row-btn">'
-      + '<button class="btn line" data-note="'+x.d+'">📝 记一笔</button>'
-      + '<button class="btn line" data-dayview="'+x.d+'">看计划</button></div>';
+      + '<button class="btn line" data-note="'+x.d+'">📝 记一笔</button></div>';
     if (st.note) h += '<div class="note" style="margin-top:14px"><div class="nh">我的笔记</div><div class="nt">'+esc(st.note)+'</div></div>';
   }
   return h + '</div>';
 }
 function loveCard(n){
   return '<div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
-    + '<div class="sec-title" style="margin:0 0 8px">今日情话 💌<span>第 '+n+' 条</span></div>'
+    + '<div class="sec-title" style="margin:0 0 8px">今天的'+WORD+' 💌<span>第 '+n+' 张</span></div>'
     + '<div style="font-size:17px;font-weight:700;line-height:1.72">'+esc(loveOf(n))+'</div>'
     + '<div class="row-btn"><button class="btn ghost sm" data-relove="'+n+'">再看一遍动画 ✨</button></div></div>';
 }
@@ -2128,61 +2148,88 @@ function viewToday(){
   }
   if (t > DAYS.length){
     return '<div class="card"><p class="day-task">计划走完啦 🎉</p>'
-      + '<ul class="focus"><li>已完成 '+doneCount()+' / '+DAYS.length+' 天，收集了 '+unlockedLove()+' 条情话。</li>'
+      + '<ul class="focus"><li>已完成 '+doneCount()+' / '+DAYS.length+' 天，收下了 '+unlockedLove()+' 张'+WORD+'。</li>'
       + '<li>如果还在背，可以把开始日往前调，继续按冲刺阶段打卡。</li></ul>'
       + '<div class="row-btn"><button class="btn rose" data-restart="'+today+'">把今天重设为 Day 1</button></div></div>';
   }
   const x = BY_NO[t];
   let h = '';
   if (isDone(t)) h += loveCard(t);
-  const due = dueCards();
-  if (due.length){
-    h += '<div class="sec-title">今天要复习<span>'+due.length+' 条到期</span></div>'
-      + '<div class="duecard"><div class="big">'+due.length+'</div>'
-      + '<div class="txt"><b>该复习的卡片到期了</b><span>先自测，再决定它还来不来</span></div>'
-      + '<button class="btn rose sm" data-review="1">开始</button></div>';
+  const due = dueCards(), rl = reviewList();
+  if (due.length || rl.length){
+    h += '<div class="sec-title">今天要复习<span>'+(due.length ? due.length+' 条卡片到期' : '')+'</span></div><div class="card">';
+    if (due.length){
+      h += '<div class="duecard" style="box-shadow:none;margin-bottom:'+(rl.length?'14px':'0')+'">'
+        + '<div class="big">'+due.length+'</div>'
+        + '<div class="txt"><b>该复习的卡片到期了</b><span>先自测，再决定它还来不来</span></div>'
+        + '<button class="btn rose sm" data-review="1">开始</button></div>';
+    }
+    if (rl.length){
+      h += '<div style="font-size:12px;font-weight:800;color:var(--sub);letter-spacing:.6px;margin-bottom:9px">整日回顾 · 1 / 3 / 7 天前</div>'
+        + '<div class="chips">' + rl.map(r =>
+            '<button class="chip'+(isReviewed(r.day)?' on':'')+'" data-rev="'+r.day+'">Day '+r.day+'<small>'+r.gap+' 天前</small></button>'
+          ).join('') + '</div>';
+    }
+    h += '</div>';
   }
   h += '<div class="sec-title">'+(isDone(t)?'今天已经很棒了':'今天要背')+'</div>';
   h += dayCard(x, true);
-  const rl = reviewList();
-  if (rl.length){
-    h += '<div class="sec-title">整日回顾<span>1 / 3 / 7 天前</span></div><div class="card">'
-      + '<div class="chips">' + rl.map(r =>
-          '<button class="chip'+(isReviewed(r.day)?' on':'')+'" data-rev="'+r.day+'">Day '+r.day+'<small>'+r.gap+' 天前</small></button>'
-        ).join('') + '</div></div>';
-  }
   return h;
 }
+const STAGES = [
+  {n:'① 马原', note:'Day 1–9 · 最难，先啃', a:1, b:9},
+  {n:'② 毛中特', note:'Day 10–14', a:10, b:14},
+  {n:'③ 习思想', note:'Day 15–24 · 占分最多', a:15, b:24},
+  {n:'④ 史纲', note:'Day 25–30', a:25, b:30},
+  {n:'⑤ 思修法治', note:'Day 31–35 · 最好拿分', a:31, b:35},
+  {n:'⑥ 二轮查漏', note:'Day 36–40', a:36, b:40},
+  {n:'⑦ 冲刺', note:'11/28–12/25 · 肖八肖四', a:41, b:DAYS.length}
+];
+let OPEN_STAGE = null;   /* null = 还没选过，默认展开「当前」那一段；-1 = 全部收起 */
+
+function planRow(x){
+  const done = isDone(x.d), st = S.days[x.d] || {steps:{}};
+  const started = STEPS.some(s => st.steps && st.steps[s[0]]);
+  return '<button class="prow'+(done?' done':'')+'" data-dayview="'+x.d+'">'
+    + '<div class="num">'+x.d+'<small>'+(x.sprint ? x.range.split('–')[0] : 'Day')+'</small></div>'
+    + '<div class="tx"><b>'+(CONTENT[x.d] ? '📖 ' : '')+esc(x.task)+'</b>'
+    + '<span>'+x.sub+' · '+md(dateOf(x))+' · '+(done ? '已完成' : started ? '进行中' : '未开始')+'</span></div>'
+    + '<div class="dot">'+(done ? '✓' : started ? '·' : '')+'</div></button>';
+}
+
 function viewPlan(){
-  let h = '<div class="sec-title">全程进度<span>'+doneCount()+' / '+DAYS.length+' 天</span></div>';
-  const stages = [
-    {n:'① 马原（Day 1–9）', a:1,  b:9},
-    {n:'② 毛中特（Day 10–14）', a:10, b:14},
-    {n:'③ 习思想（Day 15–24）', a:15, b:24},
-    {n:'④ 史纲（Day 25–30）', a:25, b:30},
-    {n:'⑤ 思修法治（Day 31–35）', a:31, b:35},
-    {n:'⑥ 二轮查漏（Day 36–40）', a:36, b:40},
-    {n:'⑦ 冲刺（11/28–12/25）', a:41, b:DAYS.length}
-  ];
-  for (const s of stages){
+  const t = todayNo(), total = DAYS.length;
+  const curIdx = STAGES.findIndex(s => t >= s.a && t <= s.b);
+  if (OPEN_STAGE === null) OPEN_STAGE = curIdx < 0 ? STAGES.length - 1 : curIdx;
+
+  let h = '<div class="todaybox"><div class="n">'
+    + (t >= 1 && t <= total ? ('Day ' + t) : (t < 1 ? '预备' : '完成')) + '</div>'
+    + '<div class="t"><b>' + (t >= 1 && t <= total ? esc(BY_NO[t].task) : (t < 1 ? '还没开始' : '计划已走完'))
+    + '</b><span>全程 ' + doneCount() + ' / ' + total + ' 天 · 距考试 ' + daysLeft() + ' 天</span></div>'
+    + (t >= 1 && t <= total ? '<button class="btn rose sm" data-tab="today">去打卡</button>' : '')
+    + '</div>'
+    + '<div class="pbar" style="margin:12px 6px 0"><i style="width:' + (doneCount()/total*100).toFixed(1) + '%"></i></div>';
+
+  h += '<div class="sec-title">全部计划<span>点阶段展开 / 收起</span></div>';
+  STAGES.forEach((s,i) => {
     const list = DAYS.filter(x => x.d >= s.a && x.d <= s.b);
     const d = list.filter(x => isDone(x.d)).length;
-    h += '<div class="stagebar"><span>'+s.n+'</span><span>'+d+'/'+list.length+'</span></div>'
-      + '<div class="pbar"><i style="width:'+(d/list.length*100).toFixed(1)+'%"></i></div>'
-      + '<div class="plist">' + list.map(x =>
-          '<button class="prow'+(isDone(x.d)?' done':'')+'" data-dayview="'+x.d+'">'
-          + '<div class="num">'+x.d+'<small>'+(x.sprint ? x.range.split('–')[0] : 'Day')+'</small></div>'
-          + '<div class="tx"><b>'+esc(x.task)+'</b><span>'+x.sub+' · '+md(dateOf(x))+'</span></div>'
-          + '<div class="dot">'+(isDone(x.d)?'✓':'')+'</div></button>').join('') + '</div>';
-  }
+    const open = (OPEN_STAGE === i), cur = (i === curIdx);
+    h += '<button class="stagehead' + (open ? ' open' : '') + (cur ? ' cur' : '') + '" data-stage="' + i + '">'
+      + '<div class="sh-l"><b>' + s.n + (cur ? '<span class="here">当前</span>' : '') + '</b>'
+      + '<span>' + s.note + '</span></div>'
+      + '<div class="sh-r"><span>' + d + '/' + list.length + '</span><i class="caret">›</i></div></button>'
+      + '<div class="pbar" style="margin:8px 6px 10px"><i style="width:' + (d/list.length*100).toFixed(1) + '%"></i></div>';
+    if (open) h += '<div class="plist">' + list.map(planRow).join('') + '</div>';
+  });
   return h;
 }
 function viewLove(){
   const un = unlockedLove();
   let h = '<div class="card love-hero"><div class="big">'+un+' / '+LOVE.length+'</div>'
-    + '<div style="font-size:13.5px;color:var(--sub);margin-top:6px">每天完成打卡，解锁一条只写给你的话</div>'
+    + '<div style="font-size:13.5px;color:var(--sub);margin-top:6px">每天完成打卡，解锁一张只写给你的'+WORD+'</div>'
     + '<div class="pbar" style="margin:14px 0 0"><i style="width:'+(un/LOVE.length*100).toFixed(1)+'%"></i></div></div>'
-    + '<div class="sec-title">情话收集册</div>';
+    + '<div class="sec-title">'+WORD+'收集册</div>';
   for (let d = 1; d <= DAYS.length; d++){
     const ok = isDone(d);
     h += '<div class="love-item'+(ok?'':' locked')+'"><div class="n">'+d+'</div>'
@@ -2396,7 +2443,7 @@ function celebrate(n){
     + '<div class="cat">'+CAT+'</div>'
     + '<div class="daytag">第 '+n+' 天 · 完成 ✓</div>'
     + '<p class="msg">'+esc(loveOf(n))+'</p>'
-    + '<div class="collect">已收集 '+unlockedLove()+' / '+LOVE.length+' 条情话</div>'
+    + '<div class="collect">已收下 '+unlockedLove()+' / '+LOVE.length+' 张'+WORD+'</div>'
     + '<button class="btn rose big" id="celclose">收下 ♡</button>'
     + '</div></div>';
   document.getElementById('celclose').onclick = () => { fx.innerHTML = ''; };
@@ -2457,6 +2504,11 @@ function bind(){
   document.querySelectorAll('[data-content]').forEach(b => b.onclick = () => openContent(+b.dataset.content));
   document.querySelectorAll('[data-relove]').forEach(b => b.onclick = () => celebrate(+b.dataset.relove));
   const rv = document.querySelector('[data-review]'); if (rv) rv.onclick = startReview;
+  document.querySelectorAll('[data-stage]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.stage;
+    OPEN_STAGE = (OPEN_STAGE === i) ? -1 : i;
+    render();
+  });
   document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
   const nn = document.querySelector('[data-newnote]'); if (nn) nn.onclick = () => openNote(null);
   document.querySelectorAll('[data-delnote]').forEach(b => b.onclick = () => {
@@ -2519,7 +2571,7 @@ function copyReport(){
   const txt = '【背诵手册周报】'+md(mon)+'–'+md(t)+'\n'
     + '本周打卡：'+wd+' 天（完成率 '+(wd/7*100).toFixed(0)+'%）\n'
     + '累计完成：'+doneCount()+'/'+DAYS.length+' 天，连续 '+streak()+' 天\n'
-    + '已掌握知识点：'+masteredCount()+' 条　情话收集：'+unlockedLove()+'/'+LOVE.length+'\n'
+    + '已掌握知识点：'+masteredCount()+' 条　'+WORD+'：'+unlockedLove()+'/'+LOVE.length+'\n'
     + '今天要背：'+(BY_NO[todayNo()] ? 'Day '+todayNo()+' '+BY_NO[todayNo()].task : '冲刺阶段');
   if (navigator.clipboard) navigator.clipboard.writeText(txt).then(
     ()=>alert('周报已复制，可以粘贴给他 🐾'), ()=>prompt('复制下面这段：', txt));
@@ -2528,6 +2580,7 @@ function copyReport(){
 
 /* 启动 */
 document.getElementById('hCat').innerHTML = CAT;
+document.getElementById('navLove').textContent = WORD;
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
 render();
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
