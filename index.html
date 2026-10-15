@@ -6,177 +6,328 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="政治打卡">
-<meta name="theme-color" content="#C8102E">
+<meta name="apple-mobile-web-app-title" content="斐斐加油">
+<meta name="theme-color" content="#F6E3E9">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>考研政治背诵打卡</title>
+<title>斐斐的背诵手册</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 :root{
-  --red:#C8102E; --red-d:#9E0C24; --gold:#F0A32A; --ink:#241A16; --sub:#8A7A72;
-  --bg:#FBF6F2; --card:#FFFFFF; --line:#EFE4DC; --ok:#1F9D55; --ok-bg:#E9F8EF;
+  --pink:#F4A8BE; --pink-l:#FBE0E8; --pink-xl:#FDF1F5;
+  --rose:#E0678A; --rose-d:#C94D72; --rose-dd:#A93A5C;
+  --gold:#E7B24C; --gold-l:#FDF5E5;
+  --ink:#3D2E33; --ink2:#5D4A50; --sub:#A08B92;
+  --bg:#FFFAF9; --card:#FFFFFF; --line:#F5E6EA;
+  --ok:#3FA96B; --ok-bg:#EBF8F0;
+  --shadow:0 2px 14px rgba(224,103,138,.07);
+  --shadow2:0 8px 30px rgba(224,103,138,.13);
   --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
 }
 body{
-  font:16px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   color:var(--ink); background:var(--bg); -webkit-text-size-adjust:100%;
-  padding-bottom:calc(72px + var(--safe-b));
+  padding-bottom:calc(74px + var(--safe-b)); overflow-x:hidden;
 }
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
-input,textarea,select{font:inherit;color:inherit}
+input,textarea{font:inherit;color:inherit}
 
-/* ---------- top bar ---------- */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0}
+.blob.b1{width:320px;height:320px;right:-110px;top:-90px;background:rgba(244,168,190,.34)}
+.blob.b2{width:260px;height:260px;left:-110px;top:38%;background:rgba(253,224,232,.5)}
+.blob.b3{width:300px;height:300px;right:-120px;bottom:6%;background:rgba(231,178,76,.13)}
+
 header{
-  position:sticky;top:0;z-index:20;
-  padding:calc(10px + var(--safe-t)) 16px 12px;
-  background:linear-gradient(135deg,var(--red) 0%,var(--red-d) 100%);
-  color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.12);
+  position:sticky;top:0;z-index:20;overflow:hidden;
+  padding:calc(12px + var(--safe-t)) 18px 16px;
+  background:linear-gradient(135deg,#FBD3DF 0%,#F4A8BE 42%,#E8849F 100%);
+  box-shadow:0 3px 18px rgba(201,77,114,.16);
 }
-.h-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.h-title{font-size:19px;font-weight:700;letter-spacing:.5px}
-.h-title small{display:block;font-size:12px;font-weight:400;opacity:.82;letter-spacing:0}
-.h-stat{display:flex;gap:14px;text-align:center}
-.h-stat b{display:block;font-size:20px;line-height:1.1}
-.h-stat span{font-size:11px;opacity:.85}
-.h-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.28);margin-top:10px;overflow:hidden}
-.h-bar i{display:block;height:100%;background:var(--gold);border-radius:99px;transition:width .35s}
+header:after{
+  content:"";position:absolute;inset:auto -30% -70% -30%;height:150px;
+  background:radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.42),transparent 70%);
+  pointer-events:none;
+}
+.h-top{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.h-hi{font-size:20px;font-weight:800;color:#fff;letter-spacing:.4px;text-shadow:0 1px 6px rgba(169,58,92,.22)}
+.h-sub{font-size:12.5px;color:rgba(255,255,255,.95);margin-top:3px;letter-spacing:.2px}
+.h-sub b{font-size:15px;font-weight:800}
+.h-cat{flex:0 0 auto;width:54px;height:46px;animation:bob 3.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-5px) rotate(1.5deg)}}
+.h-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.42);margin-top:13px;overflow:hidden;position:relative;z-index:1}
+.h-bar i{display:block;height:100%;border-radius:99px;transition:width .5s cubic-bezier(.22,.61,.36,1);
+  background:linear-gradient(90deg,#FFF3F7,#FFE08A);box-shadow:0 0 12px rgba(255,255,255,.7)}
 
-/* ---------- layout ---------- */
-main{padding:14px 14px 8px;max-width:900px;margin:0 auto}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.sec-title{font-size:13px;font-weight:700;color:var(--sub);letter-spacing:1px;margin:20px 4px 8px;display:flex;justify-content:space-between;align-items:center}
-.sec-title span{font-weight:400;letter-spacing:0}
+main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-index:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;
+  margin-bottom:14px;box-shadow:var(--shadow);animation:cardIn .34s cubic-bezier(.22,.61,.36,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.sec-title{font-size:12.5px;font-weight:800;color:var(--sub);letter-spacing:1.4px;
+  margin:20px 6px 9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sec-title span{font-weight:500;letter-spacing:0;font-size:12px}
 
-.tag{display:inline-block;font-size:12px;padding:3px 10px;border-radius:99px;background:#FDECEF;color:var(--red);font-weight:600;margin-right:6px}
-.tag.gold{background:#FFF4E2;color:#B4740C}
-.tag.gray{background:#F1EDEA;color:var(--sub)}
+.tag{display:inline-block;font-size:12px;padding:3px 11px;border-radius:99px;
+  background:var(--pink-l);color:var(--rose-dd);font-weight:700;margin-right:6px}
+.tag.gold{background:var(--gold-l);color:#A8770F}
+.tag.ok{background:var(--ok-bg);color:#1E7B47}
+.tag.plain{background:#F4F1F2;color:var(--sub)}
 
 .day-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.day-no{font-size:26px;font-weight:800;color:var(--red);line-height:1}
-.day-no em{font-style:normal;font-size:14px;font-weight:600;color:var(--sub);margin-left:2px}
-.day-date{font-size:13px;color:var(--sub);margin-left:auto}
-.day-task{font-size:18px;font-weight:600;margin:12px 0 0;line-height:1.5}
-.focus{margin:10px 0 0;padding:0;list-style:none}
-.focus li{position:relative;padding-left:18px;font-size:14.5px;color:#5C4C45;margin-top:6px}
-.focus li:before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:99px;background:var(--gold)}
+.day-no{font-size:30px;font-weight:900;line-height:1;letter-spacing:-.5px;
+  background:linear-gradient(120deg,var(--rose) 10%,var(--rose-dd) 90%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.day-no em{font-style:normal;font-size:13px;font-weight:600;-webkit-text-fill-color:var(--sub);color:var(--sub)}
+.day-date{font-size:12.5px;color:var(--sub);margin-left:auto;font-weight:600}
+.day-task{font-size:18.5px;font-weight:700;margin:13px 0 0;line-height:1.5;letter-spacing:.2px}
+.focus{margin:11px 0 0;padding:0;list-style:none}
+.focus li{position:relative;padding-left:19px;font-size:14.5px;color:var(--ink2);margin-top:7px;line-height:1.6}
+.focus li:before{content:"";position:absolute;left:5px;top:9px;width:6px;height:6px;border-radius:99px;
+  background:linear-gradient(135deg,var(--pink),var(--rose))}
 
-/* ---------- steps ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:12px 16px;border-radius:15px;background:#F7F1F3;font-size:15px;font-weight:700;
+  min-height:48px;transition:transform .14s,opacity .14s}
+.btn:active{transform:scale(.975);opacity:.86}
+.btn.rose{background:linear-gradient(135deg,#EE7C9D,#D9557E);color:#fff;
+  box-shadow:0 5px 16px rgba(217,85,126,.3)}
+.btn.line{background:#fff;border:1.5px solid var(--line);color:var(--ink2)}
+.btn.ghost{background:var(--pink-xl);color:var(--rose-dd)}
+.btn.sm{min-height:38px;padding:7px 13px;font-size:13.5px;border-radius:12px}
+.btn.big{min-height:56px;font-size:16.5px;border-radius:17px}
+.row-btn{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.row-btn .btn{flex:1;min-width:132px}
+
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-.step{
-  border:1.5px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;
-  background:#FCFAF8;transition:.18s; min-height:76px; display:flex;flex-direction:column;justify-content:center;gap:3px;
-}
-.step b{font-size:15px;font-weight:600;display:block}
+.step{border:1.5px solid var(--line);border-radius:18px;padding:13px 6px;text-align:center;
+  background:#FFFCFD;transition:.2s cubic-bezier(.22,.61,.36,1);min-height:82px;
+  display:flex;flex-direction:column;justify-content:center;gap:3px}
+.step b{font-size:15px;font-weight:700;display:block}
 .step span{font-size:11px;color:var(--sub)}
-.step .bx{width:22px;height:22px;border-radius:99px;border:2px solid #D9CCC4;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
-.step.on{background:var(--ok-bg);border-color:#8FD8AC}
-.step.on .bx{background:var(--ok);border-color:var(--ok)}
-.step.on b{color:#136B3A}
+.step .bx{width:24px;height:24px;border-radius:99px;border:2px solid #EEDCE2;margin:0 auto 5px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;transition:.2s}
+.step.on{background:linear-gradient(180deg,#F0FBF5,#E7F7EE);border-color:#A5DEBF}
+.step.on .bx{background:var(--ok);border-color:var(--ok);box-shadow:0 0 0 4px rgba(63,169,107,.14)}
+.step.on b{color:#1E7B47}
 .step:active{transform:scale(.97)}
 
-/* ---------- buttons ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:12px;background:#F4EFEB;font-size:15px;font-weight:600;min-height:46px}
-.btn.red{background:var(--red);color:#fff}
-.btn.line{background:#fff;border:1.5px solid var(--line)}
-.btn:active{opacity:.75}
-.row-btn{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.row-btn .btn{flex:1;min-width:130px}
-
-/* ---------- list rows ---------- */
-.plist{display:flex;flex-direction:column;gap:8px}
-.prow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 14px;text-align:left;width:100%}
-.prow .num{flex:0 0 44px;font-size:13px;font-weight:800;color:var(--red);line-height:1.25}
-.prow .num small{display:block;font-size:10px;color:var(--sub);font-weight:500}
+.plist{display:flex;flex-direction:column;gap:9px}
+.prow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+  border-radius:17px;padding:13px 15px;text-align:left;width:100%;box-shadow:var(--shadow);transition:transform .14s}
+.prow:active{transform:scale(.985)}
+.prow .num{flex:0 0 46px;font-size:13px;font-weight:900;color:var(--rose);line-height:1.25}
+.prow .num small{display:block;font-size:10px;color:var(--sub);font-weight:600}
 .prow .tx{flex:1;min-width:0}
-.prow .tx b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prow .tx span{font-size:12px;color:var(--sub)}
-.prow .dot{flex:0 0 auto;width:24px;height:24px;border-radius:99px;border:2px solid #E2D6CE;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
-.prow.done{background:var(--ok-bg);border-color:#B7E4CB}
+.prow .tx b{display:block;font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .tx span{font-size:11.5px;color:var(--sub)}
+.prow .dot{flex:0 0 auto;width:26px;height:26px;border-radius:99px;border:2px solid #EFE0E5;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.prow.done{background:linear-gradient(180deg,#F2FBF6,#EAF8F0);border-color:#B9E3CB}
 .prow.done .dot{background:var(--ok);border-color:var(--ok)}
-.prow.done .tx b{color:#136B3A}
-.stagebar{font-size:12px;font-weight:700;color:var(--sub);margin:16px 4px 8px;letter-spacing:1px}
-.pbar{height:5px;border-radius:9px;background:#EFE7E2;overflow:hidden;margin-top:10px}
-.pbar i{display:block;height:100%;background:var(--red)}
+.prow.done .tx b{color:#1E7B47}
+.stagebar{font-size:12px;font-weight:800;color:var(--sub);margin:18px 6px 8px;letter-spacing:.8px;
+  display:flex;justify-content:space-between}
+.pbar{height:6px;border-radius:9px;background:#F5ECEF;overflow:hidden;margin:0 6px 10px}
+.pbar i{display:block;height:100%;border-radius:9px;
+  background:linear-gradient(90deg,var(--pink),var(--rose));transition:width .5s}
 
-/* ---------- chips ---------- */
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chip{padding:9px 13px;border-radius:11px;background:#FFF4E2;color:#8A5A06;font-size:13.5px;font-weight:600;border:1.5px solid #F6E0B8;min-height:40px;display:flex;align-items:center}
-.chip.on{background:var(--ok-bg);color:#136B3A;border-color:#9BDCB4}
-.chip small{opacity:.75;font-weight:400;margin-left:5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:9px 14px;border-radius:13px;background:var(--gold-l);color:#8A5A06;font-size:13.5px;
+  font-weight:700;border:1.5px solid #F6E4C2;min-height:42px;display:flex;align-items:center}
+.chip.on{background:var(--ok-bg);color:#1E7B47;border-color:#A5DEBF}
+.chip small{opacity:.75;font-weight:500;margin-left:5px}
 
-/* ---------- notes ---------- */
-.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:11px;padding:12px 14px;margin-bottom:9px}
-.note .nh{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--sub);margin-bottom:6px}
-.note .nt{font-size:15px;white-space:pre-wrap;word-break:break-word}
-.note .del{color:#C0392B;font-size:13px;font-weight:600;padding:4px 8px}
-.empty{text-align:center;color:var(--sub);font-size:14px;padding:36px 10px}
-.empty div{font-size:40px;margin-bottom:8px}
+.duecard{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#FFF6F9,#FDEDF3);
+  border:1.5px solid #F8DCE6;border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+.duecard .big{font-size:30px;font-weight:900;color:var(--rose-d);line-height:1}
+.duecard .txt{flex:1;min-width:0}
+.duecard .txt b{display:block;font-size:15.5px;font-weight:800}
+.duecard .txt span{font-size:12.5px;color:var(--sub)}
 
-/* ---------- modal ---------- */
-.mask{position:fixed;inset:0;background:rgba(30,15,10,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center;padding:0}
-.sheet{background:#fff;width:100%;max-width:640px;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + var(--safe-b));max-height:88vh;overflow:auto;animation:up .22s}
-@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
-.sheet h3{margin:0 0 4px;font-size:18px}
-.sheet p.hint{margin:0 0 14px;font-size:13px;color:var(--sub)}
-.sheet textarea{width:100%;min-height:130px;border:1.5px solid var(--line);border-radius:12px;padding:12px;font-size:16px;resize:vertical;background:#FCFAF8}
-.sheet textarea:focus{outline:none;border-color:var(--red)}
-.sheet .row-btn{margin-top:14px}
-.seg{display:flex;gap:8px;margin:12px 0 0}
-.seg button{flex:1;padding:10px;border-radius:11px;background:#F4EFEB;font-size:14px;font-weight:600;min-height:44px}
-.seg button.on{background:var(--red);color:#fff}
-.kv{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
-.kv:last-child{border-bottom:0}
-.kv b{font-weight:700}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
-.stat b{display:block;font-size:26px;font-weight:800;color:var(--red);line-height:1.2}
-.stat span{font-size:12px;color:var(--sub)}
-
-/* ---------- 背诵内容 ---------- */
-.kframe{background:#FCFAF8;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;line-height:2;white-space:pre-wrap;color:#4A3B33}
+.kframe{background:#FDFAFB;border:1px solid var(--line);border-radius:15px;padding:13px 15px;
+  font-size:14px;line-height:2;white-space:pre-wrap;color:var(--ink2)}
 .qa{border-bottom:1px solid var(--line);padding:2px 0}
 .qa:last-child{border-bottom:0}
-.qa .q{display:flex;gap:9px;width:100%;text-align:left;font-size:15px;font-weight:600;padding:11px 0;align-items:flex-start;line-height:1.5}
-.qa .q i{flex:0 0 auto;font-style:normal;color:var(--red);font-weight:800;min-width:18px}
-.qa .q u{text-decoration:none;margin-left:auto;flex:0 0 auto;color:var(--sub);font-size:12px;font-weight:500;padding-top:3px}
-.qa .a{display:none;margin:0 0 12px;padding:10px 12px;background:#FFF9EC;border-left:3px solid var(--gold);border-radius:8px;font-size:14.5px;line-height:1.7;color:#4A3B33}
-.qa.open .a{display:block}
+.qa .q{display:flex;gap:9px;width:100%;text-align:left;font-size:15px;font-weight:700;
+  padding:12px 0;align-items:flex-start;line-height:1.5}
+.qa .q i{flex:0 0 auto;font-style:normal;color:var(--rose);font-weight:900;min-width:19px}
+.qa .q u{text-decoration:none;margin-left:auto;flex:0 0 auto;color:var(--sub);font-size:12px;
+  font-weight:600;padding-top:3px}
+.qa .a{display:none;margin:0 0 12px;padding:11px 13px;border-left:3px solid var(--pink);
+  background:#FFFBF4;border-radius:10px;font-size:14.5px;line-height:1.75;color:var(--ink2)}
+.qa.open .a{display:block;animation:cardIn .22s both}
 .qa.open .q u{color:var(--ok)}
+.level{display:flex;gap:7px;margin-top:11px}
+.level button{flex:1;padding:9px 4px;border-radius:11px;font-size:13.5px;font-weight:700;min-height:42px}
+.level button[data-rate="0"],.level button[data-rq="0"]{background:#FDECEF;color:#C0392B}
+.level button[data-rate="1"],.level button[data-rq="1"]{background:#FFF6E5;color:#A8770F}
+.level button[data-rate="2"],.level button[data-rq="2"]{background:#EAF8F0;color:#1E7B47}
+.level button:active{transform:scale(.95)}
+.rated{margin-top:10px;font-size:13px;font-weight:700;color:#1E7B47;
+  background:var(--ok-bg);border-radius:10px;padding:9px 12px;animation:cardIn .25s both}
 .cf{margin:0;padding:0;list-style:none}
-.cf li{font-size:14.5px;line-height:1.7;padding:10px 0;border-bottom:1px dashed var(--line)}
+.cf li{font-size:14.5px;line-height:1.7;padding:11px 0;border-bottom:1px dashed var(--line)}
 .cf li:last-child{border-bottom:0}
-.cf b{color:var(--red);display:block;font-size:14px;margin-bottom:3px}
-.nums{margin:0;padding-left:20px;font-size:14.5px;line-height:1.75;color:#5C4C45}
-.nums li{margin-top:7px}
+.cf b{color:var(--rose-d);display:block;font-size:14px;margin-bottom:3px}
+.nums{margin:0;padding-left:20px;font-size:14.5px;line-height:1.8;color:var(--ink2)}
+.nums li{margin-top:8px}
 .nums li:first-child{margin-top:0}
 
-/* ---------- tabbar ---------- */
-nav{
-  position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;
-  background:rgba(255,255,255,.96);backdrop-filter:saturate(180%) blur(12px);
-  border-top:1px solid var(--line);padding-bottom:var(--safe-b);
+.review{position:fixed;inset:0;z-index:70;background:linear-gradient(170deg,#FFF9FB,#FDF1F5);
+  display:flex;flex-direction:column;padding:calc(14px + var(--safe-t)) 16px calc(16px + var(--safe-b));overflow:auto}
+.rv-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.rv-top .close{font-size:15px;font-weight:700;color:var(--sub);padding:8px 4px}
+.rv-prog{flex:1;height:8px;border-radius:9px;background:#F6E7EC;overflow:hidden}
+.rv-prog i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--pink),var(--rose));transition:width .3s}
+.rv-num{font-size:13px;font-weight:800;color:var(--rose-d);font-variant-numeric:tabular-nums}
+.rv-card{background:#fff;border-radius:24px;padding:22px 20px;box-shadow:var(--shadow2);
+  border:1px solid var(--line);animation:cardIn .3s both}
+.rv-from{font-size:11.5px;color:var(--sub);font-weight:700;letter-spacing:.6px;margin-bottom:10px}
+.rv-q{font-size:19px;font-weight:800;line-height:1.55}
+.rv-a{margin-top:16px;padding:14px 15px;background:#FFFBF4;border-left:4px solid var(--gold);
+  border-radius:12px;font-size:15px;line-height:1.8;color:var(--ink2);animation:cardIn .28s both}
+.rv-done{text-align:center;padding:30px 10px}
+.rv-done .emo{font-size:52px}
+.rv-done h2{font-size:22px;margin:12px 0 6px;color:var(--rose-d)}
+.rv-done p{color:var(--sub);font-size:14.5px;margin:0 0 20px;line-height:1.8}
+
+.love-item{display:flex;gap:13px;padding:14px;border-radius:18px;margin-bottom:10px;
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.love-item.locked{background:#FCFAFB;border-style:dashed;box-shadow:none;opacity:.62}
+.love-item .n{flex:0 0 40px;height:40px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-weight:900;font-size:13px;color:#fff;
+  background:linear-gradient(135deg,var(--pink),var(--rose))}
+.love-item.locked .n{background:#EFE6E9;color:var(--sub)}
+.love-item .t{flex:1;font-size:14.5px;line-height:1.7;color:var(--ink2)}
+.love-item .t .d{display:block;font-size:11.5px;color:var(--sub);margin-top:5px;font-weight:600}
+.love-hero{text-align:center;padding:10px 4px 4px}
+.love-hero .big{font-size:40px;font-weight:900;
+  background:linear-gradient(120deg,var(--rose),var(--rose-dd));-webkit-background-clip:text;
+  background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1}
+
+.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:4px;overflow-x:auto;padding-bottom:4px}
+.heat i{width:13px;height:13px;border-radius:4px;background:#F6EDF0;display:block}
+.heat i[data-l="1"]{background:#FBD9E4}
+.heat i[data-l="2"]{background:#F4A8BE}
+.heat i[data-l="3"]{background:#E0678A}
+.heat i[data-l="4"]{background:#B9436A}
+
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:11px}
+.badge{text-align:center;padding:12px 5px;border-radius:17px;background:#FCFAFB;
+  border:1px solid var(--line);transition:.2s}
+.badge .e{font-size:26px;display:block;filter:grayscale(1);opacity:.35}
+.badge .t{font-size:11.5px;font-weight:700;color:var(--sub);margin-top:6px;display:block}
+.badge.got{background:linear-gradient(180deg,#FFF7FA,#FDECF2);border-color:#F6D6E1;box-shadow:var(--shadow)}
+.badge.got .e{filter:none;opacity:1;animation:bob 3s ease-in-out infinite}
+.badge.got .t{color:var(--rose-dd)}
+
+.mask{position:fixed;inset:0;background:rgba(61,46,51,.42);z-index:60;display:flex;
+  align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sheet{background:#fff;width:100%;max-width:660px;border-radius:26px 26px 0 0;
+  padding:20px 18px calc(20px + var(--safe-b));max-height:90vh;overflow:auto;
+  animation:up .3s cubic-bezier(.22,.61,.36,1)}
+@keyframes up{from{transform:translateY(46px);opacity:.5}to{transform:none;opacity:1}}
+.sheet h3{margin:0 0 4px;font-size:19px;font-weight:800}
+.sheet p.hint{margin:0 0 14px;font-size:13px;color:var(--sub)}
+.sheet textarea{width:100%;min-height:128px;border:1.5px solid var(--line);border-radius:15px;
+  padding:13px;font-size:16px;resize:vertical;background:#FDFAFB}
+.sheet textarea:focus{outline:none;border-color:var(--pink)}
+.seg{display:flex;gap:8px;margin-top:13px}
+.seg button{flex:1;padding:11px;border-radius:13px;background:#F7F1F3;font-size:14px;font-weight:700;min-height:46px}
+.seg button.on{background:linear-gradient(135deg,#EE7C9D,#D9557E);color:#fff}
+.empty{text-align:center;color:var(--sub);font-size:14px;padding:38px 10px}
+.empty div{font-size:42px;margin-bottom:10px}
+.kv{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.kv:last-child{border-bottom:0}
+.kv b{font-weight:800}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:19px;padding:15px;text-align:center;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:27px;font-weight:900;line-height:1.2;
+  background:linear-gradient(120deg,var(--rose),var(--rose-dd));-webkit-background-clip:text;
+  background-clip:text;-webkit-text-fill-color:transparent}
+.stat span{font-size:11.5px;color:var(--sub);font-weight:600}
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);
+  border-radius:14px;padding:13px 15px;margin-bottom:10px;box-shadow:var(--shadow)}
+.note .nh{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-size:11.5px;color:var(--sub);margin-bottom:6px;font-weight:600}
+.note .nt{font-size:15px;white-space:pre-wrap;word-break:break-word}
+.note .del{color:#C0392B;font-size:13px;font-weight:700;padding:5px 9px}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;
+  background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(14px);
+  border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+nav button{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;
+  gap:2px;color:var(--sub);font-size:10.5px;font-weight:700;transition:color .18s}
+nav button .ic{font-size:20px;line-height:1.15;transition:transform .2s}
+nav button.on{color:var(--rose-d)}
+nav button.on .ic{transform:translateY(-2px) scale(1.14)}
+
+/* ===== 彩蛋：完成一天的庆祝动画 ===== */
+#fx{position:fixed;inset:0;z-index:90;pointer-events:none}
+#fx .particles{position:absolute;inset:0;overflow:hidden}
+#fx .p{position:absolute;bottom:-10vh;opacity:0;will-change:transform,opacity;
+  animation:rise var(--dur) cubic-bezier(.22,.61,.36,1) var(--delay) forwards}
+@keyframes rise{
+  0%{opacity:0;transform:translate3d(0,0,0) scale(.35) rotate(0deg)}
+  14%{opacity:var(--op)}
+  58%{transform:translate3d(calc(var(--sway) * .62),-56vh,0) scale(1) rotate(calc(var(--rot) * .45))}
+  100%{opacity:0;transform:translate3d(var(--sway),-120vh,0) scale(1.08) rotate(var(--rot))}
 }
-nav button{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--sub);font-size:11px;font-weight:600}
-nav button .ic{font-size:21px;line-height:1.1}
-nav button.on{color:var(--red)}
-@media (min-width:700px){
-  body{padding-bottom:calc(80px + var(--safe-b))}
-  .day-task{font-size:19px}
+#fx .halo{position:absolute;left:50%;top:44%;width:52vmin;height:52vmin;margin:-26vmin 0 0 -26vmin;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(244,168,190,.55),rgba(244,168,190,0) 68%);
+  animation:halo 1.5s cubic-bezier(.22,.61,.36,1) forwards}
+@keyframes halo{0%{opacity:.85;transform:scale(.3)}100%{opacity:0;transform:scale(2.5)}}
+#fx .ring{position:absolute;left:50%;top:44%;width:230px;height:230px;margin:-115px 0 0 -115px;
+  border-radius:50%;border:2px solid rgba(224,103,138,.42);animation:ring 1.7s ease-out .1s forwards;pointer-events:none}
+@keyframes ring{0%{opacity:.7;transform:scale(.4)}100%{opacity:0;transform:scale(1.85)}}
+#fx .stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:22px;background:radial-gradient(ellipse at 50% 45%,rgba(61,46,51,.14),rgba(61,46,51,.42));
+  pointer-events:auto;animation:fadeIn .24s both}
+.cel{position:relative;width:100%;max-width:430px;border-radius:30px;padding:26px 22px 22px;
+  text-align:center;background:linear-gradient(175deg,#FFFFFF 0%,#FFF7FA 58%,#FDEEF4 100%);
+  box-shadow:0 26px 70px rgba(120,40,70,.34);
+  animation:pop .58s cubic-bezier(.18,1.2,.36,1) both}
+@keyframes pop{0%{opacity:0;transform:translateY(38px) scale(.82)}
+  62%{opacity:1;transform:translateY(-8px) scale(1.025)}100%{opacity:1;transform:none}}
+.cel:before{content:"";position:absolute;inset:-1.5px;border-radius:31px;padding:1.5px;
+  background:linear-gradient(135deg,#F9C9D8,#F4A8BE 35%,#FFE7A8 70%,#F9C9D8);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;animation:shine 3.4s linear infinite}
+@keyframes shine{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(22deg)}}
+.cel .cat{width:96px;height:82px;margin:0 auto 10px;animation:bob 2.6s ease-in-out infinite}
+.cel .daytag{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.6px;
+  color:var(--rose-dd);background:#FCE7EE;border-radius:99px;padding:5px 15px;animation:cardIn .4s .1s both}
+.cel .msg{font-size:18.5px;line-height:1.72;font-weight:700;color:var(--ink);
+  margin:15px 2px 0;letter-spacing:.3px;animation:cardIn .5s .22s both}
+.cel .collect{font-size:12px;color:var(--sub);font-weight:600;margin-top:13px;animation:cardIn .5s .34s both}
+.cel .btn{margin-top:16px;width:100%;animation:cardIn .5s .44s both}
+.cel .spark{position:absolute;font-size:15px;animation:tw 1.9s ease-in-out infinite;pointer-events:none}
+@keyframes tw{0%,100%{opacity:.25;transform:scale(.82)}50%{opacity:1;transform:scale(1.18)}}
+.cel .spark.s1{left:16px;top:22px}
+.cel .spark.s2{right:20px;top:44px;animation-delay:.3s}
+.cel .spark.s3{left:30px;bottom:88px;animation-delay:.6s}
+.cel .spark.s4{right:34px;bottom:126px;animation-delay:.9s}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+@media (min-width:700px){ .day-task{font-size:19.5px} .cel{max-width:470px} }
 </style>
 </head>
 <body>
 
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
 <header>
-  <div class="h-row">
-    <div class="h-title">考研政治 · 背诵打卡<small id="hSub">《2027 背诵手册（上册）》40 天计划</small></div>
-    <div class="h-stat">
-      <div><b id="hStreak">0</b><span>连续天数</span></div>
-      <div><b id="hDone">0</b><span>已完成</span></div>
+  <div class="h-top">
+    <div style="flex:1;min-width:0">
+      <div class="h-hi" id="hHi">你好呀</div>
+      <div class="h-sub" id="hSub"></div>
     </div>
+    <div class="h-cat" id="hCat"></div>
   </div>
   <div class="h-bar"><i id="hBar" style="width:0%"></i></div>
 </header>
@@ -184,85 +335,24 @@ nav button.on{color:var(--red)}
 <main id="view"></main>
 
 <nav>
-  <button data-tab="today" class="on"><span class="ic">📅</span>今日</button>
-  <button data-tab="plan"><span class="ic">📚</span>计划</button>
-  <button data-tab="notes"><span class="ic">✍️</span>错题本</button>
-  <button data-tab="me"><span class="ic">📊</span>我的</button>
+  <button data-tab="today" class="on"><span class="ic">☀️</span>今日</button>
+  <button data-tab="plan"><span class="ic">📖</span>计划</button>
+  <button data-tab="love"><span class="ic">💌</span>情话</button>
+  <button data-tab="notes"><span class="ic">✏️</span>错题</button>
+  <button data-tab="me"><span class="ic">🐾</span>我的</button>
 </nav>
 
 <div id="modal"></div>
+<div id="fx"></div>
 
 <script>
 /* =====================================================================
-   数据区：40 天上册计划
+   背诵内容（装配时自动注入，不要手改这一段）
    ===================================================================== */
-const START_DEFAULT = '2026-10-19';
-
-const PLAN = [
-{d:1, sub:'马原', task:'导论 + 第一章·第一节 世界的物质性', focus:['物质定义','物质与意识的辩证关系','主观能动性与客观规律性']},
-{d:2, sub:'马原', task:'第一章·第二节 事物的普遍联系和变化发展', focus:['两大特征、三大规律、五对范畴','矛盾分析法是命题王']},
-{d:3, sub:'马原', task:'第二章 实践与认识及其发展规律', focus:['实践观与认识的本质','认识运动的基本规律','真理与价值']},
-{d:4, sub:'马原', task:'第三章 人类社会及其发展规律', focus:['社会存在与社会意识','社会基本矛盾','阶级、国家与人民群众']},
-{d:5, sub:'马原', task:'第四章 资本主义的本质及规律', focus:['商品二因素、劳动二重性','价值规律、剩余价值','资本积累、循环与周转']},
-{d:6, sub:'马原', task:'第五章 资本主义的发展及其趋势', focus:['垄断与金融资本','经济全球化','当代资本主义新变化与历史趋势']},
-{d:7, sub:'马原', task:'第六章 社会主义的发展及其规律 + 第七章 共产主义崇高理想', focus:['篇幅小、得分快，一天收掉','社会主义与共产主义的特征']},
-{d:8, sub:'马原', task:'马原一轮回顾 + 计算题专项', focus:['剩余价值率、资本有机构成','周转次数、利润率','先背公式再套题']},
-{d:9, sub:'马原', task:'马原二轮：哲学框架默写 + 政经公式默写 + 真题选择', focus:['错题单独抄一页，二轮只看这一页']},
-{d:10, sub:'毛中特', task:'导论 马克思主义中国化时代化 + 第一章 毛泽东思想及其历史地位', focus:['「两个结合」','毛泽东思想活的灵魂']},
-{d:11, sub:'毛中特', task:'第二章 新民主主义革命理论 + 第三章 社会主义改造理论', focus:['总路线、三大法宝','三大改造；与史纲交叉，一次记牢']},
-{d:12, sub:'毛中特', task:'第四章 初步探索的理论成果 + 第五章 中特理论体系形成发展', focus:['抓「第一 / 标志 / 成熟」这类限定词']},
-{d:13, sub:'毛中特', task:'第六章 邓小平理论 + 第七章「三个代表」+ 第八章 科学发展观', focus:['三大理论成果逐一对照记，别混']},
-{d:14, sub:'毛中特', task:'毛中特回顾默写 + 真题选择', focus:['与 Day11 的史纲部分对照复习']},
-{d:15, sub:'习思想', task:'导论 + 第一章 新时代坚持和发展中国特色社会主义', focus:['社会主要矛盾','「两个确立」「两个维护」']},
-{d:16, sub:'习思想', task:'第二章 以中国式现代化全面推进中华民族伟大复兴', focus:['五个特征、本质要求、重大原则','分析题常客，务必能默']},
-{d:17, sub:'习思想', task:'第三章 坚持党的全面领导 + 第四章 坚持以人民为中心', focus:['「六个必须坚持」','人民至上']},
-{d:18, sub:'习思想', task:'第五章 全面深化改革开放 + 第六章 推动高质量发展', focus:['新发展理念、新发展格局','供给侧结构性改革']},
-{d:19, sub:'习思想', task:'第七章 教育科技人才战略 + 第八章 发展全过程人民民主', focus:['科教兴国、人才强国','全过程人民民主的制度体系']},
-{d:20, sub:'习思想', task:'第九章 全面依法治国 + 第十章 建设社会主义文化强国', focus:['法治体系','「第二个结合」、文化自信']},
-{d:21, sub:'习思想', task:'第十一章 民生社会建设 + 第十二章 生态文明', focus:['共同富裕','绿水青山就是金山银山']},
-{d:22, sub:'习思想', task:'第十三章 维护和塑造国家安全 + 第十四章 国防和军队', focus:['总体国家安全观','强军目标；这两章题量稳定']},
-{d:23, sub:'习思想', task:'第十五章「一国两制」+ 第十六章 大国外交与人类命运共同体', focus:['与思修、时政结合出分析题']},
-{d:24, sub:'习思想', task:'第十七章 全面从严治党 + 习思想整体框架默写', focus:['必背：十个明确 / 十四个坚持 / 十三个方面成就']},
-{d:25, sub:'史纲', task:'第一章 磨难与抗争 + 第二章 不同社会力量对国家出路的早期探索', focus:['列强侵华条约','太平天国、洋务运动、维新变法']},
-{d:26, sub:'史纲', task:'第三章 辛亥革命与君主专制制度的终结 + 第四章 中国共产党成立和中国革命新局面', focus:['辛亥革命的意义与局限','五四运动、中共一大']},
-{d:27, sub:'史纲', task:'第五章 中国革命的新道路 + 第六章 中华民族的抗日战争', focus:['农村包围城市','遵义会议','抗战三个阶段']},
-{d:28, sub:'史纲', task:'第七章 为建立新中国而奋斗 + 第八章 新中国成立与社会主义建设道路的探索', focus:['三大战役、中共七大','八大、「一五」计划']},
-{d:29, sub:'史纲', task:'第九章 改革开放与中特的开创和发展 + 第十章 中特进入新时代', focus:['十一届三中全会、南方谈话','十八大以来的成就']},
-{d:30, sub:'史纲', task:'史纲时间轴默写（会议 / 纲领 / 口号 / 时间）+ 真题', focus:['史纲靠「时间轴 + 事件因果」，默写一遍抵读三遍']},
-{d:31, sub:'思修', task:'绪论 + 第一章 领悟人生真谛 + 第二章 追求远大理想', focus:['人生观','理想信念的作用']},
-{d:32, sub:'思修', task:'第三章 继承优良传统弘扬中国精神 + 第四章 明确价值要求', focus:['中国精神的内涵','社会主义核心价值观 24 字（必背）']},
-{d:33, sub:'思修', task:'第五章 遵守道德规范 锤炼道德品格', focus:['道德的功能','公共 / 职业 / 家庭 / 个人品德四大领域']},
-{d:34, sub:'思修', task:'第六章 学习法治思想 提升法治素养', focus:['法治思维、宪法','权利义务；与习思想第九章呼应']},
-{d:35, sub:'思修', task:'思修法治全科默写 + 真题', focus:['这一科一天能默完两遍，务必吃干']},
-{d:36, sub:'综合', task:'马原 + 毛中特 二轮：只看错题页', focus:['Day8/9 与 Day14 记下的错题']},
-{d:37, sub:'综合', task:'习思想 + 史纲 二轮：框架默写', focus:['遮住细节自问，写不出的才回去看']},
-{d:38, sub:'综合', task:'思修 + 时政（另看时政材料）+ 五科各整理 1 套分析题答题模板', focus:['每科一套模板，先搭骨架后填术语']},
-{d:39, sub:'综合', task:'全科盲测一套模拟卷选择题，逐题回上册定位错处', focus:['错题必须回到上册原文，不许只看解析']},
-{d:40, sub:'综合', task:'全册扫尾：只翻自己标记的重点 + 默写本复盘 + 规划冲刺 4 周', focus:['不碰新内容，只收口']}
-];
-
-/* 冲刺阶段（11/28 – 12/25），每天按阶段任务打卡 */
-const SPRINT = [
-{from:'2026-11-28', to:'2026-12-04', title:'上册二轮 + 肖八选择题 1–4 套',
- focus:['每天 30 分钟过一章上册框架（马原→毛中特→习思想→史纲→思修轮着来）','每两天做一套肖八选择，计时 40 分钟','错题当天回上册定位原文，抄进错题本','分析题先只看题目和答案思路，暂不背']},
-{from:'2026-12-05', to:'2026-12-11', title:'肖八 5–8 套 + 五科分析题框架',
- focus:['肖八剩余 4 套做完，选择目标稳定 38+','五科各背一套分析题答题框架（先框架后术语）','时政小册子第 1 遍通读','马原计算题与易混点三刷']},
-{from:'2026-12-12', to:'2026-12-18', title:'时政专题 + 上册高频三刷 + 开始背肖四大题',
- focus:['时政小册子背第 2 遍，抓数字与首次提法','上册只看标记过的红笔重点','肖四一到就分组背大题（一天一组）','每周两套选择保持手感']},
-{from:'2026-12-19', to:'2026-12-25', title:'肖四滚动背 + 全真模拟 + 考前调整',
- focus:['肖四选择 + 大题反复滚动，做到看题干能默框架','全真模拟两套（严格按 8:30–11:30）','易混点与数字清单最后过 3 遍','12/24–25 只背肖四和时政，不碰新题','作息调到与考试同步']}
-];
-
-/* =====================================================================
-   背诵内容（自己整理的考点骨架与必背点，不是书上原文）
-   格式：
-     frame   章节骨架
-     must    [提示, 答案]   点一下才显示答案 = 挖空自测
-     confuse [易混点, 区别]
-     nums    数字 / 限定词清单（选择题最爱考）
-   ===================================================================== */
-const CONTENT = {
-1: {
+const CONTENT = {};
+/* ===== BATCH-CONTENT-START ===== */
+// Day 1-5（原来写死在 index.html 里，现抽成独立批次）
+CONTENT[1] = {
   frame: "导论\n  一、马克思主义的创立与发展\n  二、马克思主义的基本特征\n  三、马克思主义的当代价值\n第一章 世界的物质性及发展规律\n  第一节 世界的物质性与人的实践活动\n    一、哲学基本问题\n    二、物质及其存在方式\n    三、物质与意识的辩证关系\n    四、世界的物质统一性",
   must: [
     ["马克思主义公开问世的标志", "1848 年 2 月《共产党宣言》发表。"],
@@ -295,7 +385,7 @@ const CONTENT = {
     "恩格斯明确提出哲学基本问题"
   ]
 },
-2: {
+CONTENT[2] = {
   frame: "第一章 世界的物质性及发展规律\n  第二节 事物的普遍联系和变化发展\n    一、联系和发展的普遍性（两大特征）\n    二、对立统一规律（实质和核心）\n    三、量变质变规律\n    四、否定之否定规律\n    五、联系和发展的基本环节（五对范畴）",
   must: [
     ["唯物辩证法的总特征", "联系和发展。"],
@@ -330,7 +420,7 @@ const CONTENT = {
     "事物发展的方向道路：前进上升的（螺旋式上升、波浪式前进）"
   ]
 },
-3: {
+CONTENT[3] = {
   frame: "第二章 实践与认识及其发展规律\n  第一节 实践与认识\n    一、科学实践观的确立及其意义\n    二、实践的本质与基本结构\n    三、认识的本质与过程\n  第二节 真理与价值\n    一、真理的客观性、绝对性和相对性\n    二、真理与谬误\n    三、真理的检验标准\n    四、真理与价值的辩证统一\n  第三节 认识世界和改造世界",
   must: [
     ["实践的含义", "实践是人类能动地改造客观世界的物质活动。实践的观点是马克思主义认识论的首要的和基本的观点。"],
@@ -365,7 +455,7 @@ const CONTENT = {
     "认识过程的两次飞跃：感性→理性、理性→实践"
   ]
 },
-4: {
+CONTENT[4] = {
   frame: "第三章 人类社会及其发展规律\n  第一节 社会基本矛盾及其运动规律\n    一、社会存在与社会意识\n    二、生产力与生产关系的矛盾运动\n    三、经济基础与上层建筑的矛盾运动\n    四、社会形态更替的一般规律及特殊形式\n  第二节 社会历史发展的动力\n    一、社会基本矛盾\n    二、阶级斗争和社会革命\n    三、改革\n    四、科学技术\n  第三节 人民群众在历史发展中的作用",
   must: [
     ["社会存在与社会意识的关系", "社会存在决定社会意识，社会意识是社会存在的反映；社会意识具有相对独立性，对社会存在具有反作用。"],
@@ -400,7 +490,7 @@ const CONTENT = {
     "人民群众是历史的创造者"
   ]
 },
-5: {
+CONTENT[5] = {
   frame: "第四章 资本主义的本质及规律\n  第一节 商品经济和价值规律\n    一、商品经济的形成和发展\n    二、价值规律及其作用\n    三、以私有制为基础的商品经济的基本矛盾\n  第二节 资本主义经济制度的本质\n    一、劳动力成为商品与货币转化为资本\n    二、剩余价值的生产\n    三、资本积累\n    四、资本的循环周转与再生产\n    五、工资与利润\n  第三节 资本主义政治制度和意识形态",
   must: [
     ["商品二因素", "使用价值和价值。使用价值是价值的物质承担者，价值是商品的社会属性；二者对立统一。"],
@@ -439,10 +529,6 @@ const CONTENT = {
     "资本主义基本矛盾：生产社会化与生产资料资本主义私人占有之间的矛盾"
   ]
 }
-};
-
-
-/* ===== BATCH-CONTENT-START ===== */
 CONTENT[6] = {
   frame: "第五章 资本主义的发展及其趋势\n  第一节 垄断资本主义的形成与发展\n    一、自由竞争资本主义向垄断资本主义的发展\n    二、金融资本与金融寡头\n    三、垄断利润和垄断价格\n    四、国家垄断资本主义\n  第二节 正确认识当代资本主义的新变化\n    一、第二次世界大战后资本主义的新变化及其实质\n    二、2008 年国际金融危机以来资本主义的矛盾与冲突\n  第三节 资本主义的历史地位和发展趋势\n    一、资本主义的历史地位\n    二、资本主义为社会主义所代替的历史必然性",
   must: [
@@ -1680,6 +1766,141 @@ CONTENT[40] = {
 /* ===== BATCH-CONTENT-END ===== */
 
 /* =====================================================================
+   计划
+   ===================================================================== */
+const START_DEFAULT = '2026-10-19';
+const EXAM = '2026-12-26';
+const NICK_DEFAULT = '斐斐';
+
+const PLAN = [
+{d:1, sub:'马原', task:'导论 + 第一章·第一节 世界的物质性', focus:['物质定义','物质与意识的辩证关系','主观能动性与客观规律性']},
+{d:2, sub:'马原', task:'第一章·第二节 事物的普遍联系和变化发展', focus:['两大特征、三大规律、五对范畴','矛盾分析法是命题王']},
+{d:3, sub:'马原', task:'第二章 实践与认识及其发展规律', focus:['实践观与认识的本质','认识运动的基本规律','真理与价值']},
+{d:4, sub:'马原', task:'第三章 人类社会及其发展规律', focus:['社会存在与社会意识','社会基本矛盾','阶级、国家与人民群众']},
+{d:5, sub:'马原', task:'第四章 资本主义的本质及规律', focus:['商品二因素、劳动二重性','价值规律、剩余价值','资本积累、循环与周转']},
+{d:6, sub:'马原', task:'第五章 资本主义的发展及其趋势', focus:['垄断与金融资本','经济全球化','当代资本主义新变化与历史趋势']},
+{d:7, sub:'马原', task:'第六章 社会主义的发展及其规律 + 第七章 共产主义崇高理想', focus:['篇幅小、得分快，一天收掉','社会主义与共产主义的特征']},
+{d:8, sub:'马原', task:'马原一轮回顾 + 计算题专项', focus:['剩余价值率、资本有机构成','周转次数、利润率','先背公式再套题']},
+{d:9, sub:'马原', task:'马原二轮：哲学框架默写 + 政经公式默写 + 真题选择', focus:['错题单独抄一页，二轮只看这一页']},
+{d:10, sub:'毛中特', task:'导论 马克思主义中国化时代化 + 第一章 毛泽东思想及其历史地位', focus:['「两个结合」','毛泽东思想活的灵魂']},
+{d:11, sub:'毛中特', task:'第二章 新民主主义革命理论 + 第三章 社会主义改造理论', focus:['总路线、三大法宝','三大改造；与史纲交叉，一次记牢']},
+{d:12, sub:'毛中特', task:'第四章 初步探索的理论成果 + 第五章 中特理论体系形成发展', focus:['抓「第一 / 标志 / 成熟」这类限定词']},
+{d:13, sub:'毛中特', task:'第六章 邓小平理论 + 第七章「三个代表」+ 第八章 科学发展观', focus:['三大理论成果逐一对照记，别混']},
+{d:14, sub:'毛中特', task:'毛中特回顾默写 + 真题选择', focus:['与 Day11 的史纲部分对照复习']},
+{d:15, sub:'习思想', task:'导论 + 第一章 新时代坚持和发展中国特色社会主义', focus:['社会主要矛盾','「两个确立」「两个维护」']},
+{d:16, sub:'习思想', task:'第二章 以中国式现代化全面推进中华民族伟大复兴', focus:['五个特征、本质要求、重大原则','分析题常客，务必能默']},
+{d:17, sub:'习思想', task:'第三章 坚持党的全面领导 + 第四章 坚持以人民为中心', focus:['「六个必须坚持」','人民至上']},
+{d:18, sub:'习思想', task:'第五章 全面深化改革开放 + 第六章 推动高质量发展', focus:['新发展理念、新发展格局','供给侧结构性改革']},
+{d:19, sub:'习思想', task:'第七章 教育科技人才战略 + 第八章 发展全过程人民民主', focus:['科教兴国、人才强国','全过程人民民主的制度体系']},
+{d:20, sub:'习思想', task:'第九章 全面依法治国 + 第十章 建设社会主义文化强国', focus:['法治体系','「第二个结合」、文化自信']},
+{d:21, sub:'习思想', task:'第十一章 民生社会建设 + 第十二章 生态文明', focus:['共同富裕','绿水青山就是金山银山']},
+{d:22, sub:'习思想', task:'第十三章 维护和塑造国家安全 + 第十四章 国防和军队', focus:['总体国家安全观','强军目标；这两章题量稳定']},
+{d:23, sub:'习思想', task:'第十五章「一国两制」+ 第十六章 大国外交与人类命运共同体', focus:['与思修、时政结合出分析题']},
+{d:24, sub:'习思想', task:'第十七章 全面从严治党 + 习思想整体框架默写', focus:['必背：十个明确 / 十四个坚持 / 十三个方面成就']},
+{d:25, sub:'史纲', task:'第一章 磨难与抗争 + 第二章 不同社会力量对国家出路的早期探索', focus:['列强侵华条约','太平天国、洋务运动、维新变法']},
+{d:26, sub:'史纲', task:'第三章 辛亥革命与君主专制制度的终结 + 第四章 中国共产党成立和中国革命新局面', focus:['辛亥革命的意义与局限','五四运动、中共一大']},
+{d:27, sub:'史纲', task:'第五章 中国革命的新道路 + 第六章 中华民族的抗日战争', focus:['农村包围城市','遵义会议','抗战三个阶段']},
+{d:28, sub:'史纲', task:'第七章 为建立新中国而奋斗 + 第八章 新中国成立与社会主义建设道路的探索', focus:['三大战役、中共七大','八大、「一五」计划']},
+{d:29, sub:'史纲', task:'第九章 改革开放与中特的开创和发展 + 第十章 中特进入新时代', focus:['十一届三中全会、南方谈话','十八大以来的成就']},
+{d:30, sub:'史纲', task:'史纲时间轴默写（会议 / 纲领 / 口号 / 时间）+ 真题', focus:['史纲靠「时间轴 + 事件因果」，默写一遍抵读三遍']},
+{d:31, sub:'思修', task:'绪论 + 第一章 领悟人生真谛 + 第二章 追求远大理想', focus:['人生观','理想信念的作用']},
+{d:32, sub:'思修', task:'第三章 继承优良传统弘扬中国精神 + 第四章 明确价值要求', focus:['中国精神的内涵','社会主义核心价值观 24 字（必背）']},
+{d:33, sub:'思修', task:'第五章 遵守道德规范 锤炼道德品格', focus:['道德的功能','公共 / 职业 / 家庭 / 个人品德四大领域']},
+{d:34, sub:'思修', task:'第六章 学习法治思想 提升法治素养', focus:['法治思维、宪法','权利义务；与习思想第九章呼应']},
+{d:35, sub:'思修', task:'思修法治全科默写 + 真题', focus:['这一科一天能默完两遍，务必吃干']},
+{d:36, sub:'综合', task:'马原 + 毛中特 二轮：只看错题页', focus:['Day8/9 与 Day14 记下的错题']},
+{d:37, sub:'综合', task:'习思想 + 史纲 二轮：框架默写', focus:['遮住细节自问，写不出的才回去看']},
+{d:38, sub:'综合', task:'思修 + 时政（另看时政材料）+ 五科各整理 1 套分析题答题模板', focus:['每科一套模板，先搭骨架后填术语']},
+{d:39, sub:'综合', task:'全科盲测一套模拟卷选择题，逐题回上册定位错处', focus:['错题必须回到上册原文，不许只看解析']},
+{d:40, sub:'综合', task:'全册扫尾：只翻自己标记的重点 + 默写本复盘 + 规划冲刺 4 周', focus:['不碰新内容，只收口']}
+];
+
+const SPRINT = [
+{from:'2026-11-28', to:'2026-12-04', title:'上册二轮 + 肖八选择题 1–4 套',
+ focus:['每天 30 分钟过一章上册框架（马原→毛中特→习思想→史纲→思修轮着来）','每两天做一套肖八选择，计时 40 分钟','错题当天回上册定位原文，抄进错题本','分析题先只看题目和答案思路，暂不背']},
+{from:'2026-12-05', to:'2026-12-11', title:'肖八 5–8 套 + 五科分析题框架',
+ focus:['肖八剩余 4 套做完，选择目标稳定 38+','五科各背一套分析题答题框架（先框架后术语）','时政小册子第 1 遍通读','马原计算题与易混点三刷']},
+{from:'2026-12-12', to:'2026-12-18', title:'时政专题 + 上册高频三刷 + 开始背肖四大题',
+ focus:['时政小册子背第 2 遍，抓数字与首次提法','上册只看标记过的红笔重点','肖四一到就分组背大题（一天一组）','每周两套选择保持手感']},
+{from:'2026-12-19', to:'2026-12-25', title:'肖四滚动背 + 全真模拟 + 考前调整',
+ focus:['肖四选择 + 大题反复滚动，做到看题干能默框架','全真模拟两套（严格按 8:30–11:30）','易混点与数字清单最后过 3 遍','12/24–25 只背肖四和时政，不碰新题','作息调到与考试同步']}
+];
+
+/* =====================================================================
+   情话（每天一条，不重复）
+   ===================================================================== */
+const LOVE = [
+"第 1 天就坐住了，斐斐。你比你自己以为的厉害多了。",
+"今天这一页背完了。我这边也把想你的那一页翻过去了——没翻过去，还在。",
+"马原难是难，但它不会像你一样让我心跳加速。",
+"背完这段，奖励你一个抱抱（先记账，见面结）。",
+"你认真背书的侧脸，比任何一张答题卡都好看。",
+"今天也在为将来攒底气。攒的是你的，骄傲是我的。",
+"别怕慢，怕的是停。你没停。",
+"我把「喜欢你」设成了长期记忆，忘不掉的那种。",
+"斐斐，今天这页很难吧？难也背下来了，你行。",
+"你在书桌前坐住的每一分钟，我都在心里给你鼓掌。",
+"这道题要是不会，没关系——我会。",
+"你背的是知识点，我记的是你读出声的样子。",
+"今天完成啦。宇宙很大，我最想待的地方是你旁边。",
+"一天一页，慢慢来，反正我会一直等在这儿。",
+"你背书的样子有点凶，但我很喜欢。",
+"别人靠天赋，你靠今天又背了一遍。",
+"「以后」这个词太远，我只确定一件事：以后里有你。",
+"斐斐，今天也辛苦啦。手指敲敲屏幕，当我在捏捏你。",
+"你已经比昨天更好了。这件事只有我知道，但我记得。",
+"政治会考完的，我会一直在的。这两件事都作数。",
+"你今天有没有好好吃饭？背书可以，饿着不行。",
+"我承认我偏心——你的错题在我这儿都是可爱的。",
+"背到想哭就哭一下，哭完继续，我陪着。",
+"20 天啦。你坚持的样子，比任何情书都动人。",
+"你要上岸，我就去做岸。",
+"今天这页有点绕。绕不过去就明天再绕，别跟自己较劲。",
+"我数了数，你今天专注了很久。斐斐，你真棒。",
+"世界很吵，你背书的时候，我在旁边不出声。",
+"喜欢你这件事，我不需要复习，也从来没忘。",
+"时间会给坚持的人发糖。我提前给你一颗。",
+"你今天很努力。努力的人值得被偏爱，比如被我。",
+"背不动的时候想想：考完那天，我第一个来接你。",
+"你的名字我写了千万遍，在每一次「加油」后面。",
+"一页一页，我们都在往前。慢一点没关系，别退。",
+"如果紧张，就把手放在这里——我在这儿。",
+"坚持到今天，你已经赢过很多人了，包括昨天想放弃的自己。",
+"斐斐，你今天真好看（背书的时候也算）。",
+"有点累了吧？那就歇五分钟，但不许说放弃。",
+"你负责上岸，我负责在你上岸前一直递水。",
+"40 天，一页不落。这世上认真的人不多，你是其中一个。",
+"我偷偷把你的名字，写进了我每一个「以后」。",
+"今天也完成啦。你要的答案会来的，你也是。",
+"背书的苦是有尽头的，见你的路也是有尽头的，都会到。",
+"你不需要变成谁。你只要继续是你，然后上岸。",
+"每一次你说「好难」，我都想抱你一下。现在先抱一下。",
+"你今天翻的这一页，将来会变成你笑的样子。",
+"我把闹钟设在你起床之前，只想让你多睡五分钟。（其实我起不来，这句是学你）",
+"斐斐，我今天也很想你，比昨天多一点。",
+"复习不是重复，是把「我不行」磨成「我可以」。",
+"撑过一半了。后半段我陪你走，一步不少。",
+"你背的每个字都在替你铺路，我在路的另一头。",
+"今天心情不好的话，就只看这一条：你很好，你值得。",
+"我不懂政治，但我懂坚持有多难。所以我佩服你。",
+"要是今晚还背，记得开灯、喝水、披件衣服。",
+"你的努力我全看见了，虽然我一句话都没说。",
+"有点想你了，所以这条情话提前了。",
+"你把「不可能」背成了「我试试」。这一步最厉害。",
+"斐斐，别硬撑。撑不住的时候，靠我一下也是本事。",
+"今天的一小步，是你离想要的生活近了一点。",
+"我开始相信「如愿以偿」这个词，因为你。",
+"60 天了。你这股劲，够我佩服很久。",
+"你哭也没关系。我这个人不挑，开心难过的你都要。",
+"考场上的你，会感谢今天坐住的你。",
+"我把最好的运气，都记在你名下。",
+"剩下这几天别慌。你该会的，都会了。",
+"你已经做得很好了，剩下的交给时间。",
+"明天就是最后一天了。紧张就深呼吸，我在。",
+"斐斐，到这里了。无论结果如何，你都是我最骄傲的答案。"
+];
+
+/* =====================================================================
    工具
    ===================================================================== */
 const D = s => { const a = s.split('-').map(Number); return new Date(Date.UTC(a[0], a[1]-1, a[2])); };
@@ -1690,55 +1911,62 @@ const pad = n => String(n).padStart(2,'0');
 const todayStr = () => { const d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
 const WD = ['日','一','二','三','四','五','六'];
 const wdOf = s => WD[D(s).getUTCDay()];
+const md = s => s.slice(5).replace('-','/');
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const CAT = '<svg viewBox="0 0 64 56" width="100%" height="100%" aria-hidden="true">'
+ + '<path d="M12 21 L9.5 5.5 L24.5 14.5 Z" fill="#fff"/><path d="M52 21 L54.5 5.5 L39.5 14.5 Z" fill="#fff"/>'
+ + '<ellipse cx="32" cy="30" rx="24" ry="20" fill="#fff"/>'
+ + '<g transform="translate(50,12)"><path d="M0 0 L-7.5 -5.5 L-7.5 5.5 Z" fill="#F4A8BE"/>'
+ + '<path d="M0 0 L7.5 -5.5 L7.5 5.5 Z" fill="#F4A8BE"/><circle cx="0" cy="0" r="2.8" fill="#E0678A"/></g>'
+ + '<ellipse cx="23" cy="28" rx="2.7" ry="3.5" fill="#3D2E33"/><ellipse cx="41" cy="28" rx="2.7" ry="3.5" fill="#3D2E33"/>'
+ + '<ellipse cx="15.5" cy="35" rx="4.2" ry="2.7" fill="#FBD6E0"/><ellipse cx="48.5" cy="35" rx="4.2" ry="2.7" fill="#FBD6E0"/>'
+ + '<path d="M32 33 l-2.7 2.5 h5.4 Z" fill="#E0678A"/>'
+ + '<path d="M32 35.5 q-4 4 -7 1.4" stroke="#3D2E33" stroke-width="1.4" fill="none" stroke-linecap="round"/>'
+ + '<path d="M32 35.5 q4 4 7 1.4" stroke="#3D2E33" stroke-width="1.4" fill="none" stroke-linecap="round"/>'
+ + '</svg>';
 
 function sprintDays(){
   const out = []; let n = 41;
   for (const st of SPRINT){
     for (let s = st.from; diffDays(s, st.to) >= 0; s = addDays(s,1)){
       out.push({d:n++, date:s, sub:'冲刺', task:st.title, focus:st.focus, sprint:true,
-                range:st.from.replace(/-/g,'/').slice(5)+'–'+st.to.replace(/-/g,'/').slice(5)});
+                range:md(st.from)+'–'+md(st.to)});
     }
   }
   return out;
 }
-function allDays(){ return PLAN.concat(sprintDays()); }
-const DAYS = allDays();
+const DAYS = PLAN.concat(sprintDays());
 const BY_NO = {}; DAYS.forEach(x => BY_NO[x.d] = x);
-/* Day1–40 的日期跟着「开始日」自动走；冲刺阶段钉在真实日期上（肖八肖四有档期） */
-const dateOf = x => x.sprint ? x.date : addDays(S.start, x.d - 1);
-
-const STEPS = [['morning','早回顾','30 分钟'],['main','主时段','90 分钟'],['night','晚默写','20 分钟']];
 
 /* =====================================================================
    状态
    ===================================================================== */
-const LS = 'kaoyan2027_politics_v1';
-let S = load();
+const LS = 'kaoyan2027_politics_v2';
 
-function blank(){ return {v:1, start:START_DEFAULT, days:{}, notes:[], revs:{}}; }
+function blank(){
+  return {v:2, start:START_DEFAULT, nick:NICK_DEFAULT, days:{}, notes:[], revs:{}, cards:{}, log:{}};
+}
 function load(){
   try{
     const raw = localStorage.getItem(LS);
-    if (!raw) return blank();
-    const o = JSON.parse(raw);
-    return Object.assign(blank(), o);
-  }catch(e){ return blank(); }
+    if (raw) return Object.assign(blank(), JSON.parse(raw));
+    const old = localStorage.getItem('kaoyan2027_politics_v1');
+    if (old) return Object.assign(blank(), JSON.parse(old));
+  }catch(e){}
+  return blank();
 }
-function save(){
-  try{ localStorage.setItem(LS, JSON.stringify(S)); }
-  catch(e){ console.warn('保存失败', e); }
-}
-function dstate(n){ return S.days[n] || (S.days[n] = {steps:{}, note:''}); }
-function isDone(n){ const d = S.days[n]; return !!d && STEPS.every(s => d.steps[s[0]]); }
-function doneCount(){ return DAYS.filter(x => isDone(x.d)).length; }
+let S = load();
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
 
-function todayNo(){
-  const off = diffDays(S.start, todayStr());
-  return off + 1;
-}
+const dateOf = x => x.sprint ? x.date : addDays(S.start, x.d - 1);
+const STEPS = [['morning','早回顾','30 分钟'],['main','主时段','90 分钟'],['night','晚默写','20 分钟']];
+const dstate = n => S.days[n] || (S.days[n] = {steps:{}, note:''});
+const isDone = n => { const d = S.days[n]; return !!d && STEPS.every(s => d.steps[s[0]]); };
+const doneCount = () => DAYS.filter(x => isDone(x.d)).length;
+const todayNo = () => diffDays(S.start, todayStr()) + 1;
+
 function streak(){
-  // 以「整日完成」的日期连续性计算，今天未完成时从昨天往前数
   let cur = todayStr();
   if (!isDone(todayNo())) cur = addDays(cur,-1);
   let c = 0;
@@ -1751,309 +1979,452 @@ function streak(){
 }
 function reviewList(){
   const t = todayNo();
-  return DAYS.filter(x => isDone(x.d) && [1,3,7].includes(t - x.d))
-             .map(x => ({day:x.d, gap:t-x.d, info:x}));
+  return DAYS.filter(x => isDone(x.d) && [1,3,7].includes(t - x.d)).map(x => ({day:x.d, gap:t-x.d, info:x}));
 }
-function isReviewed(dayNo){
-  const t = todayStr();
-  return !!(S.revs[t] && S.revs[t].indexOf(dayNo) >= 0);
-}
-function toggleReviewed(dayNo){
+function isReviewed(n){ const t = todayStr(); return !!(S.revs[t] && S.revs[t].indexOf(n) >= 0); }
+function toggleReviewed(n){
   const t = todayStr();
   if (!S.revs[t]) S.revs[t] = [];
-  const i = S.revs[t].indexOf(dayNo);
-  if (i >= 0) S.revs[t].splice(i,1); else S.revs[t].push(dayNo);
+  const i = S.revs[t].indexOf(n);
+  if (i >= 0) S.revs[t].splice(i,1); else S.revs[t].push(n);
   save();
+}
+const loveOf = d => LOVE[(d - 1) % LOVE.length];
+const unlockedLove = () => DAYS.filter(x => isDone(x.d) && x.d <= LOVE.length).length;
+const daysLeft = () => Math.max(0, diffDays(todayStr(), EXAM));
+
+/* ---- 卡片级间隔重复（Leitner：不会→1 天，模糊→2 天，会了→3/7/14/30/60 天） ---- */
+const INT = [1,3,7,14,30,60];
+const cardOf = key => S.cards[key] || null;
+function rateCard(key, q){
+  const c = S.cards[key] || {lv:0, reps:0, lapses:0};
+  const t = todayStr();
+  if (q === 0){ c.lv = 0; c.lapses = (c.lapses||0)+1; c.due = addDays(t,1); }
+  else if (q === 1){ c.lv = Math.max(0,(c.lv||0)-1); c.due = addDays(t,2); }
+  else { c.lv = Math.min(5,(c.lv||0)+1); c.due = addDays(t, INT[c.lv]); }
+  c.reps = (c.reps||0)+1; c.last = t;
+  S.cards[key] = c;
+  bump('cards');
+  save();
+  return c;
+}
+function bump(kind){
+  const t = todayStr();
+  if (!S.log[t]) S.log[t] = {steps:0, cards:0};
+  S.log[t][kind] = (S.log[t][kind]||0) + 1;
+}
+function dueCards(){
+  const t = todayStr();
+  const out = [];
+  for (const x of DAYS){
+    const c = CONTENT[x.d];
+    if (!c || !c.must) continue;
+    if (diffDays(S.start, dateOf(x)) > diffDays(S.start, t)) continue;
+    c.must.forEach((m,i) => {
+      const key = x.d + ':' + i;
+      const cd = S.cards[key];
+      if (cd && cd.due <= t) out.push({key, d:x.d, i, q:m[0], a:m[1], lv:cd.lv});
+    });
+  }
+  out.sort((p,q) => (p.lv - q.lv) || (p.d - q.d));
+  return out;
+}
+const ratedCount = () => Object.keys(S.cards).length;
+const masteredCount = () => Object.values(S.cards).filter(c => (c.lv||0) >= 3).length;
+
+function badgeList(){
+  const dn = doneCount(), st = streak(), lv = unlockedLove(), ms = masteredCount();
+  return [
+    {e:'🌱', t:'开始第一步', ok: dn >= 1},
+    {e:'🔥', t:'连续 3 天', ok: st >= 3},
+    {e:'💪', t:'连续 7 天', ok: st >= 7},
+    {e:'🏅', t:'连续 14 天', ok: st >= 14},
+    {e:'👑', t:'连续 30 天', ok: st >= 30},
+    {e:'📗', t:'完成 10 天', ok: dn >= 10},
+    {e:'📘', t:'完成 20 天', ok: dn >= 20},
+    {e:'🎓', t:'完成 40 天', ok: dn >= 40},
+    {e:'💌', t:'收集 10 条', ok: lv >= 10},
+    {e:'💝', t:'收集 30 条', ok: lv >= 30},
+    {e:'💞', t:'收集 68 条', ok: lv >= 68},
+    {e:'🧠', t:'掌握 100 条', ok: ms >= 100},
+    {e:'🌟', t:'掌握 300 条', ok: ms >= 300},
+    {e:'🍀', t:'掌握 600 条', ok: ms >= 600}
+  ];
 }
 
 /* =====================================================================
    渲染
    ===================================================================== */
 let TAB = 'today';
-
-function renderHeader(){
-  document.getElementById('hStreak').textContent = streak();
-  document.getElementById('hDone').textContent = doneCount();
-  document.getElementById('hBar').style.width = (doneCount()/DAYS.length*100).toFixed(1)+'%';
+function greeting(){
+  const h = new Date().getHours();
+  if (h < 5) return '夜深了';
+  if (h < 11) return '早上好';
+  if (h < 14) return '中午好';
+  if (h < 18) return '下午好';
+  if (h < 23) return '晚上好';
+  return '夜深了';
 }
-
+function renderHeader(){
+  document.getElementById('hHi').textContent = greeting() + '，' + (S.nick || NICK_DEFAULT) + ' 🎀';
+  document.getElementById('hSub').innerHTML =
+    '距离考试还有 <b>' + daysLeft() + '</b> 天 · 已坚持 <b>' + doneCount() + '</b>/' + DAYS.length + ' 天';
+  document.getElementById('hBar').style.width = (doneCount()/DAYS.length*100).toFixed(1) + '%';
+}
 function render(){
   renderHeader();
   const v = document.getElementById('view');
   v.innerHTML = TAB === 'today' ? viewToday() : TAB === 'plan' ? viewPlan()
-              : TAB === 'notes' ? viewNotes() : viewMe();
+              : TAB === 'love' ? viewLove() : TAB === 'notes' ? viewNotes() : viewMe();
   bind();
-  window.scrollTo(0,0);
+  const top = () => { window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; };
+  top(); setTimeout(top, 0);
 }
 
-function dayCard(x, showSteps){
+function stepBtns(x){
+  const st = dstate(x.d);
+  return '<div class="steps">' + STEPS.map(s => {
+    const on = !!st.steps[s[0]];
+    return '<button class="step'+(on?' on':'')+'" data-step="'+s[0]+'" data-day="'+x.d+'">'
+      + '<span class="bx">'+(on?'✓':'')+'</span><b>'+s[1]+'</b><span>'+s[2]+'</span></button>';
+  }).join('') + '</div>';
+}
+function dayCard(x, full){
   const st = dstate(x.d), done = isDone(x.d);
-  const dateTxt = dateOf(x) + ' 周' + wdOf(dateOf(x));
-  let html = '<div class="card" id="daycard-'+x.d+'">'
+  let h = '<div class="card" id="daycard-'+x.d+'">'
     + '<div class="day-head"><div class="day-no">Day '+x.d+'<em> / '+DAYS.length+'</em></div>'
-    + '<div class="day-date">'+dateTxt+(x.range?' · '+x.range:'')+'</div></div>'
-    + '<div style="margin-top:10px"><span class="tag">'+x.sub+'</span>'
-    + (x.sprint?'<span class="tag gray">冲刺</span>':'')
-    + (done?'<span class="tag gray" style="background:#E9F8EF;color:#136B3A">已完成</span>':'')+'</div>'
+    + '<div class="day-date">'+dateOf(x)+' 周'+wdOf(dateOf(x))+'</div></div>'
+    + '<div style="margin-top:11px"><span class="tag">'+x.sub+'</span>'
+    + (x.sprint ? '<span class="tag plain">冲刺</span>' : '')
+    + (done ? '<span class="tag ok">已完成 ✓</span>' : '') + '</div>'
     + '<p class="day-task">'+esc(x.task)+'</p>';
-  if (x.focus && x.focus.length){
-    html += '<ul class="focus">' + x.focus.map(f=>'<li>'+esc(f)+'</li>').join('') + '</ul>';
-  }
-  if (showSteps){
-    html += '<div class="steps">' + STEPS.map(s=>{
-      const on = !!st.steps[s[0]];
-      return '<button class="step'+(on?' on':'')+'" data-step="'+s[0]+'" data-day="'+x.d+'">'
-        + '<span class="bx">'+(on?'✓':'')+'</span><b>'+s[1]+'</b><span>'+s[2]+'</span></button>';
-    }).join('') + '</div>';
-    if (CONTENT[x.d]) html += '<div class="row-btn"><button class="btn red" data-content="'+x.d+'">📖 背这一天的内容</button></div>';
-    html += '<div class="row-btn">'
+  if (x.focus && x.focus.length)
+    h += '<ul class="focus">' + x.focus.map(f => '<li>'+esc(f)+'</li>').join('') + '</ul>';
+  if (full){
+    if (CONTENT[x.d]) h += '<div class="row-btn"><button class="btn rose big" data-content="'+x.d+'">📖 背这一天的内容</button></div>';
+    h += stepBtns(x);
+    h += '<div class="row-btn">'
       + '<button class="btn line" data-note="'+x.d+'">📝 记一笔</button>'
-      + '<button class="btn line" data-dayview="'+x.d+'">看这一天的计划</button>'
-      + '</div>';
-    if (st.note) html += '<div class="note" style="margin-top:12px"><div class="nh">我的笔记</div><div class="nt">'+esc(st.note)+'</div></div>';
+      + '<button class="btn line" data-dayview="'+x.d+'">看计划</button></div>';
+    if (st.note) h += '<div class="note" style="margin-top:14px"><div class="nh">我的笔记</div><div class="nt">'+esc(st.note)+'</div></div>';
   }
-  return html + '</div>';
+  return h + '</div>';
 }
-
+function loveCard(n){
+  return '<div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
+    + '<div class="sec-title" style="margin:0 0 8px">今日情话 💌<span>第 '+n+' 条</span></div>'
+    + '<div style="font-size:17px;font-weight:700;line-height:1.72">'+esc(loveOf(n))+'</div>'
+    + '<div class="row-btn"><button class="btn ghost sm" data-relove="'+n+'">再看一遍动画 ✨</button></div></div>';
+}
 function viewToday(){
-  const t = todayNo();
-  const today = todayStr();
-
-  // 预备期
+  const t = todayNo(), today = todayStr();
   if (t < 1){
-    const n = 1 - t;
     return '<div class="card"><div class="day-head"><div class="day-no">预备期</div></div>'
-      + '<p class="day-task">距离计划开始（' + S.start.replace(/-/g,'/') + '）还有 ' + n + ' 天。</p>'
-      + '<ul class="focus"><li>现在可以先做一件小事：把上册翻一遍目录，知道五科各占多少章。</li>'
+      + '<p class="day-task">距离计划开始（' + S.start.replace(/-/g,'/') + '）还有 ' + (1-t) + ' 天。</p>'
+      + '<ul class="focus"><li>可以先翻一遍上册目录，知道五科各占多少章。</li>'
       + '<li>想立刻开始，就点下面的按钮，把今天设为 Day 1。</li></ul>'
-      + '<div class="row-btn"><button class="btn red" data-restart="'+today+'">就从今天开始</button>'
-      + '<button class="btn line" data-tab="plan">先看全部计划</button></div></div>'
-      + (t >= 0 ? dayCard(BY_NO[1], false) : '');
+      + '<div class="row-btn"><button class="btn rose" data-restart="'+today+'">就从今天开始</button>'
+      + '<button class="btn line" data-tab="plan">先看全部计划</button></div></div>';
   }
-
-  // 计划已走完
   if (t > DAYS.length){
-    return '<div class="card"><p class="day-task">40 天计划已走完 🎉</p>'
-      + '<ul class="focus"><li>已完成 '+doneCount()+' / '+DAYS.length+' 天。</li>'
-      + '<li>如果还在背，可以把开始日期往前调，或直接按「冲刺阶段」继续打卡。</li></ul>'
-      + '<div class="row-btn"><button class="btn red" data-restart="'+today+'">把今天重设为 Day 1</button></div></div>';
+    return '<div class="card"><p class="day-task">计划走完啦 🎉</p>'
+      + '<ul class="focus"><li>已完成 '+doneCount()+' / '+DAYS.length+' 天，收集了 '+unlockedLove()+' 条情话。</li>'
+      + '<li>如果还在背，可以把开始日往前调，继续按冲刺阶段打卡。</li></ul>'
+      + '<div class="row-btn"><button class="btn rose" data-restart="'+today+'">把今天重设为 Day 1</button></div></div>';
   }
-
   const x = BY_NO[t];
-  let html = '';
+  let h = '';
+  if (isDone(t)) h += loveCard(t);
+  const due = dueCards();
+  if (due.length){
+    h += '<div class="sec-title">今天要复习<span>'+due.length+' 条到期</span></div>'
+      + '<div class="duecard"><div class="big">'+due.length+'</div>'
+      + '<div class="txt"><b>该复习的卡片到期了</b><span>先自测，再决定它还来不来</span></div>'
+      + '<button class="btn rose sm" data-review="1">开始</button></div>';
+  }
+  h += '<div class="sec-title">'+(isDone(t)?'今天已经很棒了':'今天要背')+'</div>';
+  h += dayCard(x, true);
   const rl = reviewList();
   if (rl.length){
-    html += '<div class="sec-title">今天的复习任务 · 艾宾浩斯<button class="chip" data-reviewall="1" style="font-size:12px;padding:5px 10px;min-height:0">全部标记已复习</button></div><div class="card">'
-      + '<p class="focus" style="color:var(--sub);font-size:13px;margin:0 0 4px">按 1 / 3 / 7 天节奏，今天该回头过一遍这几天的内容：</p>'
+    h += '<div class="sec-title">整日回顾<span>1 / 3 / 7 天前</span></div><div class="card">'
       + '<div class="chips">' + rl.map(r =>
           '<button class="chip'+(isReviewed(r.day)?' on':'')+'" data-rev="'+r.day+'">Day '+r.day+'<small>'+r.gap+' 天前</small></button>'
         ).join('') + '</div></div>';
   }
-  html += dayCard(x, true);
-  return html;
+  return h;
 }
-
 function viewPlan(){
-  let html = '<div class="sec-title">全程进度<span>'+doneCount()+' / '+DAYS.length+' 天</span></div>';
+  let h = '<div class="sec-title">全程进度<span>'+doneCount()+' / '+DAYS.length+' 天</span></div>';
   const stages = [
-    {n:'第一阶段 · 马原（Day 1–9）', a:1,  b:9},
-    {n:'第二阶段 · 毛中特（Day 10–14）', a:10, b:14},
-    {n:'第三阶段 · 习思想（Day 15–24）', a:15, b:24},
-    {n:'第四阶段 · 史纲（Day 25–30）', a:25, b:30},
-    {n:'第五阶段 · 思修法治（Day 31–35）', a:31, b:35},
-    {n:'第六阶段 · 二轮查漏（Day 36–40）', a:36, b:40},
-    {n:'冲刺阶段 · 11/28–12/25', a:41, b:DAYS.length}
+    {n:'① 马原（Day 1–9）', a:1,  b:9},
+    {n:'② 毛中特（Day 10–14）', a:10, b:14},
+    {n:'③ 习思想（Day 15–24）', a:15, b:24},
+    {n:'④ 史纲（Day 25–30）', a:25, b:30},
+    {n:'⑤ 思修法治（Day 31–35）', a:31, b:35},
+    {n:'⑥ 二轮查漏（Day 36–40）', a:36, b:40},
+    {n:'⑦ 冲刺（11/28–12/25）', a:41, b:DAYS.length}
   ];
   for (const s of stages){
     const list = DAYS.filter(x => x.d >= s.a && x.d <= s.b);
     const d = list.filter(x => isDone(x.d)).length;
-    html += '<div class="stagebar">'+s.n+' · '+d+'/'+list.length+'</div>'
-      + '<div class="pbar" style="margin:0 4px 8px"><i style="width:'+(d/list.length*100).toFixed(1)+'%"></i></div>'
+    h += '<div class="stagebar"><span>'+s.n+'</span><span>'+d+'/'+list.length+'</span></div>'
+      + '<div class="pbar"><i style="width:'+(d/list.length*100).toFixed(1)+'%"></i></div>'
       + '<div class="plist">' + list.map(x =>
           '<button class="prow'+(isDone(x.d)?' done':'')+'" data-dayview="'+x.d+'">'
-          + '<div class="num">'+x.d+'<small>'+(x.sprint?x.range.split('–')[0]:'Day')+'</small></div>'
-          + '<div class="tx"><b>'+esc(x.task)+'</b><span>'+x.sub+' · '+dateOf(x).slice(5).replace('-','/')+'</span></div>'
+          + '<div class="num">'+x.d+'<small>'+(x.sprint ? x.range.split('–')[0] : 'Day')+'</small></div>'
+          + '<div class="tx"><b>'+esc(x.task)+'</b><span>'+x.sub+' · '+md(dateOf(x))+'</span></div>'
           + '<div class="dot">'+(isDone(x.d)?'✓':'')+'</div></button>').join('') + '</div>';
   }
-  return html;
+  return h;
 }
-
+function viewLove(){
+  const un = unlockedLove();
+  let h = '<div class="card love-hero"><div class="big">'+un+' / '+LOVE.length+'</div>'
+    + '<div style="font-size:13.5px;color:var(--sub);margin-top:6px">每天完成打卡，解锁一条只写给你的话</div>'
+    + '<div class="pbar" style="margin:14px 0 0"><i style="width:'+(un/LOVE.length*100).toFixed(1)+'%"></i></div></div>'
+    + '<div class="sec-title">情话收集册</div>';
+  for (let d = 1; d <= DAYS.length; d++){
+    const ok = isDone(d);
+    h += '<div class="love-item'+(ok?'':' locked')+'"><div class="n">'+d+'</div>'
+      + '<div class="t">'+(ok ? esc(loveOf(d)) + '<span class="d">'+(BY_NO[d]?dateOf(BY_NO[d]):'')+' · 已收集</span>'
+                              : '完成第 '+d+' 天就能看到 🔒') + '</div></div>';
+  }
+  return h;
+}
 function viewNotes(){
   if (!S.notes.length){
-    return '<div class="empty"><div>✍️</div>还没有记录<br>在「今日」点「记一笔」，把错题、易混点存下来</div>'
-      + '<div class="row-btn"><button class="btn red" data-newnote="1">＋ 新增一条</button></div>';
+    return '<div class="empty"><div>✏️</div>还没有记录<br>在「今日」点「记一笔」，把错题、易混点存下来</div>'
+      + '<div class="row-btn"><button class="btn rose" data-newnote="1">＋ 新增一条</button></div>';
   }
-  const list = S.notes.slice().sort((a,b)=> b.ts - a.ts);
+  const list = S.notes.slice().sort((a,b) => b.ts - a.ts);
   return '<div class="sec-title">错题 / 易混点<span>共 '+list.length+' 条</span></div>'
-    + '<div class="row-btn" style="margin:0 0 12px"><button class="btn red" data-newnote="1">＋ 新增一条</button></div>'
-    + list.map(n =>
-        '<div class="note"><div class="nh"><span>'+(n.tag?esc(n.tag)+' · ':'')+'Day '+(n.day||'-')+' · '+n.date+'</span>'
-        + '<button class="del" data-delnote="'+n.id+'">删除</button></div>'
-        + '<div class="nt">'+esc(n.text)+'</div></div>').join('');
+    + '<div class="row-btn" style="margin:0 0 13px"><button class="btn rose" data-newnote="1">＋ 新增一条</button></div>'
+    + list.map(n => '<div class="note"><div class="nh"><span>'+(n.tag?esc(n.tag)+' · ':'')+'Day '+(n.day||'-')+' · '+n.date+'</span>'
+      + '<button class="del" data-delnote="'+n.id+'">删除</button></div>'
+      + '<div class="nt">'+esc(n.text)+'</div></div>').join('');
 }
-
-function viewMe(){
-  const done = doneCount(), total = DAYS.length;
-  const t = todayStr();
-  const nd = new Date(); const dow = (nd.getDay()+6)%7;   // 周一=0
-  const mon = addDays(t, -dow);
-  let weekDone = 0;
-  for (let i=0;i<7;i++){
-    const n = diffDays(S.start, addDays(mon,i)) + 1;
-    if (n>=1 && n<=total && isDone(n)) weekDone++;
+function heatmap(){
+  const weeks = 8, cells = [];
+  const t = todayStr(), dow = (D(t).getUTCDay() + 6) % 7;
+  const start = addDays(t, -(weeks*7 - 1) - (6 - dow));
+  for (let i = 0; i < weeks*7; i++){
+    const day = addDays(start, i), l = S.log[day];
+    let lv = 0;
+    if (l){
+      const tot = (l.steps||0) + (l.cards||0);
+      lv = tot >= 20 ? 4 : tot >= 10 ? 3 : tot >= 5 ? 2 : tot >= 1 ? 1 : 0;
+    }
+    cells.push('<i data-l="'+lv+'" title="'+day+'"></i>');
   }
+  return cells.join('');
+}
+function viewMe(){
+  const done = doneCount(), total = DAYS.length, t = todayStr();
+  const dow = (new Date().getDay()+6)%7, mon = addDays(t, -dow);
+  let weekDone = 0;
+  for (let i=0;i<7;i++){ const n = diffDays(S.start, addDays(mon,i))+1; if (n>=1 && n<=total && isDone(n)) weekDone++; }
   const weekNotes = S.notes.filter(n => n.date >= mon && n.date <= t).length;
-  let weekSteps = 0;
-  DAYS.forEach(x => { const d = S.days[x.d]; if (d) weekSteps += STEPS.filter(s=>d.steps[s[0]]).length; });
-
+  const ms = masteredCount(), rated = ratedCount(), bl = badgeList();
   return '<div class="sec-title">总览</div>'
    + '<div class="grid2">'
    + '<div class="stat"><b>'+done+'</b><span>已完成天数 / '+total+'</span></div>'
    + '<div class="stat"><b>'+streak()+'</b><span>连续打卡（天）</span></div>'
-   + '<div class="stat"><b>'+(done/total*100).toFixed(0)+'%</b><span>全程进度</span></div>'
-   + '<div class="stat"><b>'+S.notes.length+'</b><span>错题 / 易混点</span></div>'
+   + '<div class="stat"><b>'+(rated?Math.round(ms/rated*100):0)+'%</b><span>已自测卡片掌握率</span></div>'
+   + '<div class="stat"><b>'+ms+'</b><span>掌握的知识点</span></div>'
    + '</div>'
-
-   + '<div class="sec-title">本周周报（'+mon.slice(5).replace('-','/')+' – '+t.slice(5).replace('-','/')+'）</div>'
+   + '<div class="sec-title">打卡热力图<span>近 8 周</span></div>'
+   + '<div class="card"><div class="heat">'+heatmap()+'</div>'
+   + '<div style="font-size:11.5px;color:var(--sub);margin-top:10px">格子越深，那天学得越多</div></div>'
+   + '<div class="sec-title">徽章<span>'+bl.filter(b=>b.ok).length+' / '+bl.length+'</span></div>'
+   + '<div class="card"><div class="badges">'
+   + bl.map(b => '<div class="badge'+(b.ok?' got':'')+'"><span class="e">'+b.e+'</span><span class="t">'+b.t+'</span></div>').join('')
+   + '</div></div>'
+   + '<div class="sec-title">本周<span>'+md(mon)+' – '+md(t)+'</span></div>'
    + '<div class="card">'
    + '<div class="kv"><span>完成整日打卡</span><b>'+weekDone+' 天</b></div>'
-   + '<div class="kv"><span>完成单步打卡</span><b>'+weekSteps+' 次</b></div>'
-   + '<div class="kv"><span>本周新增记录</span><b>'+weekNotes+' 条</b></div>'
-   + '<div class="kv"><span>本周完成率</span><b>'+(weekDone/7*100).toFixed(0)+'%</b></div>'
+   + '<div class="kv"><span>已建档复习卡片</span><b>'+rated+' 张</b></div>'
+   + '<div class="kv"><span>新增错题记录</span><b>'+weekNotes+' 条</b></div>'
    + '<div class="row-btn"><button class="btn line" data-report="1">📋 生成并复制周报</button></div>'
    + '</div>'
-
    + '<div class="sec-title">设置</div><div class="card">'
-   + '<div class="kv"><span>计划开始日</span><b>'+S.start.replace(/-/g,'/')+'</b></div>'
-   + '<div class="row-btn"><button class="btn line" data-restart="'+t+'">把今天设为 Day 1</button>'
-   + '<button class="btn line" data-restart="'+START_DEFAULT+'">恢复默认（10/19）</button></div>'
+   + '<div class="kv"><span>昵称</span><b>'+(S.nick||NICK_DEFAULT)+'</b></div>'
+   + '<div class="row-btn"><button class="btn line" data-nick="1">改昵称</button>'
+   + '<button class="btn line" data-restart="'+t+'">今天设为 Day 1</button></div>'
+   + '<div class="kv" style="margin-top:6px"><span>计划开始日</span><b>'+S.start.replace(/-/g,'/')+'</b></div>'
    + '</div>'
-
-   + '<div class="sec-title">数据（重要）</div><div class="card">'
-   + '<p class="focus" style="margin:0;font-size:13.5px;color:var(--sub)">打卡记录只存在这台 iPad 的 Safari 里。<b>清理 Safari 数据会全部丢失</b>，建议每周导出一次备份文件。</p>'
-   + '<div class="row-btn">'
-   + '<button class="btn red" data-export="1">⬇️ 导出备份</button>'
-   + '<button class="btn line" data-import="1">⬆️ 导入备份</button>'
-   + '<button class="btn line" data-copy="1">📄 复制进度文本</button>'
-   + '</div>'
+   + '<div class="sec-title">数据</div><div class="card">'
+   + '<p class="focus" style="margin:0;font-size:13.5px;color:var(--sub)">记录只存在这台 iPad 上，<b>清理 Safari 数据会全丢</b>，建议每周导出一次备份。</p>'
+   + '<div class="row-btn"><button class="btn rose" data-export="1">⬇️ 导出备份</button>'
+   + '<button class="btn line" data-import="1">⬆️ 导入备份</button></div>'
    + '<div class="row-btn"><button class="btn line" style="color:#C0392B" data-reset="1">清空全部记录</button></div>'
-   + '</div>';
+   + '</div>'
+   + '<div class="sec-title">写给你</div><div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
+   + '<p style="margin:0;font-size:14.5px;line-height:1.85;color:var(--ink2)">斐斐，这本小册子是我做的。<br>'
+   + '我背不会马原，也帮不上你做题。我能做的，就是把你每天要背的东西整理好，'
+   + '再在你想放弃的时候，给你一句话。<br><br>'
+   + '你要上岸，我就先做岸。 —— 每天都在的人</p></div>';
 }
 
 /* =====================================================================
-   事件
+   背诵内容 / 复习
    ===================================================================== */
-function bind(){
-  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
-
-  // 打卡
-  document.querySelectorAll('[data-step]').forEach(b => b.onclick = () => {
-    const n = +b.dataset.day, k = b.dataset.step, st = dstate(n);
-    st.steps[k] = !st.steps[k];
-    if (isDone(n)) st.doneDate = todayStr(); else delete st.doneDate;
-    save(); render();
-  });
-
-  // 复习标记
-  document.querySelectorAll('[data-rev]').forEach(b => b.onclick = () => {
-    toggleReviewed(+b.dataset.rev); render();
-  });
-  const ra = document.querySelector('[data-reviewall]');
-  if (ra) ra.onclick = () => { reviewList().forEach(r => { if (!isReviewed(r.day)) toggleReviewed(r.day); }); render(); };
-
-  // 跳到某天
-  document.querySelectorAll('[data-dayview]').forEach(b => b.onclick = () => openDay(+b.dataset.dayview));
-
-  // 背这一天的内容
-  document.querySelectorAll('[data-content]').forEach(b => b.onclick = () => openContent(+b.dataset.content));
-
-  // 记一笔
-  document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
-  const nn = document.querySelector('[data-newnote]');
-  if (nn) nn.onclick = () => openNote(null);
-  document.querySelectorAll('[data-delnote]').forEach(b => b.onclick = () => {
-    if (confirm('删除这条记录？')){
-      S.notes = S.notes.filter(x => String(x.id) !== String(b.dataset.delnote));
-      save(); render();
-    }
-  });
-
-  // 设置 / 数据
-  document.querySelectorAll('[data-restart]').forEach(b => b.onclick = () => {
-    if (confirm('把计划开始日设为 ' + b.dataset.restart.replace(/-/g,'/') + '？\n（只改计算「今天是第几天」，已打的卡不会丢）')){
-      S.start = b.dataset.restart; save(); render();
-    }
-  });
-  const ex = document.querySelector('[data-export]'); if (ex) ex.onclick = exportData;
-  const im = document.querySelector('[data-import]'); if (im) im.onclick = importData;
-  const cp = document.querySelector('[data-copy]'); if (cp) cp.onclick = copyText;
-  const rp = document.querySelector('[data-report]'); if (rp) rp.onclick = copyReport;
-  const rs = document.querySelector('[data-reset]'); if (rs) rs.onclick = () => {
-    if (confirm('清空全部打卡和记录？此操作不可恢复。') && confirm('真的确定？建议先导出备份。')){
-      S = blank(); save(); render();
-    }
-  };
+function rateRow(key, cd){
+  if (cd && cd.reps){
+    const left = diffDays(todayStr(), cd.due);
+    return '<div class="rated">✓ 记住了' + (left <= 0 ? '，今天再见一次' : '，' + left + ' 天后再见')
+      + '（已复习 ' + cd.reps + ' 次）</div>';
+  }
+  return '<div class="level">'
+    + '<button data-rate="0" data-key="'+key+'">不会 😣</button>'
+    + '<button data-rate="1" data-key="'+key+'">模糊 🤔</button>'
+    + '<button data-rate="2" data-key="'+key+'">会了 😊</button></div>';
 }
-
-function switchTab(t){
-  TAB = t;
-  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
-  render();
-}
-
-function openDay(n){
-  const x = BY_NO[n];
-  showSheet(dayCard(x,true), () => bind());
-}
-
 function openContent(n){
   const c = CONTENT[n], x = BY_NO[n];
   if (!c) return;
-  let h = '<h3>Day '+n+' · '+x.sub+'</h3><p class="hint">'+esc(x.task)+'</p>';
-  h += '<div class="sec-title" style="margin:6px 4px 8px">章节骨架</div><div class="kframe">'+esc(c.frame)+'</div>';
+  let h = '<h3>'+(x ? ('Day '+n+' · '+x.sub) : ('Day '+n))+'</h3>'
+    + '<p class="hint">'+(x?esc(x.task):'')+'　·　先自己想，再点开看答案</p>'
+    + '<div class="sec-title" style="margin:4px 4px 8px">章节骨架</div><div class="kframe">'+esc(c.frame)+'</div>';
   if (c.must && c.must.length){
-    h += '<div class="sec-title" style="margin:18px 4px 8px">必背点 · 点一下看答案<button class="chip" id="qaall">全部显示</button></div>'
-      + '<div class="card" style="padding:2px 14px;margin-bottom:0">'
-      + c.must.map((m,i)=>'<div class="qa"><button class="q"><i>'+(i+1)+'</i><span>'+esc(m[0])
-          +'</span><u>看答案</u></button><div class="a">'+esc(m[1])+'</div></div>').join('')
-      + '</div>';
+    h += '<div class="sec-title" style="margin:18px 4px 8px">必背点 · 自测'
+       + '<button class="btn ghost sm" id="qaall">全部显示</button></div>'
+       + '<div class="card" style="padding:2px 15px;margin-bottom:0">'
+       + c.must.map((m,i)=>{
+           const key = n + ':' + i;
+           return '<div class="qa" data-qa="'+key+'">'
+             + '<button class="q"><i>'+(i+1)+'</i><span>'+esc(m[0])+'</span><u>看答案</u></button>'
+             + '<div class="a">'+esc(m[1])+rateRow(key, cardOf(key))+'</div></div>';
+         }).join('')
+       + '</div>';
   }
   if (c.confuse && c.confuse.length){
-    h += '<div class="sec-title" style="margin:18px 4px 8px">易混对比</div><div class="card" style="padding:2px 14px">'
-      + '<ul class="cf">' + c.confuse.map(v=>'<li><b>'+esc(v[0])+'</b>'+esc(v[1])+'</li>').join('') + '</ul></div>';
+    h += '<div class="sec-title" style="margin:18px 4px 8px">易混对比</div><div class="card" style="padding:2px 15px">'
+       + '<ul class="cf">' + c.confuse.map(v => '<li><b>'+esc(v[0])+'</b>'+esc(v[1])+'</li>').join('') + '</ul></div>';
   }
   if (c.nums && c.nums.length){
     h += '<div class="sec-title" style="margin:18px 4px 8px">数字 / 限定词清单</div><div class="card">'
-      + '<ul class="nums">' + c.nums.map(v=>'<li>'+esc(v)+'</li>').join('') + '</ul></div>';
+       + '<ul class="nums">' + c.nums.map(v => '<li>'+esc(v)+'</li>').join('') + '</ul></div>';
   }
   h += '<div class="row-btn"><button class="btn line" data-close="1">关闭</button></div>';
-  showSheet(h, () => {
-    document.querySelectorAll('.qa .q').forEach(q => q.onclick = () => {
-      const box = q.parentElement; box.classList.toggle('open');
-      q.querySelector('u').textContent = box.classList.contains('open') ? '收起' : '看答案';
+  showSheet(h, bindContentSheet);
+}
+function bindContentSheet(){
+  document.querySelectorAll('.qa .q').forEach(q => q.onclick = () => {
+    const box = q.parentElement; box.classList.toggle('open');
+    q.querySelector('u').textContent = box.classList.contains('open') ? '收起' : '看答案';
+  });
+  const all = document.getElementById('qaall');
+  if (all) all.onclick = () => {
+    const items = document.querySelectorAll('.qa');
+    const anyClosed = Array.prototype.some.call(items, el => !el.classList.contains('open'));
+    items.forEach(el => {
+      el.classList.toggle('open', anyClosed);
+      const u = el.querySelector('u'); if (u) u.textContent = anyClosed ? '收起' : '看答案';
     });
-    const all = document.getElementById('qaall');
-    if (all) all.onclick = () => {
-      const items = document.querySelectorAll('.qa');
-      const anyClosed = Array.prototype.some.call(items, el => !el.classList.contains('open'));
-      items.forEach(el => {
-        el.classList.toggle('open', anyClosed);
-        const u = el.querySelector('u'); if (u) u.textContent = anyClosed ? '收起' : '看答案';
-      });
-      all.textContent = anyClosed ? '全部收起' : '全部显示';
-    };
+    all.textContent = anyClosed ? '全部收起' : '全部显示';
+  };
+  document.querySelectorAll('[data-rate]').forEach(b => b.onclick = () => {
+    const cd = rateCard(b.dataset.key, +b.dataset.rate);
+    const left = diffDays(todayStr(), cd.due);
+    b.parentElement.outerHTML = '<div class="rated">✓ 已记录' + (left <= 0 ? '，今天再见一次' : '，' + left + ' 天后再见')
+      + '（复习 ' + cd.reps + ' 次）</div>';
   });
 }
 
+let RQ = [], RI = 0, RSTAT = {0:0,1:0,2:0};
+function startReview(){
+  RQ = dueCards();
+  if (!RQ.length){ alert('现在没有到期的卡片，先去背今天的内容吧 🐾'); return; }
+  RI = 0; RSTAT = {0:0,1:0,2:0};
+  renderReview();
+}
+function renderReview(){
+  let m = document.getElementById('reviewbox');
+  if (!m){ m = document.createElement('div'); m.id = 'reviewbox'; document.body.appendChild(m); }
+  if (RI >= RQ.length){
+    const g = RSTAT[2], mid = RSTAT[1], bad = RSTAT[0];
+    m.innerHTML = '<div class="review"><div class="rv-done">'
+      + '<div class="emo">'+(bad === 0 ? '🎉' : '🌿')+'</div><h2>复习完成</h2>'
+      + '<p>这次过了 '+RQ.length+' 张：会了 '+g+' · 模糊 '+mid+' · 不会 '+bad+'<br>'
+      + (bad === 0 ? '全记住了，斐斐你今天超厉害。' : '不会的明天还会来找你，别急。') + '</p>'
+      + '<button class="btn rose big" id="rvend">回到今天</button></div></div>';
+    document.getElementById('rvend').onclick = () => { m.innerHTML = ''; render(); };
+    return;
+  }
+  const c = RQ[RI], x = BY_NO[c.d];
+  m.innerHTML = '<div class="review">'
+    + '<div class="rv-top"><button class="close" id="rvclose">✕</button>'
+    + '<div class="rv-prog"><i style="width:'+(RI/RQ.length*100).toFixed(1)+'%"></i></div>'
+    + '<div class="rv-num">'+(RI+1)+'/'+RQ.length+'</div></div>'
+    + '<div class="rv-card"><div class="rv-from">Day '+c.d+' · '+(x?x.sub:'')+' · 已复习 '+(c.lv||0)+' 级</div>'
+    + '<div class="rv-q">'+esc(c.q)+'</div><div id="rva"></div></div>'
+    + '<div style="margin-top:16px"><button class="btn line big" id="rvshow" style="width:100%">先想一下，再看答案</button></div></div>';
+  document.getElementById('rvclose').onclick = () => { m.innerHTML = ''; render(); };
+  document.getElementById('rvshow').onclick = () => {
+    document.getElementById('rva').innerHTML = '<div class="rv-a">'+esc(c.a)+'</div>'
+      + '<div class="level" style="margin-top:14px">'
+      + '<button data-rq="0">不会 😣</button><button data-rq="1">模糊 🤔</button><button data-rq="2">会了 😊</button></div>';
+    document.getElementById('rvshow').outerHTML = '<div style="font-size:12.5px;color:var(--sub);text-align:center;margin-top:12px">按真实感觉点，别客气</div>';
+    document.querySelectorAll('[data-rq]').forEach(b => b.onclick = () => {
+      const q = +b.dataset.rq; rateCard(c.key, q); RSTAT[q]++; RI++; renderReview();
+    });
+  };
+}
+
+/* =====================================================================
+   彩蛋
+   ===================================================================== */
+function celebrate(n){
+  const fx = document.getElementById('fx');
+  const glyphs = ['💗','💕','🎀','✨','🌸','🐾','💖','⭐'];
+  let parts = '';
+  for (let i = 0; i < 30; i++){
+    const size = (14 + Math.random()*20).toFixed(0);
+    const dur = (3.4 + Math.random()*2.8).toFixed(2);
+    const delay = (Math.random()*1.8).toFixed(2);
+    const sway = ((Math.random()*2-1) * 16).toFixed(1);
+    const rot = ((Math.random()*2-1) * 320).toFixed(0);
+    const op = (0.65 + Math.random()*0.35).toFixed(2);
+    parts += '<span class="p" style="left:'+(Math.random()*100).toFixed(1)+'%;font-size:'+size+'px;'
+      + '--dur:'+dur+'s;--delay:'+delay+'s;--sway:'+sway+'vw;--rot:'+rot+'deg;--op:'+op+'">'
+      + glyphs[i % glyphs.length]+'</span>';
+  }
+  fx.innerHTML = '<div class="particles">'+parts+'</div><div class="halo"></div><div class="ring"></div>'
+    + '<div class="stage"><div class="cel">'
+    + '<span class="spark s1">✨</span><span class="spark s2">✨</span>'
+    + '<span class="spark s3">🎀</span><span class="spark s4">💗</span>'
+    + '<div class="cat">'+CAT+'</div>'
+    + '<div class="daytag">第 '+n+' 天 · 完成 ✓</div>'
+    + '<p class="msg">'+esc(loveOf(n))+'</p>'
+    + '<div class="collect">已收集 '+unlockedLove()+' / '+LOVE.length+' 条情话</div>'
+    + '<button class="btn rose big" id="celclose">收下 ♡</button>'
+    + '</div></div>';
+  document.getElementById('celclose').onclick = () => { fx.innerHTML = ''; };
+  setTimeout(() => { const ps = fx.querySelector('.particles'); if (ps) ps.remove(); }, 8000);
+}
+
+/* =====================================================================
+   弹层 / 交互
+   ===================================================================== */
+function showSheet(inner, after){
+  const m = document.getElementById('modal');
+  m.innerHTML = '<div class="mask" id="mask"><div class="sheet">'+inner+'</div></div>';
+  document.getElementById('mask').onclick = e => { if (e.target.id === 'mask') closeSheet(); };
+  document.querySelectorAll('[data-close]').forEach(b => b.onclick = closeSheet);
+  if (after) after();
+}
+function closeSheet(){ document.getElementById('modal').innerHTML = ''; }
+function openDay(n){ showSheet(dayCard(BY_NO[n], true), bind); }
+
 function openNote(dayNo){
   const d = dayNo || (todayNo() >= 1 && todayNo() <= DAYS.length ? todayNo() : 1);
-  const html = '<h3>记一笔</h3><p class="hint">错题、易混点、背不下来的地方 —— 一句话就够，别写长。</p>'
+  const html = '<h3>记一笔</h3><p class="hint">错题、易混点、背不下来的地方 —— 一句话就够。</p>'
     + '<div class="seg" id="tagseg">'
     + ['错题','易混','难点','灵感'].map((t,i)=>'<button data-tag="'+t+'"'+(i===0?' class="on"':'')+'>'+t+'</button>').join('')
     + '</div>'
     + '<textarea id="notetx" placeholder="例：马原·劳动二重性 ≠ 商品二因素，别记反"></textarea>'
     + '<div class="row-btn"><button class="btn line" data-close="1">取消</button>'
-    + '<button class="btn red" id="savenote">保存</button></div>';
+    + '<button class="btn rose" id="savenote">保存</button></div>';
   showSheet(html, () => {
     let tag = '错题';
     document.querySelectorAll('#tagseg button').forEach(b => b.onclick = () => {
@@ -2063,21 +2434,57 @@ function openNote(dayNo){
     document.getElementById('savenote').onclick = () => {
       const tx = document.getElementById('notetx').value.trim();
       if (!tx){ alert('先写点内容吧'); return; }
-      S.notes.push({id: Date.now()+''+Math.floor(Math.random()*999), day:d, text:tx, tag:tag, date:todayStr(), ts:Date.now()});
+      S.notes.push({id: Date.now()+''+Math.floor(Math.random()*999), day:d, text:tx, tag, date:todayStr(), ts:Date.now()});
       save(); closeSheet(); render();
     };
   });
 }
 
-function showSheet(inner, after){
-  const m = document.getElementById('modal');
-  m.innerHTML = '<div class="mask" id="mask"><div class="sheet">'+inner+'</div></div>';
-  document.getElementById('mask').onclick = e => { if (e.target.id === 'mask') closeSheet(); };
-  document.querySelectorAll('[data-close]').forEach(b => b.onclick = closeSheet);
-  if (after) after();
+function bind(){
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
+  document.querySelectorAll('[data-step]').forEach(b => b.onclick = () => {
+    const n = +b.dataset.day, k = b.dataset.step, st = dstate(n);
+    const was = isDone(n);
+    st.steps[k] = !st.steps[k];
+    if (isDone(n)) st.doneDate = todayStr(); else delete st.doneDate;
+    if (st.steps[k]) bump('steps');
+    else if (S.log[todayStr()]) S.log[todayStr()].steps = Math.max(0, (S.log[todayStr()].steps||0)-1);
+    save(); render();
+    if (!was && isDone(n)) setTimeout(() => celebrate(n), 240);
+  });
+  document.querySelectorAll('[data-rev]').forEach(b => b.onclick = () => { toggleReviewed(+b.dataset.rev); render(); });
+  document.querySelectorAll('[data-dayview]').forEach(b => b.onclick = () => openDay(+b.dataset.dayview));
+  document.querySelectorAll('[data-content]').forEach(b => b.onclick = () => openContent(+b.dataset.content));
+  document.querySelectorAll('[data-relove]').forEach(b => b.onclick = () => celebrate(+b.dataset.relove));
+  const rv = document.querySelector('[data-review]'); if (rv) rv.onclick = startReview;
+  document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
+  const nn = document.querySelector('[data-newnote]'); if (nn) nn.onclick = () => openNote(null);
+  document.querySelectorAll('[data-delnote]').forEach(b => b.onclick = () => {
+    if (confirm('删除这条记录？')){ S.notes = S.notes.filter(x => String(x.id) !== String(b.dataset.delnote)); save(); render(); }
+  });
+  document.querySelectorAll('[data-restart]').forEach(b => b.onclick = () => {
+    if (confirm('把计划开始日设为 ' + b.dataset.restart.replace(/-/g,'/') + '？\n（只改「今天是第几天」，已打的卡不会丢）')){
+      S.start = b.dataset.restart; save(); render();
+    }
+  });
+  const nk = document.querySelector('[data-nick]'); if (nk) nk.onclick = () => {
+    const v = prompt('想怎么称呼她？', S.nick || NICK_DEFAULT);
+    if (v && v.trim()){ S.nick = v.trim().slice(0,10); save(); render(); }
+  };
+  const ex = document.querySelector('[data-export]'); if (ex) ex.onclick = exportData;
+  const im = document.querySelector('[data-import]'); if (im) im.onclick = importData;
+  const rp = document.querySelector('[data-report]'); if (rp) rp.onclick = copyReport;
+  const rs = document.querySelector('[data-reset]'); if (rs) rs.onclick = () => {
+    if (confirm('清空全部打卡、卡片和记录？不可恢复。') && confirm('真的确定？建议先导出备份。')){
+      S = blank(); save(); render();
+    }
+  };
 }
-function closeSheet(){ document.getElementById('modal').innerHTML = ''; }
-
+function switchTab(t){
+  TAB = t;
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  render();
+}
 function download(name, text, type){
   const blob = new Blob([text], {type: type || 'application/json'});
   const a = document.createElement('a');
@@ -2085,10 +2492,7 @@ function download(name, text, type){
   document.body.appendChild(a); a.click();
   setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
-function exportData(){
-  const stamp = todayStr().replace(/-/g,'');
-  download('政治打卡备份_'+stamp+'.json', JSON.stringify(S, null, 1));
-}
+function exportData(){ download('背诵手册备份_' + todayStr().replace(/-/g,'') + '.json', JSON.stringify(S, null, 1)); }
 function importData(){
   const inp = document.createElement('input');
   inp.type = 'file'; inp.accept = '.json,application/json';
@@ -2098,8 +2502,8 @@ function importData(){
     r.onload = () => {
       try{
         const o = JSON.parse(r.result);
-        if (!o || !o.days) throw new Error('格式不对');
-        if (!confirm('导入将覆盖当前记录（已完成 '+doneCount()+' 天）。继续？')) return;
+        if (!o || !o.days) throw new Error('文件格式不对');
+        if (!confirm('导入会覆盖当前记录。继续？')) return;
         S = Object.assign(blank(), o); save(); render();
         alert('导入成功：已完成 ' + doneCount() + ' 天');
       }catch(e){ alert('导入失败：' + e.message); }
@@ -2108,39 +2512,24 @@ function importData(){
   };
   inp.click();
 }
-function copyText(){
-  const lines = [];
-  lines.push('考研政治 40 天背诵打卡 · 进度');
-  lines.push('开始日：'+S.start+'　已完成：'+doneCount()+'/'+DAYS.length+'　连续：'+streak()+' 天');
-  lines.push('---');
-  DAYS.forEach(x => { if (isDone(x.d)) lines.push('Day '+x.d+' '+dateOf(x)+' ✅ '+x.task); });
-  const txt = lines.join('\n');
-  navigator.clipboard && navigator.clipboard.writeText(txt).then(
-    ()=>alert('已复制进度文本，可粘贴到备忘录里存一份'),
-    ()=>prompt('复制下面这段保存：', txt)
-  ) || prompt('复制下面这段保存：', txt);
-}
 function copyReport(){
-  const t = todayStr(); const nd = new Date(); const dow = (nd.getDay()+6)%7;
-  const mon = addDays(t, -dow);
+  const t = todayStr(), dow = (new Date().getDay()+6)%7, mon = addDays(t,-dow);
   let wd = 0;
   for (let i=0;i<7;i++){ const n = diffDays(S.start, addDays(mon,i))+1; if (n>=1 && n<=DAYS.length && isDone(n)) wd++; }
-  const wn = S.notes.filter(n => n.date >= mon && n.date <= t).length;
-  const txt = '【考研政治打卡周报】'+mon.slice(5).replace('-','/')+'–'+t.slice(5).replace('-','/')+'\n'
+  const txt = '【背诵手册周报】'+md(mon)+'–'+md(t)+'\n'
     + '本周打卡：'+wd+' 天（完成率 '+(wd/7*100).toFixed(0)+'%）\n'
-    + '错题记录：'+wn+' 条\n'
     + '累计完成：'+doneCount()+'/'+DAYS.length+' 天，连续 '+streak()+' 天\n'
-    + '下一步：'+(BY_NO[todayNo()] ? 'Day '+todayNo()+' '+BY_NO[todayNo()].task : '冲刺阶段');
-  navigator.clipboard && navigator.clipboard.writeText(txt).then(
-    ()=>alert('周报已复制，可直接粘贴给星期二或存备忘录'),
-    ()=>prompt('复制下面这段：', txt)
-  ) || prompt('复制下面这段：', txt);
+    + '已掌握知识点：'+masteredCount()+' 条　情话收集：'+unlockedLove()+'/'+LOVE.length+'\n'
+    + '今天要背：'+(BY_NO[todayNo()] ? 'Day '+todayNo()+' '+BY_NO[todayNo()].task : '冲刺阶段');
+  if (navigator.clipboard) navigator.clipboard.writeText(txt).then(
+    ()=>alert('周报已复制，可以粘贴给他 🐾'), ()=>prompt('复制下面这段：', txt));
+  else prompt('复制下面这段：', txt);
 }
 
 /* 启动 */
+document.getElementById('hCat').innerHTML = CAT;
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
 render();
-
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }

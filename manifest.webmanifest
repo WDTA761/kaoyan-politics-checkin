@@ -1,13 +1,13 @@
 {
-  "name": "考研政治背诵打卡",
-  "short_name": "政治打卡",
-  "description": "2027考研政治背诵手册（上册）40天背诵计划与打卡",
+  "name": "斐斐的背诵手册",
+  "short_name": "斐斐加油",
+  "description": "2027考研政治背诵手册（上册）背诵计划与打卡",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FBF6F2",
-  "theme_color": "#C8102E",
+  "background_color": "#FFFAF9",
+  "theme_color": "#F4A8BE",
   "lang": "zh-CN",
   "icons": [
     { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },

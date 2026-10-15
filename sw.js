@@ -2,7 +2,7 @@
    - 页面（HTML）：网络优先 → 保证永远是最新版；断网时回退到缓存，照样能用
    - 图标等静态资源：缓存优先 → 秒开
 */
-const CACHE = 'zz-kaoyan-2027-v2';
+const CACHE = 'zz-kaoyan-2027-v3';
 const ASSETS = ['./', './index.html', './manifest.webmanifest',
                 './icon-180.png', './icon-192.png', './icon-512.png'];
 
