@@ -1839,7 +1839,7 @@ CONTENT[40] = {
    计划
    ===================================================================== */
 const START_DEFAULT = '2026-10-19';
-const EXAM = '2026-12-26';
+const EXAM_DEFAULT = '2026-12-21';   /* 考试最后一天（在「我的」里能改） */
 const NICK_DEFAULT = '斐斐';
 /* 打卡解锁的那句话，叫什么名字就在这一行改（页签、标题、统计都会跟着变） */
 const WORD = '小纸条';
@@ -1892,10 +1892,10 @@ const SPRINT = [
  focus:['每天 30 分钟过一章上册框架（马原→毛中特→习思想→史纲→思修轮着来）','每两天做一套肖八选择，计时 40 分钟','错题当天回上册定位原文，抄进错题本','分析题先只看题目和答案思路，暂不背']},
 {from:'2026-12-05', to:'2026-12-11', title:'肖八 5–8 套 + 五科分析题框架',
  focus:['肖八剩余 4 套做完，选择目标稳定 38+','五科各背一套分析题答题框架（先框架后术语）','时政小册子第 1 遍通读','马原计算题与易混点三刷']},
-{from:'2026-12-12', to:'2026-12-18', title:'时政专题 + 上册高频三刷 + 开始背肖四大题',
- focus:['时政小册子背第 2 遍，抓数字与首次提法','上册只看标记过的红笔重点','肖四一到就分组背大题（一天一组）','每周两套选择保持手感']},
-{from:'2026-12-19', to:'2026-12-25', title:'肖四滚动背 + 全真模拟 + 考前调整',
- focus:['肖四选择 + 大题反复滚动，做到看题干能默框架','全真模拟两套（严格按 8:30–11:30）','易混点与数字清单最后过 3 遍','12/24–25 只背肖四和时政，不碰新题','作息调到与考试同步']}
+{from:'2026-12-12', to:'2026-12-17', title:'时政专题 + 上册高频三刷 + 开始背肖四大题',
+ focus:['时政小册子背第 2 遍，抓数字与首次提法','上册只看标记过的红笔重点','肖四到手就分组背大题（一天一组）','每周两套选择保持手感']},
+{from:'2026-12-18', to:'2026-12-20', title:'肖四滚动背 + 全真模拟 + 考前收口',
+ focus:['肖四选择 + 大题反复滚动，做到看题干能默框架','全真模拟一套（严格按考试时间）','易混点与数字清单最后过 3 遍','12/19–20 只背肖四和时政，不碰新题','作息调到与考试同步']}
 ];
 
 /* =====================================================================
@@ -1963,13 +1963,8 @@ const LOVE = [
 "今天的一小步，是你离想要的生活近了一点。",
 "我开始相信「如愿以偿」这个词，因为你。",
 "60 天了。你这股劲，够我佩服很久。",
-"你哭也没关系。我这个人不挑，开心难过的你都要。",
-"考场上的你，会感谢今天坐住的你。",
-"我把最好的运气，都记在你名下。",
-"剩下这几天别慌。你该会的，都会了。",
-"你已经做得很好了，剩下的交给时间。",
-"明天就是最后一天了。紧张就深呼吸，我在。",
-"斐斐，到这里了。无论结果如何，你都是我最骄傲的答案。"
+"肖四背到想撕书了吧？再忍一下，真的快到了。",
+"明天就上考场了。不管考成什么样子，你都已经很棒了——我在。"
 ];
 
 /* =====================================================================
@@ -2143,7 +2138,7 @@ const BY_NO = {}; DAYS.forEach(x => BY_NO[x.d] = x);
 const LS = 'kaoyan2027_politics_v2';
 
 function blank(){
-  return {v:2, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'',
+  return {v:2, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'', exam:'',
           days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
 }
 function load(){
@@ -2189,8 +2184,10 @@ function toggleReviewed(n){
   if (i >= 0) S.revs[t].splice(i,1); else S.revs[t].push(n);
   save();
 }
-const daysLeft = () => Math.max(0, diffDays(todayStr(), EXAM));
-const examPassed = () => diffDays(EXAM, todayStr()) >= 0;      /* 今天 >= 考试日 */
+const examDay = () => S.exam || EXAM_DEFAULT;
+const lifeFrom = () => addDays(examDay(), 1);          /* 考完的第二天，开始陪伴模式 */
+const daysLeft = () => Math.max(0, diffDays(todayStr(), examDay()));
+const examPassed = () => diffDays(lifeFrom(), todayStr()) >= 0;
 
 /* ---------- 模式：study（考研期）/ life（考后陪伴） ---------- */
 function mode(){
@@ -2228,11 +2225,10 @@ function notesEarned(){
 }
 /* 陪伴模式当天的纸条序号（考后第 d 天 → 68 + d + 1；提前手动切模式也不会算出负数） */
 function lifeSerial(date){
-  const d = Math.max(0, diffDays(EXAM, date));
-  return LOVE.length + d + 1;
+  return LOVE.length + Math.max(0, diffDays(lifeFrom(), date)) + 1;
 }
 const togetherDays = () => S.together ? (diffDays(S.together, todayStr()) + 1) : 0;
-const noteNoToday = () => examPassed() ? (LOVE.length + diffDays(EXAM, todayStr()) + 1)
+const noteNoToday = () => examPassed() ? lifeSerial(todayStr())
                                        : (todayNo() >= 1 && todayNo() <= LOVE.length ? todayNo() : 0);
 
 /* ---- 卡片级间隔重复（Leitner：不会→1 天，模糊→2 天，会了→3/7/14/30/60 天） ---- */
@@ -2391,7 +2387,7 @@ function dayCard(x, full){
   return h + '</div>';
 }
 function loveCard(k, dateStr){
-  const label = (k <= LOVE.length) ? ('第 ' + k + ' 张') : (md(dateStr || addDays(EXAM, k - LOVE.length - 1)) + ' 的这张');
+  const label = (k <= LOVE.length) ? ('第 ' + k + ' 张') : (md(dateStr || addDays(lifeFrom(), k - LOVE.length - 1)) + ' 的这张');
   return '<div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
     + '<div class="sec-title" style="margin:0 0 8px">今天的'+WORD+' 💌<span>'+label+'</span></div>'
     + '<div style="font-size:17px;font-weight:700;line-height:1.72">'+esc(noteByNo(k))+'</div>'
@@ -2538,7 +2534,7 @@ const STAGES = [
   {n:'④ 史纲', note:'Day 25–30', a:25, b:30},
   {n:'⑤ 思修法治', note:'Day 31–35 · 最好拿分', a:31, b:35},
   {n:'⑥ 二轮查漏', note:'Day 36–40', a:36, b:40},
-  {n:'⑦ 冲刺', note:'11/28–12/25 · 肖八肖四', a:41, b:DAYS.length}
+  {n:'⑦ 冲刺', note:'11/28–12/20 · 肖八肖四', a:41, b:DAYS.length}
 ];
 let OPEN_STAGE = null;   /* null = 还没选过，默认展开「当前」那一段；-1 = 全部收起 */
 
@@ -2585,7 +2581,7 @@ function viewLove(){
     + '<div style="font-size:13.5px;color:var(--sub);margin-top:6px">每天完成当天的事，解锁一张只写给你的'+WORD+'</div>'
     + '<div class="pbar" style="margin:14px 0 0"><i style="width:'+(earned/TOTAL_NOTES*100).toFixed(1)+'%"></i></div></div>';
 
-  h += '<div class="sec-title">考研那 68 天<span>'+unlockedLove()+' / '+LOVE.length+'</span></div>';
+  h += '<div class="sec-title">考研那 '+LOVE.length+' 天<span>'+unlockedLove()+' / '+LOVE.length+'</span></div>';
   for (let k = 1; k <= LOVE.length; k++){
     const ok = isDone(k);
     h += noteRow(k, ok, ok ? md(dateOf(BY_NO[k])) : '完成第 '+k+' 天解锁 🔒');
@@ -2597,7 +2593,7 @@ function viewLove(){
     h += '<div class="sec-title">考完以后<span>'+lifeEarned+' / '+LOVE_LIFE.length+'</span></div>';
     let preview = 0;
     for (let k = LOVE.length + 1; k <= TOTAL_NOTES; k++){
-      const dt = addDays(EXAM, k - LOVE.length - 1);
+      const dt = addDays(lifeFrom(), k - LOVE.length - 1);
       const ok = lifeDone(dt);
       if (!ok && preview >= 7) continue;
       if (!ok) preview++;
@@ -2693,6 +2689,11 @@ function viewMe(){
    + '<div class="row-btn"><button class="btn line" data-nick="1">改昵称</button>'
    + '<button class="btn line" data-restart="'+t+'">今天设为 Day 1</button></div>'
    + '<div class="kv" style="margin-top:6px"><span>计划开始日</span><b>'+S.start.replace(/-/g,'/')+'</b></div>'
+   + '<div class="kv" style="margin-top:6px"><span>考试最后一天</span><b>'+examDay().replace(/-/g,'/')+'</b></div>'
+   + '<div class="row-btn"><input type="date" id="examdate" value="'+examDay()+'" '
+   + 'style="flex:1;min-width:150px;min-height:48px;border:1.5px solid var(--line);border-radius:15px;'
+   + 'padding:0 14px;font-size:15px;background:#fff"><button class="btn line" id="examsave">保存</button></div>'
+   + '<p class="focus" style="margin:10px 0 0;font-size:12.5px;color:var(--sub)">改这里只影响倒计时和「考完自动切换陪伴模式」。</p>'
    + '</div>'
    + '<div class="sec-title">数据</div><div class="card">'
    + '<p class="focus" style="margin:0;font-size:13.5px;color:var(--sub)">记录只存在这台 iPad 上，<b>清理 Safari 数据会全丢</b>，建议每周导出一次备份。</p>'
@@ -2819,7 +2820,7 @@ function renderReview(){
 function celebrate(n, dateStr){
   const fx = document.getElementById('fx');
   const label = (n <= LOVE.length) ? ('第 ' + n + ' 天 · 完成 ✓')
-                                   : (md(dateStr || addDays(EXAM, n - LOVE.length - 1)) + ' · 完成 ✓');
+                                   : (md(dateStr || addDays(lifeFrom(), n - LOVE.length - 1)) + ' · 完成 ✓');
   const glyphs = ['💗','💕','🎀','✨','🌸','🐾','💖','⭐'];
   let parts = '';
   for (let i = 0; i < 30; i++){
@@ -2928,6 +2929,11 @@ function bind(){
   if (tgs) tgs.onclick = () => {
     const el = document.getElementById('tgdate');
     S.together = el ? el.value : ''; save(); render();
+  };
+  const exs = document.getElementById('examsave');
+  if (exs) exs.onclick = () => {
+    const el = document.getElementById('examdate');
+    if (el && el.value){ S.exam = el.value; save(); render(); }
   };
   document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
   const nn = document.querySelector('[data-newnote]'); if (nn) nn.onclick = () => openNote(null);
