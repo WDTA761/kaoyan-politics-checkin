@@ -3783,23 +3783,70 @@ const BY_NO = {}; DAYS.forEach(x => BY_NO[x.d] = x);
    状态
    ===================================================================== */
 const LS = 'kaoyan2027_politics_v2';
+const SNAP = 'kaoyan2027_snap_';          /* 每天一份快照，保留最近 8 天 */
+const snapKey = d => SNAP + d;
 
 function blank(){
   return {v:4, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'', exam:'',
-          artStart:'', art:{}, skip:{}, quizLog:{}, words:[],
+          artStart:'', art:{}, skip:{}, quizLog:{}, words:[], lastExport:'',
           days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
 }
-function load(){
+/* 从最近 8 天的快照里找一份可用的 */
+function fromSnap(){
+  const t = todayStr();
+  for (let i = 0; i < 8; i++){
+    try{ const raw = localStorage.getItem(snapKey(addDays(t, -i))); if (raw) return JSON.parse(raw); }catch(e){}
+  }
+  return null;
+}
+/* 抢救：扫出本机所有本 App 的存储键，挑内容最多的那份 */
+function salvage(){
+  let best = null, bestN = 0;
   try{
-    const raw = localStorage.getItem(LS);
-    if (raw) return Object.assign(blank(), JSON.parse(raw));
-    const old = localStorage.getItem('kaoyan2027_politics_v1');
-    if (old) return Object.assign(blank(), JSON.parse(old));
+    for (let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if (!k || k.indexOf('kaoyan2027') !== 0) continue;
+      try{
+        const o = JSON.parse(localStorage.getItem(k));
+        if (!o || typeof o !== 'object') continue;
+        const n = Object.keys(o.days||{}).length * 3 + (o.words||[]).length * 2
+                + Object.keys(o.life||{}).length * 2 + (o.notes||[]).length
+                + Object.keys(o.cards||{}).length + Object.keys(o.art||{}).length * 2;
+        if (n > bestN){ bestN = n; best = o; }
+      }catch(e){}
+    }
   }catch(e){}
-  return blank();
+  return best;
+}
+function load(){
+  let o = null;
+  try{ const raw = localStorage.getItem(LS); if (raw) o = JSON.parse(raw); }catch(e){}
+  if (!o) o = fromSnap();                     /* 主数据没了 → 用快照 */
+  if (!o) o = salvage();                      /* 快照也没 → 全盘扫一遍抢救 */
+  return Object.assign(blank(), o || {});
 }
 let S = load();
-function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
+function save(){
+  try{
+    const json = JSON.stringify(S);
+    localStorage.setItem(LS, json);
+    localStorage.setItem(snapKey(todayStr()), json);     /* 当天快照随时更新 */
+    const t = todayStr();
+    for (let i = 9; i < 40; i++){                        /* 清掉 9 天前的 */
+      const k = snapKey(addDays(t, -i));
+      if (localStorage.getItem(k)) localStorage.removeItem(k);
+    }
+  }catch(e){}
+}
+function snapList(){
+  const t = todayStr(), out = [];
+  for (let i = 0; i < 9; i++){
+    const d = addDays(t, -i);
+    const raw = localStorage.getItem(snapKey(d));
+    if (raw) out.push({d, kb: Math.round(raw.length/1024)});
+  }
+  return out;
+}
 
 const dateOf = x => x.sprint ? x.date : addDays(S.start, x.d - 1);
 const STEPS = [['morning','早回顾','30 分钟'],['main','主时段','90 分钟'],['night','晚默写','20 分钟']];
@@ -4125,6 +4172,7 @@ function viewLifeToday(){
   const all = l.t.length >= 3;
   const serial = lifeSerial(t);
   let h = '';
+  if (!S.lastExport || diffDays(S.lastExport, todayStr()) >= 7) h += backupNag();
   if (all) h += loveCard(serial, t);
 
   h += '<div class="sec-title">今天的三件小事<span>'+l.t.length+' / 3</span></div>'
@@ -4227,6 +4275,14 @@ function noteRow(k, ok, sub){
     + '<div class="t">'+(ok ? esc(noteByNo(k))+'<span class="d">'+sub+' · 已收下</span>' : sub)+'</div></div>';
 }
 
+function backupNag(){
+  return '<div class="card" style="background:linear-gradient(150deg,#FFF9EC,#FDF2DC);border-color:#F2DFB8">'
+    + '<div class="sec-title" style="margin:0 0 8px">该备份了 🛟</div>'
+    + '<p style="margin:0;font-size:14.5px;line-height:1.8;color:var(--ink2)">'
+    + (S.lastExport ? '上次导出是 ' + md(S.lastExport) + '，' : '还没有导出过备份，')
+    + '记录只存在这台 iPad 上。点一下导出，存到「文件」里就不怕丢了。</p>'
+    + '<div class="row-btn"><button class="btn" style="background:linear-gradient(135deg,#E9B24C,#C8912F);color:#fff" data-export="1">⬇️ 导出备份</button></div></div>';
+}
 function viewToday(){
   if (isLife()) return viewLifeToday();
   const t = todayNo(), today = todayStr();
@@ -4250,6 +4306,7 @@ function viewToday(){
   }
   const x = BY_NO[t];
   let h = '';
+  if (!S.lastExport || diffDays(S.lastExport, todayStr()) >= 7) h += backupNag();
   if (isDone(t)) h += loveCard(t);
 
   if (daysLeft() <= 3 && examDay() >= todayStr()){
@@ -4724,10 +4781,15 @@ function viewMe(){
    + '<p class="focus" style="margin:12px 0 0;font-size:12.5px;color:var(--sub)">在每天的「背这一天的内容」里，每条考点右边都能点「跳过」；'
    + '标题上的蓝色／红色小标签表示它「只出选择题」还是「会出大题」。</p>'
    + '</div>'
-   + '<div class="sec-title">数据</div><div class="card">'
-   + '<p class="focus" style="margin:0;font-size:13.5px;color:var(--sub)">记录只存在这台 iPad 上，<b>清理 Safari 数据会全丢</b>，建议每周导出一次备份。</p>'
-   + '<div class="row-btn"><button class="btn rose" data-export="1">⬇️ 导出备份</button>'
+   + '<div class="sec-title">数据与备份<span>很重要</span></div><div class="card">'
+   + '<p class="focus" style="margin:0 0 10px;font-size:13.5px;color:var(--sub)">记录<b>只存在这台 iPad 的浏览器里</b>，没有服务器。清理 Safari 数据、换浏览器、iOS 回收存储，都会让它消失。'
+   + '现在做了两层保护：<b>每天自动存一份本机快照</b>（保留 8 天）+ <b>定期导出到「文件」</b>。</p>'
+   + '<div class="kv"><span>上次导出备份</span><b style="color:'+((!S.lastExport || diffDays(S.lastExport, t) >= 7) ? '#C0392B' : 'inherit')+'">'+(S.lastExport ? md(S.lastExport) : '从没导出过')+'</b></div>'
+   + '<div class="kv"><span>本机快照</span><b>'+snapList().length+' 天（最新 '+(snapList()[0] ? md(snapList()[0].d) : '无')+'）</b></div>'
+   + '<div class="row-btn"><button class="btn rose" data-export="1">⬇️ 导出备份到「文件」</button>'
    + '<button class="btn line" data-import="1">⬆️ 导入备份</button></div>'
+   + '<div class="row-btn"><button class="btn line" data-restoresnap="1">🛟 从快照恢复</button>'
+   + '<button class="btn line" data-salvage="1">🔎 全盘抢救旧数据</button></div>'
    + '<div class="row-btn"><button class="btn line" style="color:#C0392B" data-reset="1">清空全部记录</button></div>'
    + '</div>'
    + '<div class="sec-title">写给你</div><div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
@@ -5140,9 +5202,33 @@ function bind(){
   const im = document.querySelector('[data-import]'); if (im) im.onclick = importData;
   const rp = document.querySelector('[data-report]'); if (rp) rp.onclick = copyReport;
   const rs = document.querySelector('[data-reset]'); if (rs) rs.onclick = () => {
-    if (confirm('清空全部打卡、卡片和记录？不可恢复。') && confirm('真的确定？建议先导出备份。')){
-      S = blank(); save(); render();
+    if (confirm('清空全部打卡、单词、卡片和记录？不可恢复。') && confirm('真的确定？建议先导出备份。')){
+      S = blank();
+      try{ for (let i = 0; i < 40; i++) localStorage.removeItem(snapKey(addDays(todayStr(), -i))); }catch(e){}
+      save(); render();
     }
+  };
+  const rsnap = document.querySelector('[data-restoresnap]');
+  if (rsnap) rsnap.onclick = () => {
+    const list = snapList();
+    if (!list.length){ alert('本机还没有快照 🐾'); return; }
+    const menu = list.map((x,i) => (i+1) + '. ' + x.d + '（' + x.kb + ' KB）').join('\n');
+    const pick = prompt('从哪一天的快照恢复？输入序号：\n' + menu, '1');
+    const idx = parseInt(pick, 10) - 1;
+    if (!(idx >= 0 && idx < list.length)) return;
+    const raw = localStorage.getItem(snapKey(list[idx].d));
+    if (!raw){ alert('这份快照读不出来'); return; }
+    if (!confirm('会用 ' + list[idx].d + ' 的快照覆盖当前数据，继续？')) return;
+    S = Object.assign(blank(), JSON.parse(raw));
+    save(); render(); alert('已恢复到 ' + list[idx].d);
+  };
+  const sv = document.querySelector('[data-salvage]');
+  if (sv) sv.onclick = () => {
+    const o = salvage();
+    if (!o){ alert('本机没有找到可抢救的旧数据 🐾'); return; }
+    const n = Object.keys(o.days||{}).length + (o.words||[]).length + Object.keys(o.life||{}).length;
+    if (!confirm('找到一份旧数据（打卡/单词/心情共 ' + n + ' 条痕迹），用它覆盖当前数据？')) return;
+    S = Object.assign(blank(), o); save(); render(); alert('已抢救回来');
   };
 }
 function switchTab(t){
@@ -5157,7 +5243,10 @@ function download(name, text, type){
   document.body.appendChild(a); a.click();
   setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
-function exportData(){ download('一点点备份_' + todayStr().replace(/-/g,'') + '.json', JSON.stringify(S, null, 1)); }
+function exportData(){
+  S.lastExport = todayStr(); save();
+  download('一点点备份_' + todayStr().replace(/-/g,'') + '.json', JSON.stringify(S, null, 1));
+}
 function importData(){
   const inp = document.createElement('input');
   inp.type = 'file'; inp.accept = '.json,application/json';
@@ -5204,6 +5293,7 @@ document.getElementById('hCat').innerHTML = CAT;
 document.getElementById('navLove').textContent = WORD;
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
 render();
+save();          /* 首次打开也立刻写一份本机快照 */
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
