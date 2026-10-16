@@ -4824,7 +4824,7 @@ function refreshFilterCounts(){
 }
 function bindContentSheet(){
   document.querySelectorAll('.qa .q').forEach(q => q.onclick = () => {
-    const box = q.parentElement; box.classList.toggle('open');
+    const box = q.closest('.qa') || q.parentElement; box.classList.toggle('open');
     q.querySelector('u').textContent = box.classList.contains('open') ? '收起' : '看答案';
   });
   const all = document.getElementById('qaall');
