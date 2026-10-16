@@ -293,6 +293,7 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 .rv-card{background:#fff;border-radius:24px;padding:22px 20px;box-shadow:var(--shadow2);
   border:1px solid var(--line);animation:cardIn .3s both}
 .rv-from{font-size:11.5px;color:var(--sub);font-weight:700;letter-spacing:.6px;margin-bottom:10px}
+.rvmode{text-align:center;font-size:12.5px;color:var(--sub);font-weight:700;margin-bottom:10px}
 .rv-q{font-size:19px;font-weight:800;line-height:1.55}
 .rv-a{margin-top:16px;padding:14px 15px;background:#FFFBF4;border-left:4px solid var(--gold);
   border-radius:12px;font-size:15px;line-height:1.8;color:var(--ink2);white-space:pre-line;animation:cardIn .28s both}
@@ -3963,9 +3964,10 @@ function dueCards(){
     });
   }
   for (const w of words()){
+    if (!w.passed) continue;                       // 没通过的只走「每日检测」，不进长期复习
     const key = wordKey(w.id), cd = S.cards[key];
     if (S.skip[key]) continue;
-    if (cd && cd.due <= t) out.push({key, d:0, i:0, q:w.en,
+    if (cd && cd.due <= t) out.push({key, wid: w.id, d:0, i:0, q:w.en,
       a: w.zh + (w.ex ? '\n' + w.ex : ''), lv:cd.lv, from:'单词 · '+(w.date||'')});
   }
   out.sort((p,q) => (p.lv - q.lv) || (p.d - q.d));
@@ -4431,16 +4433,37 @@ function delWord(id){
   delete S.cards[wordKey(id)];
   save();
 }
-const wordCard = w => ({key: wordKey(w.id), q: w.en,
+const wordCard = w => ({key: wordKey(w.id), wid: w.id, q: w.en,
                         a: w.zh + (w.ex ? '\n' + w.ex : ''), from: '单词 · ' + (w.date||'')});
+/* 今日检测队列：不是今天才加的、且还没通过的词（没通过的会一直滚到明天） */
+const dailyTestQueue = () => words().filter(w => !w.passed && w.date < todayStr() && !S.skip[wordKey(w.id)]);
+/* 长期复习队列：已通过、按 3/7/14/30/60 天到期的词 */
 const dueWords = () => { const t = todayStr();
-  return words().filter(w => { const c = S.cards[wordKey(w.id)]; return c && c.due <= t; }); };
+  return words().filter(w => w.passed && !S.skip[wordKey(w.id)])
+               .filter(w => { const c = S.cards[wordKey(w.id)]; return c && c.due <= t; }); };
+/* 统一出口：会了→毕业进长期复习；模糊/不会→回到每日检测队列（明天和新词一起测） */
+function rateWord(id, q){
+  const w = words().find(x => x.id === id);
+  if (!w) return;
+  w.tests = (w.tests||0) + 1;
+  w.lastTest = todayStr();
+  if (q === 2){
+    w.passed = true;
+    w.passDate = todayStr();
+    rateCard(wordKey(id), 2);
+  } else {
+    w.fails = (w.fails||0) + 1;
+    w.passed = false;
+    save();
+  }
+}
 function wordStats(){
   const ws = words(), t = todayStr();
   return {total: ws.length,
-          mastered: ws.filter(w => (S.cards[wordKey(w.id)]||{}).lv >= 3).length,
+          passed: ws.filter(w => w.passed).length,
           todayNew: ws.filter(w => w.date === t).length,
-          due: dueWords().length};
+          dueNow: dailyTestQueue().length,
+          srsDue: dueWords().length};
 }
 function wordBars(){
   const N = 14, data = []; let max = 1;
@@ -4460,42 +4483,51 @@ function wordCardToday(){
   return '<div class="card" style="border-color:#DCE6F8">'
     + '<div class="day-head"><div class="day-no" style="background:linear-gradient(120deg,#7FA8E8,#4F79C8);'
     + '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">单词</div>'
-    + '<div class="day-date">今天新增 '+st.todayNew+' 个 · 待复习 '+st.due+' 个</div></div>'
-    + '<p class="day-task">'+(st.total ? '累计 '+st.total+' 个，已掌握 '+st.mastered+' 个。' : '今天遇到的生词，记进来就会自动排复习。')+'</p>'
+    + '<div class="day-date">今天新增 '+st.todayNew+' 个 · 待检测 '+st.dueNow+' 个</div></div>'
+    + '<p class="day-task">'+(st.dueNow ? '有 '+st.dueNow+' 个词等着今天检测。'
+      : (st.total ? '累计 '+st.total+' 个，已通过 '+st.passed+' 个。' : '今天遇到的生词，记进来，明天开始检测。'))+'</p>'
     + '<div class="row-btn"><button class="btn big" style="background:linear-gradient(135deg,#7FA8E8,#4F79C8);color:#fff" data-addword="1">＋ 加单词</button></div>'
     + '<div class="row-btn">'
-    + '<button class="btn line" data-wordreview="1">🔁 复习到期'+(st.due ? '（'+st.due+'）' : '')+'</button>'
+    + '<button class="btn '+(st.dueNow ? 'rose' : 'line')+'" data-wordtest="1">📝 今日检测'+(st.dueNow ? '（'+st.dueNow+'）' : '')+'</button>'
     + '<button class="btn line" data-wordquiz="1">🎲 抽测</button></div>'
     + '</div>';
 }
 function viewWords(){
   const ws = words().slice().sort((a,b) => b.ts - a.ts);
-  const st = wordStats();
+  const st = wordStats(), t = todayStr();
   let h = '<div class="grid2">'
     + '<div class="stat"><b>'+st.total+'</b><span>累计单词</span></div>'
-    + '<div class="stat"><b>'+st.mastered+'</b><span>已掌握</span></div>'
+    + '<div class="stat"><b>'+st.dueNow+'</b><span>今日待检测</span></div>'
     + '<div class="stat"><b>'+st.todayNew+'</b><span>今天新增</span></div>'
-    + '<div class="stat"><b>'+st.due+'</b><span>今天待复习</span></div>'
+    + '<div class="stat"><b>'+st.passed+'</b><span>已通过</span></div>'
     + '</div>'
-    + '<div class="sec-title">新增统计<span>近 14 天</span></div><div class="card">'+wordBars()+'</div>'
-    + '<div class="row-btn"><button class="btn rose big" data-addword="1">＋ 添加单词</button></div>'
+    + '<div class="row-btn"><button class="btn big" style="width:100%;background:linear-gradient(135deg,#7FA8E8,#4F79C8);color:#fff" data-wordtest="1">📝 开始今日检测'+(st.dueNow ? '（'+st.dueNow+' 个）' : '')+'</button></div>'
     + '<div class="row-btn">'
-    + '<button class="btn'+(st.due ? '' : ' line')+'" style="'+(st.due ? 'background:linear-gradient(135deg,#7FA8E8,#4F79C8);color:#fff' : '')+'" data-wordreview="1">🔁 复习到期'+(st.due ? '（'+st.due+'）' : '')+'</button>'
-    + '<button class="btn line" data-wordquiz="1">🎲 抽测 10 个</button></div>';
+    + '<button class="btn rose" data-addword="1">＋ 添加单词</button>'
+    + '<button class="btn line" data-wordreview="1">🔁 长期复习'+(st.srsDue ? '（'+st.srsDue+'）' : '')+'</button>'
+    + '<button class="btn line" data-wordquiz="1">🎲 抽测</button></div>'
+    + '<div class="card" style="background:linear-gradient(150deg,#F5F8FE,#EDF2FB);border-color:#DCE6F8">'
+    + '<div class="sec-title" style="margin:0 0 8px">怎么用</div>'
+    + '<ul class="focus" style="margin:0">'
+    + '<li><b>今天加的词，明天才开始检测</b>（当天不测）</li>'
+    + '<li>检测点「会了」就算过；点「模糊／不会」的，<b>明天自动滚进来和新词一起再测</b>，直到过了为止</li>'
+    + '<li>过了的词转入长期复习：3 / 7 / 14 / 30 / 60 天各来一次</li>'
+    + '<li>长期复习里再点「模糊／不会」，它会回到每日检测队列</li></ul></div>'
+    + '<div class="sec-title">新增统计<span>近 14 天</span></div><div class="card">'+wordBars()+'</div>';
   if (!ws.length){
-    return h + '<div class="empty"><div>🔤</div>还没有单词<br>把今天阅读里遇到的新词记进来，'
-      + '系统会按 1 / 3 / 7 / 14 / 30 / 60 天安排复习</div>';
+    return h + '<div class="empty"><div>🔤</div>还没有单词<br>把今天阅读里遇到的新词记进来</div>';
   }
-  h += '<div class="sec-title">我的单词<span>'+ws.length+' 个</span></div>';
+  h += '<div class="sec-title">我的单词<span>'+ws.length+' 个 · 待检测 '+st.dueNow+' 个</span></div>';
   h += ws.map(w => {
-    const c = S.cards[wordKey(w.id)] || {}, lv = c.lv || 0;
-    const tag = lv >= 3 ? '<span class="wtag ok">已掌握</span>'
-              : lv >= 1 ? '<span class="wtag mid">复习中 '+lv+'</span>'
-              : '<span class="wtag new">新词</span>';
+    const c = S.cards[wordKey(w.id)] || {};
+    let tag, meta;
+    if (w.passed){ tag = '<span class="wtag ok">已通过</span>'; meta = c.due ? ('下次 '+md(c.due)) : ''; }
+    else if (w.tests){ tag = '<span class="wtag mid">待检测</span>'; meta = '已测 '+w.tests+' 次没过'; }
+    else if (w.date === t){ tag = '<span class="wtag new">今天新加</span>'; meta = '明天开始检测'; }
+    else { tag = '<span class="wtag mid">待检测</span>'; meta = '今天要测'; }
     return '<div class="wordrow"><div class="wmain"><b>'+esc(w.en)+'</b>'
-      + '<span>'+esc(w.zh)+'</span>'
-      + (w.ex ? '<i>'+esc(w.ex)+'</i>' : '') + '</div>'
-      + '<div class="wside">'+tag+'<span class="wmeta">'+(c.due ? '下次 '+md(c.due) : '还没测过')+'</span></div>'
+      + '<span>'+esc(w.zh)+'</span>' + (w.ex ? '<i>'+esc(w.ex)+'</i>' : '') + '</div>'
+      + '<div class="wside">'+tag+'<span class="wmeta">'+meta+'</span></div>'
       + '<button class="wdel" data-delword="'+w.id+'">✕</button></div>';
   }).join('');
   return h;
@@ -4651,7 +4683,7 @@ function viewMe(){
            : '<div class="kv"><span>已建档复习卡片</span><b>'+ratedCount()+' 张</b></div>')
    + '<div class="kv"><span>新增碎碎念</span><b>'+weekNotes+' 条</b></div>'
    + '<div class="kv"><span>美术史累计打卡</span><b>'+artCount()+' 天（第 '+artRound()+' 轮）</b></div>'
-   + '<div class="kv"><span>英语单词</span><b>'+words().length+' 个（已掌握 '+wordStats().mastered+'）</b></div>'
+   + '<div class="kv"><span>英语单词</span><b>'+words().length+' 个（已通过 '+wordStats().passed+'）</b></div>'
    + '<div class="row-btn"><button class="btn line" data-report="1">📋 生成并复制周报</button></div>'
    + '</div>'
    + '<div class="sec-title">模式</div><div class="card">'
@@ -4847,22 +4879,44 @@ function startQuiz(){
 }
 function startWordReview(){
   const ws = dueWords();
-  if (!ws.length){ alert('现在没有到期的单词，先加几个新词吧 🐾'); return; }
-  QUIZ = false;
+  if (!ws.length){ alert('现在没有需要长期复习的单词 🐾'); return; }
+  QUIZ = 'srs';
   RQ = ws.map(wordCard); RI = 0; RSTAT = {0:0,1:0,2:0};
   renderReview();
 }
+/* 每日检测：昨天及以前加的、还没通过的词（没通过的会滚到明天和新词一起测） */
+function startWordTest(){
+  const q = dailyTestQueue();
+  if (!q.length){
+    alert(words().filter(w => w.date === todayStr()).length
+      ? '今天新加的单词，明天开始检测 🐾'
+      : '现在没有要检测的单词，先去加几个吧 🐾');
+    return;
+  }
+  RQ = q.map((w,i) => {
+    const base = {key: wordKey(w.id), wid: w.id, test: true,
+      from: '第 ' + ((w.tests||0) + 1) + ' 次检测' + (w.tests ? '（上次没过）' : '')};
+    return (i % 3 === 2) ? Object.assign(base, {q: w.zh, a: w.en, from: base.from + ' · 中译英'})
+                         : Object.assign(base, {q: w.en, a: w.zh + (w.ex ? '\n' + w.ex : '')});
+  });
+  QUIZ = 'test';
+  RI = 0; RSTAT = {0:0,1:0,2:0};
+  renderReview();
+}
 function startWordQuiz(){
-  const pool = words().filter(w => !S.skip[wordKey(w.id)]).map(wordCard);
+  const pool = words().filter(w => !S.skip[wordKey(w.id)]);
   if (pool.length < 2){ alert('先加几个单词再来抽测 🐾'); return; }
   for (let i = pool.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
     const t = pool[i]; pool[i] = pool[j]; pool[j] = t;
   }
-  const picked = pool.slice(0, Math.min(10, pool.length)).map((c,i) =>
-    (i % 3 === 2) ? {key: c.key, q: c.a, a: c.q, from: '单词 · 看中文写英文'} : c);
+  RQ = pool.slice(0, Math.min(10, pool.length)).map((w,i) => {
+    const base = {key: wordKey(w.id), wid: w.id, from: '抽测'};
+    return (i % 3 === 2) ? Object.assign(base, {a: w.en, q: w.zh, from: '抽测 · 中译英'})
+                         : Object.assign(base, {q: w.en, a: w.zh + (w.ex ? '\n' + w.ex : '')});
+  });
   QUIZ = 'word';
-  RQ = picked; RI = 0; RSTAT = {0:0,1:0,2:0};
+  RI = 0; RSTAT = {0:0,1:0,2:0};
   renderReview();
 }
 function renderReview(){
@@ -4872,14 +4926,22 @@ function renderReview(){
     const g = RSTAT[2], mid = RSTAT[1], bad = RSTAT[0];
     const pct = Math.round(g / RQ.length * 100);
     logQuiz(RQ.length, g);
+    const isTest = QUIZ === 'test';
+    let line;
+    if (isTest){
+      line = (g === RQ.length) ? '全过了，斐斐你今天超厉害。'
+           : '没过的 ' + (RQ.length - g) + ' 个，明天会和新词一起再测，别急。';
+    } else {
+      line = (g === RQ.length) ? '全记住了，斐斐你今天超厉害。'
+           : bad === 0 ? '没有完全不会的，稳住这个状态。'
+           : '不会的明天还会来找你，别急。';
+    }
     m.innerHTML = '<div class="review"><div class="rv-done">'
-      + '<div class="emo">'+(bad === 0 ? '🎉' : pct >= 60 ? '🌿' : '💪')+'</div>'
-      + '<h2>'+(QUIZ ? '抽测结束' : '复习完成')+'</h2>'
+      + '<div class="emo">'+(g === RQ.length ? '🎉' : pct >= 60 ? '🌿' : '💪')+'</div>'
+      + '<h2>'+(isTest ? '检测完成' : QUIZ ? '抽测结束' : '复习完成')+'</h2>'
       + '<div class="scorebig">'+pct+'%</div>'
-      + '<p>'+(QUIZ ? '这次抽了 ' : '这次过了 ')+RQ.length+' 条：会了 '+g+' · 模糊 '+mid+' · 不会 '+bad+'<br>'
-      + (g === RQ.length ? '全记住了，斐斐你今天超厉害。'
-         : bad === 0 ? '没有完全不会的，稳住这个状态。'
-         : '不会的明天还会来找你，别急。') + '</p>'
+      + '<p>'+(isTest ? '这次测了 ' : QUIZ ? '这次抽了 ' : '这次过了 ')
+      + RQ.length + ' 个：过了 ' + g + ' · 模糊 ' + mid + ' · 不会 ' + bad + '<br>' + line + '</p>'
       + '<button class="btn rose big" id="rvend">回到今天</button></div></div>';
     document.getElementById('rvend').onclick = () => { QUIZ = false; m.innerHTML = ''; render(); };
     return;
@@ -4889,7 +4951,9 @@ function renderReview(){
     + '<div class="rv-top"><button class="close" id="rvclose">✕</button>'
     + '<div class="rv-prog"><i style="width:'+(RI/RQ.length*100).toFixed(1)+'%"></i></div>'
     + '<div class="rv-num">'+(RI+1)+'/'+RQ.length+'</div></div>'
-    + (QUIZ ? '<div style="text-align:center;font-size:12.5px;color:var(--sub);font-weight:700;margin-bottom:10px">🎲 随机抽测</div>' : '')
+    + (QUIZ === 'test' ? '<div class="rvmode">📝 今日检测'+(c.from ? ' · '+esc(c.from) : '')+'</div>'
+       : QUIZ === 'word' ? '<div class="rvmode">🎲 随机抽测</div>'
+       : QUIZ === 'srs' ? '<div class="rvmode">🔁 长期复习</div>' : '')
     + '<div class="rv-card"><div class="rv-from">'+(c.from||'')+' · 已复习 '+(c.lv||0)+' 级</div>'
     + '<div class="rv-q">'+esc(c.q)+'</div><div id="rva"></div></div>'
     + '<div style="margin-top:16px"><button class="btn line big" id="rvshow" style="width:100%">先想一下，再看答案</button></div></div>';
@@ -4900,7 +4964,9 @@ function renderReview(){
       + '<button data-rq="0">不会 😣</button><button data-rq="1">模糊 🤔</button><button data-rq="2">会了 😊</button></div>';
     document.getElementById('rvshow').outerHTML = '<div style="font-size:12.5px;color:var(--sub);text-align:center;margin-top:12px">按真实感觉点，别客气</div>';
     document.querySelectorAll('[data-rq]').forEach(b => b.onclick = () => {
-      const q = +b.dataset.rq; rateCard(c.key, q); RSTAT[q]++; RI++; renderReview();
+      const q = +b.dataset.rq;
+      if (c.wid) rateWord(c.wid, q); else rateCard(c.key, q);
+      RSTAT[q]++; RI++; renderReview();
     });
   };
 }
@@ -5046,6 +5112,7 @@ function bind(){
   const cl = document.querySelector('[data-closing]'); if (cl) cl.onclick = openClosing;
   const aw = document.querySelector('[data-addword]'); if (aw) aw.onclick = openAddWord;
   const wr = document.querySelector('[data-wordreview]'); if (wr) wr.onclick = startWordReview;
+  const wt = document.querySelector('[data-wordtest]'); if (wt) wt.onclick = startWordTest;
   const wq = document.querySelector('[data-wordquiz]'); if (wq) wq.onclick = startWordQuiz;
   document.querySelectorAll('[data-delword]').forEach(b => b.onclick = () => {
     if (confirm('删掉这个单词？')){ delWord(b.dataset.delword); render(); }
