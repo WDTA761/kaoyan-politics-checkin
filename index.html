@@ -226,6 +226,24 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
   background:#FFFBF4;border-radius:10px;font-size:14.5px;line-height:1.75;color:var(--ink2)}
 .qa.open .a{display:block;animation:cardIn .22s both}
 .qa.open .q u{color:var(--ok)}
+.qh{display:flex;align-items:flex-start;gap:8px}
+.qh .q{flex:1;min-width:0}
+.skipb{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--sub);background:#F5EFF1;
+  border-radius:9px;padding:7px 11px;margin-top:11px;min-width:46px}
+.skipb.back{color:var(--rose-dd);background:var(--pink-xl)}
+.typetag{flex:0 0 auto;font-size:10.5px;font-weight:800;border-radius:6px;
+  padding:2px 6px;margin-right:6px;white-space:nowrap}
+.typetag.ts{background:#EDF2FD;color:#3B62A8}
+.typetag.tb{background:#FDECEF;color:#B3374F}
+.typetag.td{background:#F1EDF7;color:#6C5CA8}
+.filterbar{display:flex;gap:7px;margin:0 0 10px;flex-wrap:wrap}
+.filterbar button{padding:8px 13px;border-radius:11px;background:#F7F1F3;font-size:12.5px;
+  font-weight:700;color:var(--sub);min-height:38px}
+.filterbar button.on{background:linear-gradient(135deg,#EE7C9D,#D9557E);color:#fff}
+.qalist[data-f="sel"] .qa:not([data-ty="选"]){display:none}
+.qalist[data-f="big"] .qa[data-ty="选"]{display:none}
+.qalist[data-f="skip"] .qa[data-sk="0"]{display:none}
+.qalist:not([data-f="skip"]) .qa[data-sk="1"]{display:none}
 .level{display:flex;gap:7px;margin-top:11px}
 .level button{flex:1;padding:9px 4px;border-radius:11px;font-size:13.5px;font-weight:700;min-height:42px}
 .level button[data-rate="0"],.level button[data-rq="0"]{background:#FDECEF;color:#C0392B}
@@ -2641,8 +2659,7 @@ ART_CONTENT[22] = {
     ["库尔贝", "法国现实主义美术的旗手，代表作《奥尔南的葬礼》《画室》《石工》；特征：以巨大尺幅描绘普通人的葬礼、劳动与日常生活，不做美化，笔触厚重朴实，主张艺术应表现真实与当代。"],
     ["杜米埃", "法国现实主义画家、讽刺漫画家与版画家，代表作《三等车厢》《高康大》《立法肚子》；特征：以夸张变形的漫画手法讽刺资产阶级与政客，油画则色调沉郁，表现城市平民的艰辛。"],
     ["米勒", "法国现实主义画家、巴比松画派成员，代表作《拾穗者》1857《播种者》《晚钟》《牧羊女》；特征：以农民劳动与农村生活为终身主题，构图简洁、色调浑厚柔和，人物如纪念碑般庄严，充满对劳动者的同情与宗教般的静穆感。"],
-    ["《拾穗者》", "米勒 1857 年所作，现实主义代表作；特征：描绘三名农妇在收割后的田间拾穗，背景是辽阔的原野与远处的麦垛，人物弯腰的动势重复而有节奏，色彩以黄褐与蓝灰为主，把最平凡的劳动画成庄严的图景。"],
-    ["巴比松画派", "19 世纪 30 至 60 年代活动于法国枫丹白露森林巴比松村的风景画派，代表人物卢梭、柯罗、杜比尼、杜普雷、特罗容；特征：主张走出画室对景写生，直接描绘自然的光色与空气，画风质朴，是印象主义的先导。"],
+    ["《拾穗者》与巴比松画派", "《拾穗者》是米勒 1857 年所作的现实主义代表作；特征：描绘三名农妇在收割后的田间拾穗，背景是辽阔的原野与远处的麦垛，人物弯腰的动势重复而有节奏，色彩以黄褐与蓝灰为主，把最平凡的劳动画成庄严的图景。巴比松画派是 19 世纪 30 至 60 年代活动于法国枫丹白露森林巴比松村的风景画派，代表人物卢梭、柯罗、杜比尼、杜普雷、特罗容；特征：主张走出画室对景写生，直接描绘自然的光色与空气，画风质朴，是印象主义的先导。"],
     ["柯罗", "巴比松画派中影响最大的风景画家，代表作《孟特芳丹的回忆》《珍珠女》；特征：银灰色调，画面朦胧柔和，树枝如羽毛般轻盈，人物与风景融为一体，兼具古典的宁静与自然的诗意。"],
     ["卢梭", "巴比松画派的领袖，代表作《橡树林》《枫丹白露森林的出口》；特征：坚持对自然直接写生，画面结构坚实、色调沉郁，善画大树与旷野，被称为「风景画中的现实主义」。"]
   ],
@@ -2667,8 +2684,7 @@ ART_CONTENT[22] = {
 ART_CONTENT[23] = {
   frame: "第五章 19 世纪欧洲美术\n  二、法国（印象主义、新印象主义、后印象主义、雕塑）\n  三、德国（门采尔、珂勒惠支）\n  四、英国（透纳、拉斐尔前派）\n  五、俄罗斯（巡回展览画派、列宾、克拉姆斯科伊）\n  六、象征主义",
   must: [
-    ["印象主义", "19 世纪 60 至 70 年代兴起于法国的画派，1874 年首届画展在摄影师纳达尔工作室举办，因批评家讥讽莫奈《印象·日出》而得名；代表画家莫奈、马奈、雷诺阿、德加、毕沙罗、西斯莱；特征：反对官方沙龙与古典题材，主张户外对景写生，用短促笔触与色彩并置捕捉瞬间的光色变化，画面明亮，阴影用彩色的补色表现。"],
-    ["莫奈", "印象主义最典型的代表、色彩的探索者，代表作《印象·日出》1874《睡莲》组画《卢昂大教堂》系列《草垛》系列；特征：在同一对象的不同时间反复作画以记录光色变化，笔触短促、色彩明丽，轮廓消解于光色之中。"],
+    ["印象主义及其代表莫奈", "印象主义是 19 世纪 60 至 70 年代兴起于法国的画派，1874 年首届画展在摄影师纳达尔工作室举办，因批评家讥讽莫奈《印象·日出》而得名；代表画家莫奈、马奈、雷诺阿、德加、毕沙罗、西斯莱；特征：反对官方沙龙与古典题材，主张户外对景写生，用短促笔触与色彩并置捕捉瞬间的光色变化，画面明亮，阴影用彩色的补色表现。莫奈是印象主义最典型的代表、色彩的探索者，代表作《印象·日出》1874（描绘勒阿弗尔港雾中的日出，用橙红太阳与灰蓝水面形成补色对比，笔触迅疾、物象轮廓模糊，是印象主义得名之作）、《睡莲》组画、《卢昂大教堂》系列、《草垛》系列；特征：在同一对象的不同时间反复作画以记录光色变化。"],
     ["《印象·日出》", "莫奈 1874 年所作，印象主义得名之作；特征：描绘勒阿弗尔港雾中的日出，用橙红的太阳与灰蓝的水面形成补色对比，笔触迅疾，物象轮廓模糊，只表现瞬间的视觉印象。"],
     ["马奈", "法国画家、印象主义的先驱与精神领袖，代表作《草地上的午餐》1863《奥林匹亚》《吹笛少年》《福利·贝热尔的酒吧间》；特征：以平面化的色块、简化的明暗和直接的用色冲击传统，题材取自当代生活，与官方学院派正面冲突。"],
     ["雷诺阿", "法国印象主义画家，代表作《煎饼磨坊的舞会》《游艇上的午餐》《浴女》；特征：善画人物尤其妇女与儿童，色彩温暖明媚，用斑驳的光斑表现人物皮肤与衣着，画面欢乐、愉悦、富生活气息。"],
@@ -2679,8 +2695,7 @@ ART_CONTENT[23] = {
     ["梵高", "荷兰籍后印象主义画家，代表作《向日葵》1888《星月夜》1889《阿尔的卧室》《吃土豆的人》；特征：用强烈对比的纯色与旋转扭动的厚涂笔触直接表达内心的激情与痛苦，一生创作短暂而高产，对野兽主义与表现主义影响巨大。"],
     ["高更", "法国后印象主义画家、综合主义的倡导者，代表作《我们从哪里来？我们是谁？我们往哪里去？》《塔希提岛上的女人》《布道后的幻象》；特征：反对印象主义的自然主义，主张用大块平涂的强烈色彩、简化的形体和粗重轮廓表现主观与象征意味，追求原始与野性的生命力。"],
     ["罗丹", "19 世纪至 20 世纪初法国最伟大的雕塑家，代表作《思想者》《加莱义民》《巴尔扎克像》《地狱之门》《青铜时代》；特征：摆脱学院派的表面光滑完整，强调肌肉的起伏与光影的颤动，充满力量与情感张力；《思想者》原为《地狱之门》横楣中央的主像，《加莱义民》纪念 1347 年加莱六义士自我牺牲。"],
-    ["门采尔", "19 世纪德国现实主义画家，代表作《轧铁工厂》1875《腓特烈大帝生平》组画；特征：以写实的笔法描绘工业劳动与新崛起的工人生活，是欧洲最早表现大工业生产的画家之一，素描与油画皆严谨生动。"],
-    ["珂勒惠支", "德国版画家、雕塑家，代表作版画组画《织工暴动》《农民战争》、铜版画《母亲与死去的孩子》；特征：以母亲与孩子的形象、工人的苦难与反抗为终身主题，用黑白版画的强烈对比表现悲愤与同情，被鲁迅介绍到中国后影响中国新兴木刻运动。"],
+    ["门采尔与珂勒惠支（德国现实主义）", "门采尔是 19 世纪德国现实主义画家，代表作《轧铁工厂》1875《腓特烈大帝生平》组画；特征：以写实的笔法描绘工业劳动与新崛起的工人生活，是欧洲最早表现大工业生产的画家之一。珂勒惠支是德国版画家、雕塑家，代表作版画组画《织工暴动》《农民战争》、铜版画《母亲与死去的孩子》；特征：以母亲与孩子的形象、工人的苦难与反抗为终身主题，用黑白版画的强烈对比表现悲愤与同情，被鲁迅介绍到中国后影响中国新兴木刻运动。"],
     ["透纳", "19 世纪英国风景画大师、浪漫主义代表，代表作《雨、蒸汽和速度》《奴隶船》《议会大厦的火灾》；特征：痴迷于表现光、雾、水汽与大气运动，用旋涡状的笔触与明亮的色彩使物象几乎消融，被称为「光的画家」，对印象主义有重要先导作用。"],
     ["巡回展览画派", "19 世纪 70 年代起俄国现实主义画派，因在各大城市巡回展出而得名（又称巡回展览派），组织者为克拉姆斯科伊，代表画家列宾、苏里科夫、希什金、列维坦；特征：反对只服务宫廷的学院派，以民主立场描绘俄罗斯现实生活、历史与风景，具有强烈的批判性与民族性。"],
     ["列宾", "俄国巡回展览画派最杰出的代表，代表作《伏尔加河上的纤夫》1870 至 1873《意外归来》《伊凡雷帝杀子》《查波罗什人给土耳其苏丹写信》；特征：以深刻的心理刻画、广阔的构图和严谨的造型描绘俄国社会矛盾与历史，被称为俄国现实主义绘画的高峰。"],
@@ -2709,16 +2724,14 @@ ART_CONTENT[23] = {
 ART_CONTENT[24] = {
   frame: "第六章 20 世纪美术\n  一、现代主义美术（总体特征）\n  二、现代主义诸流派\n    1. 野兽主义\n    2. 立体主义\n    3. 未来主义\n    4. 表现主义\n    5. 达达主义\n    6. 超现实主义\n    7. 抽象主义、抽象表现主义\n  三、现代雕塑（布朗库西、亨利·摩尔、贾克梅蒂）\n  四、后现代主义美术：波普艺术、观念艺术\n  五、次重点：俄国至上主义、俄国构成主义、巴黎画派、大地艺术、照相写实主义",
   must: [
-    ["20 世纪美术的时代背景", "20 世纪经历两次世界大战、工业与科技革命、社会主义运动与民族独立运动；摄影与电影的出现迫使绘画放弃再现功能，哲学上非理性主义、精神分析学与存在主义影响深广；美术中心由巴黎转向纽约，流派更替迅速，艺术家以宣言与运动的方式集团登场。"],
-    ["现代主义美术的总体特征", "指 20 世纪上半期西方反传统的美术思潮与流派总称；特征：① 反对文艺复兴以来的写实传统与学院规范，主张艺术自律；② 强调主观表现、内在精神与形式探索，走向抽象与变形；③ 广泛吸收原始艺术、非洲艺术与东方艺术；④ 派别林立、宣言不断，艺术家追求原创性与个人语言。"],
+    ["20 世纪美术的时代背景与现代主义美术特征", "20 世纪经历两次世界大战、工业与科技革命、社会主义运动与民族独立运动；摄影与电影的出现迫使绘画放弃再现功能，哲学上非理性主义、精神分析学与存在主义影响深广；美术中心由巴黎转向纽约，流派更替迅速，艺术家以宣言与运动的方式集团登场。现代主义美术指 20 世纪上半期西方反传统的美术思潮与流派总称；特征：① 反对文艺复兴以来的写实传统与学院规范，主张艺术自律；② 强调主观表现、内在精神与形式探索，走向抽象与变形；③ 广泛吸收原始艺术、非洲艺术与东方艺术；④ 派别林立、宣言不断，艺术家追求原创性与个人语言。"],
     ["野兽主义", "1905 年巴黎秋季沙龙上因批评家沃塞尔的讥讽而得名的画派，代表画家马蒂斯、弗拉曼克、德兰；特征：把色彩从描写功能中解放出来，用大块高纯度原色平涂与粗放笔触构成画面，形体简化、装饰性强，追求色彩的愉悦与生命感。马蒂斯代表作《舞蹈》1909 至 1910《红色的和谐》，晚年以彩色剪纸创作，被称为「用剪刀作画」。"],
     ["立体主义", "1907 至 1914 年间由毕加索与布拉克在巴黎创立的画派，被视为 20 世纪最重要的现代主义运动之一；特征：否定单一视点与传统的明暗造型，把对象分解为几何切面并同时呈现多个视角，画面平面化、结构理性化。分「分析立体主义」（1907 至 1911，形色碎裂、以灰褐为主）与「综合立体主义」（1912 年后，引入拼贴与字母，色彩明亮）。开山之作是毕加索 1907 年的《亚威农少女》（五个变形裸体，面部借鉴非洲黑人雕刻，人体与背景碎裂为尖锐几何块面）；布拉克代表作《埃斯塔克的房子》，首创在画面上使用字母与纸拼贴。"],
     ["毕加索", "西班牙籍画家、立体主义创始人，代表作《亚威农少女》1907《格尔尼卡》1937《弹曼陀铃的女孩》《镜前的少女》；特征：一生风格多变（蓝色时期、玫瑰色时期、立体主义、新古典主义、超现实主义），造型自由、充满张力，是现代艺术最具影响力的大师。"],
     ["《格尔尼卡》", "毕加索 1937 年所作，控诉德国法西斯轰炸西班牙小镇格尔尼卡；特征：以黑白灰三色、碎裂的立体主义构图表现母亲、死婴、奔马、公牛与残肢等象征形象，画面动荡而有纪念碑式力量，是 20 世纪最著名的反战作品。"],
     ["未来主义", "1909 年由意大利诗人马里内蒂发表宣言、随后扩展到美术的运动，代表画家波丘尼、巴拉、塞韦里尼，雕塑家波丘尼；特征：赞美现代工业、机器、速度与战争，用连续重叠的形象与「力的线条」表现运动的过程与同时性，把立体主义的分解法用于表现动感。巴拉代表作《拴着皮带的狗的动态》，波丘尼代表作《城市的兴起》《空间中连续的唯一形体》。"],
     ["表现主义", "20 世纪初兴起于德国和北欧、强调表现内在情感与精神的艺术倾向，代表社团为 1905 年在德累斯顿成立的桥社与 1911 年在慕尼黑成立的青骑士社，代表画家基尔希纳、诺尔德、康定斯基、马尔克，奥地利画家席勒、科柯施卡；特征：用扭曲变形的形体、强烈的色彩与粗犷笔触表达焦虑、孤独与社会批判，反对印象主义的外在记录。先驱为挪威画家蒙克，代表作《呐喊》1893。"],
-    ["达达主义", "1916 年在瑞士苏黎世伏尔泰酒馆由查拉等人发起的反艺术运动，代表艺术家杜尚、阿尔普、皮卡比亚、施维特斯，德国有豪斯曼与照片拼贴；特征：以虚无、嘲弄、偶然与破坏对抗战争的荒谬和资产阶级艺术观，用现成物品、拼贴与胡闹式行动否定传统艺术的定义。杜尚代表作《泉》1917（倒置的小便池）、《带胡须的蒙娜丽莎》、《下楼梯的裸女》。"],
-    ["杜尚", "法国籍艺术家、达达主义的核心人物，代表作《泉》1917《带胡须的蒙娜丽莎》《大玻璃（甚至被单身汉剥光了的新娘）》《下楼梯的裸女第二号》；特征：把日常工业品签上名当作品展出，提出「现成品」概念，认为艺术的价值在于观念而非技艺，直接开启观念艺术与后现代主义。"],
+    ["达达主义与杜尚", "达达主义是 1916 年在瑞士苏黎世伏尔泰酒馆由查拉等人发起的反艺术运动，代表艺术家杜尚、阿尔普、皮卡比亚、施维特斯，德国有豪斯曼与照片拼贴；特征：以虚无、嘲弄、偶然与破坏对抗战争的荒谬和资产阶级艺术观，用现成物品、拼贴与胡闹式行动否定传统艺术的定义。杜尚是法国籍艺术家、达达主义的核心人物，代表作《泉》1917（倒置的小便池）、《带胡须的蒙娜丽莎》、《大玻璃（甚至被单身汉剥光了的新娘）》、《下楼梯的裸女第二号》；特征：把日常工业品签上名当作品展出，提出「现成品」概念，认为艺术的价值在于观念而非技艺，直接开启观念艺术与后现代主义。"],
     ["超现实主义", "1924 年由法国作家布勒东发表《超现实主义宣言》正式成立的流派，代表画家达利、米罗、马格利特、恩斯特、马松，另有阿尔普；特征：以弗洛伊德精神分析学为理论基础，主张摆脱理性与道德束缚，通过自动书写、梦境记录与逼真描绘表现潜意识、梦幻与偶然，画面奇幻怪诞。达利代表作《记忆的永恒》1931《内战的预感》，米罗代表作《哈里昆的狂欢》。"],
     ["抽象主义", "20 世纪初兴起、完全放弃具体物象而只用形、色、线、面等纯形式要素作画的倾向，代表人物康定斯基、蒙德里安、马列维奇；特征：主张绘画应表现内在精神或纯粹的形式关系，走向非具象与几何化。康定斯基被视为抽象绘画的开创者，1910 年前后开始纯抽象的水彩与油画，著有《论艺术的精神》；蒙德里安创立「冷抽象」，以红黄蓝三原色与黑白灰、直线直角构成均衡画面（《红黄蓝的构成》）。"],
     ["抽象表现主义", "20 世纪 40 至 50 年代在美国兴起的现代主义绘画运动，又称「纽约画派」，代表画家波洛克、德库宁、罗斯科、纽曼、克莱因；特征：尺幅巨大、无主题无中心构图，强调绘画行动本身与纯粹情感的宣泄，分「行动绘画」（波洛克《第 31 号》《薰衣草之雾》，用滴洒与泼溅作画）与「色域绘画」（罗斯科《橙与黄》等大块柔和色面）。它的出现标志西方现代艺术中心由巴黎转到纽约。"],
@@ -2728,17 +2741,15 @@ ART_CONTENT[24] = {
     ["20 世纪现代雕塑（布朗库西、亨利·摩尔、贾克梅蒂）", "共同倾向：脱离纪念碑式与学院派传统，走向抽象、简化与空间观念的拓展。布朗库西（罗马尼亚）把形体极度简化磨光，追求材质纯净与形态本质，代表作《吻》《沉睡的缪斯》《空间中的鸟》《无穷柱》；亨利·摩尔（英国）以抽象简化的人体（斜倚躯体、母子）为母题，在实体上凿洞使形体与空间互相穿透，代表作《斜倚的人体》系列、《国王与王后》《母与子》；贾克梅蒂（瑞士）用极度拉长、粗糙如被侵蚀的形体表现现代人的孤独与存在的虚无感，代表作《行走的人》《城市广场》《迭戈像》。"],
     ["俄国至上主义", "1915 年由俄国画家马列维奇创立的抽象流派，代表作《白底上的黑方块》1915《白色上的白色》；特征：主张绘画应彻底摆脱物象与实用，以最基本的几何形（方块、圆、十字）和纯色表现「纯粹感觉的至上」，画面非具象、无透视、无体积，是最极端的几何抽象。"],
     ["俄国构成主义", "20 世纪 10 至 20 年代在俄国兴起、与十月革命关系密切的艺术运动，代表艺术家塔特林、罗德琴科、加博，代表作塔特林《第三国际纪念碑》模型；特征：主张艺术应当进入生产与建设，用工业材料（铁、玻璃、木头）与几何结构创作，把艺术变为实用设计与建筑的任务，对包豪斯与现代设计影响深远。"],
-    ["大地艺术", "20 世纪 60 年代兴起于美国的美术倾向，代表艺术家史密森、克里斯托与让娜—克劳德、海泽，代表作史密森《螺旋形防波堤》；特征：走出美术馆，在自然与荒野中以土、石、水等大地材料创作巨尺度作品，强调与环境、时间、过程的关系，常无法收藏与展出。"],
-    ["照相写实主义", "20 世纪 60 至 70 年代兴起于美国（又称超级写实主义）的美术倾向，代表画家克洛斯、埃斯蒂斯，雕塑家杜安·汉森；特征：以照片为唯一依据，用机械的复制手法把人物、街景与日常物品放大到极度逼真，画面平滑无笔触，取消个人情感与笔法痕迹，反映消费社会与图像复制时代。"],
+    ["大地艺术与照相写实主义", "大地艺术是 20 世纪 60 年代兴起于美国的美术倾向，代表艺术家史密森、克里斯托与让娜—克劳德、海泽，代表作史密森《螺旋形防波堤》；特征：走出美术馆，在自然与荒野中以土、石、水等大地材料创作巨尺度作品，强调与环境、时间、过程的关系，常无法收藏与展出。照相写实主义（又称超级写实主义）是 20 世纪 60 至 70 年代兴起于美国的美术倾向，代表画家克洛斯、埃斯蒂斯，雕塑家杜安·汉森；特征：以照片为唯一依据，用机械的复制手法把人物、街景与日常物品放大到极度逼真，画面平滑无笔触，取消个人情感与笔法痕迹，反映消费社会与图像复制时代。"],
   ],
   confuse: [
     ["野兽主义 / 立体主义", "野兽主义从色彩入手，用大块纯色与狂放笔触解放色彩，形体仍可辨认（马蒂斯）；立体主义从形体入手，把对象分解为几何切面、同时呈现多视角（毕加索、布拉克）。"],
     ["立体主义 / 未来主义", "立体主义是静态的结构分解；未来主义借用其分解法专门表现速度、运动与同时性，并赞美机器、战争与都市（巴拉、波丘尼）。"],
     ["达达主义 / 超现实主义", "达达以否定、嘲弄与破坏对抗战争与资产阶级艺术，目标是取消艺术；超现实主义以弗洛伊德理论为依据，用自动技法与梦境意象探入潜意识，目标是把潜意识视觉化。"],
     ["抽象主义 / 抽象表现主义", "抽象主义是欧洲 20 世纪初的理论与形式探索，追求纯粹形式与精神性（康定斯基、蒙德里安）；抽象表现主义是美国战后的绘画运动，尺幅巨大、强调行动与情感宣泄，标志纽约取代巴黎。"],
-    ["现代主义 / 后现代主义", "现代主义追求原创、前卫、纯粹形式与精英性；后现代主义反对这些主张，用拼贴、挪用、复制与折中，模糊高雅与通俗、取消艺术的唯一性。"],
-    ["波普艺术 / 观念艺术", "波普取材于商业与大众图像，仍有具体可见的形象与物质作品；观念艺术则主张观念即艺术，作品可以是文字、行为或现成物，极力弱化物的形态。"],
-    ["布朗库西 / 亨利·摩尔", "布朗库西追求单一形体的极致简化与材质磨光，作品紧凑、内向、近乎抽象符号；亨利·摩尔以人体（尤其斜倚躯体与母子）为母题，用实体上凿洞使形体与空间穿透，尺幅巨大、多置户外。"]
+    ["现代主义 / 后现代主义、现代雕塑对照", "现代主义追求原创、前卫、纯粹形式与精英性；后现代主义反对这些主张，用拼贴、挪用、复制与折中，模糊高雅与通俗、取消艺术的唯一性。雕塑上，布朗库西追求单一形体的极致简化与材质磨光，作品紧凑、内向、近乎抽象符号；亨利·摩尔以人体（尤其斜倚躯体与母子）为母题，用实体上凿洞使形体与空间穿透，尺幅巨大、多置户外。"],
+    ["波普艺术 / 观念艺术", "波普取材于商业与大众图像，仍有具体可见的形象与物质作品；观念艺术则主张观念即艺术，作品可以是文字、行为或现成物，极力弱化物的形态。"]
   ],
   nums: [
     "毕加索《亚威农少女》1907 年（立体主义开山之作）、《格尔尼卡》1937 年。",
@@ -2796,6 +2807,623 @@ ART_CONTENT[25] = {
   ]
 };
 /* ===== ART-CONTENT-END ===== */
+const CTYPE = {};
+/* ===== CTYPE-CONTENT-START ===== */
+CTYPE["1:0"] = "选";
+CTYPE["1:1"] = "选";
+CTYPE["1:2"] = "选";
+CTYPE["1:3"] = "都";
+CTYPE["1:4"] = "选";
+CTYPE["1:5"] = "选";
+CTYPE["1:6"] = "选";
+CTYPE["1:7"] = "选";
+CTYPE["1:8"] = "选";
+CTYPE["1:9"] = "都";
+CTYPE["1:10"] = "选";
+CTYPE["1:11"] = "都";
+CTYPE["1:12"] = "都";
+CTYPE["1:13"] = "都";
+CTYPE["1:14"] = "都";
+CTYPE["1:15"] = "大";
+CTYPE["2:0"] = "选";
+CTYPE["2:1"] = "都";
+CTYPE["2:2"] = "选";
+CTYPE["2:3"] = "大";
+CTYPE["2:4"] = "选";
+CTYPE["2:5"] = "大";
+CTYPE["2:6"] = "选";
+CTYPE["2:7"] = "都";
+CTYPE["2:8"] = "大";
+CTYPE["2:9"] = "都";
+CTYPE["2:10"] = "都";
+CTYPE["2:11"] = "都";
+CTYPE["2:12"] = "选";
+CTYPE["2:13"] = "选";
+CTYPE["2:14"] = "都";
+CTYPE["2:15"] = "都";
+CTYPE["3:0"] = "选";
+CTYPE["3:1"] = "都";
+CTYPE["3:2"] = "选";
+CTYPE["3:3"] = "选";
+CTYPE["3:4"] = "都";
+CTYPE["3:5"] = "都";
+CTYPE["3:6"] = "都";
+CTYPE["3:7"] = "都";
+CTYPE["3:8"] = "都";
+CTYPE["3:9"] = "都";
+CTYPE["3:10"] = "都";
+CTYPE["3:11"] = "都";
+CTYPE["3:12"] = "大";
+CTYPE["3:13"] = "选";
+CTYPE["3:14"] = "都";
+CTYPE["3:15"] = "都";
+CTYPE["4:0"] = "大";
+CTYPE["4:1"] = "都";
+CTYPE["4:2"] = "选";
+CTYPE["4:3"] = "都";
+CTYPE["4:4"] = "大";
+CTYPE["4:5"] = "大";
+CTYPE["4:6"] = "选";
+CTYPE["4:7"] = "选";
+CTYPE["4:8"] = "选";
+CTYPE["4:9"] = "选";
+CTYPE["4:10"] = "都";
+CTYPE["4:11"] = "都";
+CTYPE["4:12"] = "大";
+CTYPE["4:13"] = "大";
+CTYPE["4:14"] = "都";
+CTYPE["5:0"] = "选";
+CTYPE["5:1"] = "选";
+CTYPE["5:2"] = "选";
+CTYPE["5:3"] = "选";
+CTYPE["5:4"] = "选";
+CTYPE["5:5"] = "选";
+CTYPE["5:6"] = "选";
+CTYPE["5:7"] = "选";
+CTYPE["5:8"] = "选";
+CTYPE["5:9"] = "选";
+CTYPE["5:10"] = "选";
+CTYPE["5:11"] = "选";
+CTYPE["5:12"] = "选";
+CTYPE["5:13"] = "选";
+CTYPE["5:14"] = "选";
+CTYPE["5:15"] = "选";
+CTYPE["5:16"] = "选";
+CTYPE["6:0"] = "选";
+CTYPE["6:1"] = "选";
+CTYPE["6:2"] = "选";
+CTYPE["6:3"] = "选";
+CTYPE["6:4"] = "选";
+CTYPE["6:5"] = "选";
+CTYPE["6:6"] = "选";
+CTYPE["6:7"] = "选";
+CTYPE["6:8"] = "选";
+CTYPE["6:9"] = "选";
+CTYPE["6:10"] = "选";
+CTYPE["6:11"] = "选";
+CTYPE["6:12"] = "选";
+CTYPE["6:13"] = "选";
+CTYPE["6:14"] = "都";
+CTYPE["7:0"] = "选";
+CTYPE["7:1"] = "选";
+CTYPE["7:2"] = "选";
+CTYPE["7:3"] = "选";
+CTYPE["7:4"] = "选";
+CTYPE["7:5"] = "选";
+CTYPE["7:6"] = "都";
+CTYPE["7:7"] = "大";
+CTYPE["7:8"] = "大";
+CTYPE["7:9"] = "都";
+CTYPE["7:10"] = "都";
+CTYPE["7:11"] = "都";
+CTYPE["7:12"] = "大";
+CTYPE["7:13"] = "大";
+CTYPE["8:0"] = "选";
+CTYPE["8:1"] = "选";
+CTYPE["8:2"] = "选";
+CTYPE["8:3"] = "选";
+CTYPE["8:4"] = "选";
+CTYPE["8:5"] = "选";
+CTYPE["8:6"] = "选";
+CTYPE["8:7"] = "选";
+CTYPE["8:8"] = "选";
+CTYPE["8:9"] = "选";
+CTYPE["8:10"] = "选";
+CTYPE["8:11"] = "选";
+CTYPE["9:0"] = "都";
+CTYPE["9:1"] = "选";
+CTYPE["9:2"] = "选";
+CTYPE["9:3"] = "选";
+CTYPE["9:4"] = "都";
+CTYPE["9:5"] = "选";
+CTYPE["9:6"] = "都";
+CTYPE["9:7"] = "选";
+CTYPE["9:8"] = "大";
+CTYPE["9:9"] = "大";
+CTYPE["9:10"] = "都";
+CTYPE["9:11"] = "都";
+CTYPE["10:0"] = "选";
+CTYPE["10:1"] = "都";
+CTYPE["10:2"] = "大";
+CTYPE["10:3"] = "选";
+CTYPE["10:4"] = "选";
+CTYPE["10:5"] = "选";
+CTYPE["10:6"] = "选";
+CTYPE["10:7"] = "大";
+CTYPE["10:8"] = "都";
+CTYPE["10:9"] = "都";
+CTYPE["10:10"] = "都";
+CTYPE["10:11"] = "选";
+CTYPE["10:12"] = "大";
+CTYPE["10:13"] = "选";
+CTYPE["11:0"] = "选";
+CTYPE["11:1"] = "选";
+CTYPE["11:2"] = "选";
+CTYPE["11:3"] = "选";
+CTYPE["11:4"] = "选";
+CTYPE["11:5"] = "选";
+CTYPE["11:6"] = "都";
+CTYPE["11:7"] = "都";
+CTYPE["11:8"] = "选";
+CTYPE["11:9"] = "选";
+CTYPE["11:10"] = "选";
+CTYPE["11:11"] = "选";
+CTYPE["11:12"] = "选";
+CTYPE["11:13"] = "都";
+CTYPE["11:14"] = "都";
+CTYPE["11:15"] = "都";
+CTYPE["12:0"] = "选";
+CTYPE["12:1"] = "选";
+CTYPE["12:2"] = "都";
+CTYPE["12:3"] = "选";
+CTYPE["12:4"] = "选";
+CTYPE["12:5"] = "选";
+CTYPE["12:6"] = "选";
+CTYPE["12:7"] = "大";
+CTYPE["12:8"] = "选";
+CTYPE["12:9"] = "选";
+CTYPE["12:10"] = "选";
+CTYPE["12:11"] = "大";
+CTYPE["12:12"] = "选";
+CTYPE["12:13"] = "都";
+CTYPE["13:0"] = "选";
+CTYPE["13:1"] = "选";
+CTYPE["13:2"] = "选";
+CTYPE["13:3"] = "选";
+CTYPE["13:4"] = "选";
+CTYPE["13:5"] = "都";
+CTYPE["13:6"] = "选";
+CTYPE["13:7"] = "选";
+CTYPE["13:8"] = "选";
+CTYPE["13:9"] = "选";
+CTYPE["13:10"] = "选";
+CTYPE["13:11"] = "选";
+CTYPE["13:12"] = "选";
+CTYPE["13:13"] = "都";
+CTYPE["13:14"] = "都";
+CTYPE["13:15"] = "都";
+CTYPE["14:0"] = "选";
+CTYPE["14:1"] = "都";
+CTYPE["14:2"] = "选";
+CTYPE["14:3"] = "选";
+CTYPE["14:4"] = "选";
+CTYPE["14:5"] = "选";
+CTYPE["14:6"] = "选";
+CTYPE["14:7"] = "选";
+CTYPE["14:8"] = "选";
+CTYPE["14:9"] = "都";
+CTYPE["14:10"] = "都";
+CTYPE["14:11"] = "选";
+CTYPE["15:0"] = "选";
+CTYPE["15:1"] = "大";
+CTYPE["15:2"] = "都";
+CTYPE["15:3"] = "大";
+CTYPE["15:4"] = "大";
+CTYPE["15:5"] = "大";
+CTYPE["15:6"] = "大";
+CTYPE["15:7"] = "都";
+CTYPE["15:8"] = "都";
+CTYPE["15:9"] = "都";
+CTYPE["15:10"] = "都";
+CTYPE["15:11"] = "选";
+CTYPE["15:12"] = "都";
+CTYPE["15:13"] = "大";
+CTYPE["15:14"] = "大";
+CTYPE["16:0"] = "大";
+CTYPE["16:1"] = "大";
+CTYPE["16:2"] = "大";
+CTYPE["16:3"] = "大";
+CTYPE["16:4"] = "都";
+CTYPE["16:5"] = "大";
+CTYPE["16:6"] = "大";
+CTYPE["16:7"] = "都";
+CTYPE["16:8"] = "都";
+CTYPE["16:9"] = "大";
+CTYPE["16:10"] = "大";
+CTYPE["16:11"] = "大";
+CTYPE["16:12"] = "都";
+CTYPE["16:13"] = "大";
+CTYPE["16:14"] = "都";
+CTYPE["16:15"] = "大";
+CTYPE["17:0"] = "大";
+CTYPE["17:1"] = "大";
+CTYPE["17:2"] = "都";
+CTYPE["17:3"] = "都";
+CTYPE["17:4"] = "大";
+CTYPE["17:5"] = "都";
+CTYPE["17:6"] = "大";
+CTYPE["17:7"] = "大";
+CTYPE["17:8"] = "都";
+CTYPE["17:9"] = "都";
+CTYPE["17:10"] = "都";
+CTYPE["17:11"] = "都";
+CTYPE["17:12"] = "大";
+CTYPE["17:13"] = "都";
+CTYPE["17:14"] = "都";
+CTYPE["17:15"] = "都";
+CTYPE["18:0"] = "大";
+CTYPE["18:1"] = "都";
+CTYPE["18:2"] = "大";
+CTYPE["18:3"] = "都";
+CTYPE["18:4"] = "都";
+CTYPE["18:5"] = "都";
+CTYPE["18:6"] = "大";
+CTYPE["18:7"] = "大";
+CTYPE["18:8"] = "大";
+CTYPE["18:9"] = "都";
+CTYPE["18:10"] = "大";
+CTYPE["18:11"] = "大";
+CTYPE["18:12"] = "都";
+CTYPE["18:13"] = "都";
+CTYPE["18:14"] = "都";
+CTYPE["18:15"] = "都";
+CTYPE["19:0"] = "大";
+CTYPE["19:1"] = "都";
+CTYPE["19:2"] = "大";
+CTYPE["19:3"] = "都";
+CTYPE["19:4"] = "大";
+CTYPE["19:5"] = "大";
+CTYPE["19:6"] = "都";
+CTYPE["19:7"] = "都";
+CTYPE["19:8"] = "都";
+CTYPE["19:9"] = "大";
+CTYPE["19:10"] = "大";
+CTYPE["19:11"] = "大";
+CTYPE["19:12"] = "都";
+CTYPE["19:13"] = "都";
+CTYPE["19:14"] = "都";
+CTYPE["19:15"] = "都";
+CTYPE["20:0"] = "大";
+CTYPE["20:1"] = "大";
+CTYPE["20:2"] = "大";
+CTYPE["20:3"] = "大";
+CTYPE["20:4"] = "大";
+CTYPE["20:5"] = "大";
+CTYPE["20:6"] = "都";
+CTYPE["20:7"] = "都";
+CTYPE["20:8"] = "都";
+CTYPE["20:9"] = "大";
+CTYPE["20:10"] = "大";
+CTYPE["20:11"] = "都";
+CTYPE["20:12"] = "大";
+CTYPE["20:13"] = "大";
+CTYPE["20:14"] = "大";
+CTYPE["20:15"] = "都";
+CTYPE["21:0"] = "都";
+CTYPE["21:1"] = "选";
+CTYPE["21:2"] = "都";
+CTYPE["21:3"] = "都";
+CTYPE["21:4"] = "选";
+CTYPE["21:5"] = "选";
+CTYPE["21:6"] = "选";
+CTYPE["21:7"] = "都";
+CTYPE["21:8"] = "选";
+CTYPE["21:9"] = "大";
+CTYPE["21:10"] = "大";
+CTYPE["21:11"] = "大";
+CTYPE["21:12"] = "都";
+CTYPE["21:13"] = "都";
+CTYPE["21:14"] = "选";
+CTYPE["21:15"] = "都";
+CTYPE["22:0"] = "选";
+CTYPE["22:1"] = "大";
+CTYPE["22:2"] = "大";
+CTYPE["22:3"] = "大";
+CTYPE["22:4"] = "大";
+CTYPE["22:5"] = "大";
+CTYPE["22:6"] = "都";
+CTYPE["22:7"] = "大";
+CTYPE["22:8"] = "都";
+CTYPE["22:9"] = "选";
+CTYPE["22:10"] = "选";
+CTYPE["22:11"] = "选";
+CTYPE["22:12"] = "大";
+CTYPE["22:13"] = "都";
+CTYPE["22:14"] = "都";
+CTYPE["22:15"] = "大";
+CTYPE["23:0"] = "选";
+CTYPE["23:1"] = "大";
+CTYPE["23:2"] = "都";
+CTYPE["23:3"] = "选";
+CTYPE["23:4"] = "选";
+CTYPE["23:5"] = "都";
+CTYPE["23:6"] = "大";
+CTYPE["23:7"] = "大";
+CTYPE["23:8"] = "大";
+CTYPE["23:9"] = "大";
+CTYPE["23:10"] = "选";
+CTYPE["23:11"] = "都";
+CTYPE["23:12"] = "选";
+CTYPE["23:13"] = "都";
+CTYPE["23:14"] = "选";
+CTYPE["23:15"] = "都";
+CTYPE["24:0"] = "都";
+CTYPE["24:1"] = "大";
+CTYPE["24:2"] = "大";
+CTYPE["24:3"] = "都";
+CTYPE["24:4"] = "选";
+CTYPE["24:5"] = "都";
+CTYPE["24:6"] = "都";
+CTYPE["24:7"] = "选";
+CTYPE["24:8"] = "大";
+CTYPE["24:9"] = "大";
+CTYPE["24:10"] = "大";
+CTYPE["24:11"] = "大";
+CTYPE["24:12"] = "大";
+CTYPE["24:13"] = "大";
+CTYPE["24:14"] = "选";
+CTYPE["24:15"] = "选";
+CTYPE["25:0"] = "选";
+CTYPE["25:1"] = "都";
+CTYPE["25:2"] = "都";
+CTYPE["25:3"] = "选";
+CTYPE["25:4"] = "选";
+CTYPE["25:5"] = "选";
+CTYPE["25:6"] = "选";
+CTYPE["25:7"] = "选";
+CTYPE["25:8"] = "选";
+CTYPE["25:9"] = "选";
+CTYPE["25:10"] = "选";
+CTYPE["25:11"] = "选";
+CTYPE["25:12"] = "选";
+CTYPE["25:13"] = "选";
+CTYPE["25:14"] = "选";
+CTYPE["26:0"] = "选";
+CTYPE["26:1"] = "选";
+CTYPE["26:2"] = "选";
+CTYPE["26:3"] = "选";
+CTYPE["26:4"] = "选";
+CTYPE["26:5"] = "选";
+CTYPE["26:6"] = "大";
+CTYPE["26:7"] = "大";
+CTYPE["26:8"] = "选";
+CTYPE["26:9"] = "大";
+CTYPE["26:10"] = "选";
+CTYPE["26:11"] = "选";
+CTYPE["26:12"] = "选";
+CTYPE["26:13"] = "选";
+CTYPE["26:14"] = "选";
+CTYPE["26:15"] = "大";
+CTYPE["27:0"] = "都";
+CTYPE["27:1"] = "选";
+CTYPE["27:2"] = "选";
+CTYPE["27:3"] = "选";
+CTYPE["27:4"] = "选";
+CTYPE["27:5"] = "选";
+CTYPE["27:6"] = "大";
+CTYPE["27:7"] = "都";
+CTYPE["27:8"] = "选";
+CTYPE["27:9"] = "选";
+CTYPE["27:10"] = "选";
+CTYPE["27:11"] = "选";
+CTYPE["27:12"] = "选";
+CTYPE["27:13"] = "选";
+CTYPE["27:14"] = "选";
+CTYPE["27:15"] = "大";
+CTYPE["28:0"] = "选";
+CTYPE["28:1"] = "选";
+CTYPE["28:2"] = "选";
+CTYPE["28:3"] = "选";
+CTYPE["28:4"] = "选";
+CTYPE["28:5"] = "选";
+CTYPE["28:6"] = "选";
+CTYPE["28:7"] = "选";
+CTYPE["28:8"] = "选";
+CTYPE["28:9"] = "大";
+CTYPE["28:10"] = "选";
+CTYPE["28:11"] = "选";
+CTYPE["28:12"] = "选";
+CTYPE["28:13"] = "大";
+CTYPE["28:14"] = "选";
+CTYPE["28:15"] = "选";
+CTYPE["29:0"] = "大";
+CTYPE["29:1"] = "选";
+CTYPE["29:2"] = "选";
+CTYPE["29:3"] = "选";
+CTYPE["29:4"] = "选";
+CTYPE["29:5"] = "都";
+CTYPE["29:6"] = "选";
+CTYPE["29:7"] = "选";
+CTYPE["29:8"] = "选";
+CTYPE["29:9"] = "选";
+CTYPE["29:10"] = "都";
+CTYPE["29:11"] = "选";
+CTYPE["29:12"] = "大";
+CTYPE["29:13"] = "都";
+CTYPE["29:14"] = "选";
+CTYPE["29:15"] = "大";
+CTYPE["30:0"] = "选";
+CTYPE["30:1"] = "选";
+CTYPE["30:2"] = "选";
+CTYPE["30:3"] = "选";
+CTYPE["30:4"] = "选";
+CTYPE["30:5"] = "选";
+CTYPE["30:6"] = "选";
+CTYPE["30:7"] = "选";
+CTYPE["30:8"] = "选";
+CTYPE["30:9"] = "选";
+CTYPE["30:10"] = "选";
+CTYPE["30:11"] = "选";
+CTYPE["30:12"] = "选";
+CTYPE["30:13"] = "选";
+CTYPE["30:14"] = "选";
+CTYPE["30:15"] = "大";
+CTYPE["30:16"] = "选";
+CTYPE["30:17"] = "选";
+CTYPE["30:18"] = "选";
+CTYPE["30:19"] = "选";
+CTYPE["30:20"] = "选";
+CTYPE["30:21"] = "都";
+CTYPE["30:22"] = "选";
+CTYPE["30:23"] = "都";
+CTYPE["31:0"] = "选";
+CTYPE["31:1"] = "大";
+CTYPE["31:2"] = "都";
+CTYPE["31:3"] = "大";
+CTYPE["31:4"] = "选";
+CTYPE["31:5"] = "都";
+CTYPE["31:6"] = "都";
+CTYPE["31:7"] = "选";
+CTYPE["31:8"] = "大";
+CTYPE["31:9"] = "都";
+CTYPE["31:10"] = "选";
+CTYPE["31:11"] = "都";
+CTYPE["31:12"] = "都";
+CTYPE["31:13"] = "大";
+CTYPE["31:14"] = "都";
+CTYPE["31:15"] = "都";
+CTYPE["32:0"] = "都";
+CTYPE["32:1"] = "都";
+CTYPE["32:2"] = "都";
+CTYPE["32:3"] = "选";
+CTYPE["32:4"] = "都";
+CTYPE["32:5"] = "大";
+CTYPE["32:6"] = "都";
+CTYPE["32:7"] = "都";
+CTYPE["32:8"] = "大";
+CTYPE["32:9"] = "大";
+CTYPE["32:10"] = "都";
+CTYPE["32:11"] = "都";
+CTYPE["32:12"] = "都";
+CTYPE["32:13"] = "都";
+CTYPE["32:14"] = "都";
+CTYPE["32:15"] = "选";
+CTYPE["33:0"] = "都";
+CTYPE["33:1"] = "都";
+CTYPE["33:2"] = "选";
+CTYPE["33:3"] = "大";
+CTYPE["33:4"] = "大";
+CTYPE["33:5"] = "都";
+CTYPE["33:6"] = "都";
+CTYPE["33:7"] = "都";
+CTYPE["33:8"] = "选";
+CTYPE["33:9"] = "都";
+CTYPE["33:10"] = "都";
+CTYPE["33:11"] = "都";
+CTYPE["33:12"] = "都";
+CTYPE["33:13"] = "都";
+CTYPE["33:14"] = "大";
+CTYPE["33:15"] = "都";
+CTYPE["34:0"] = "选";
+CTYPE["34:1"] = "选";
+CTYPE["34:2"] = "都";
+CTYPE["34:3"] = "大";
+CTYPE["34:4"] = "大";
+CTYPE["34:5"] = "都";
+CTYPE["34:6"] = "大";
+CTYPE["34:7"] = "大";
+CTYPE["34:8"] = "都";
+CTYPE["34:9"] = "选";
+CTYPE["34:10"] = "都";
+CTYPE["34:11"] = "都";
+CTYPE["34:12"] = "大";
+CTYPE["34:13"] = "大";
+CTYPE["34:14"] = "都";
+CTYPE["34:15"] = "都";
+CTYPE["35:0"] = "选";
+CTYPE["35:1"] = "都";
+CTYPE["35:2"] = "大";
+CTYPE["35:3"] = "大";
+CTYPE["35:4"] = "大";
+CTYPE["35:5"] = "都";
+CTYPE["35:6"] = "大";
+CTYPE["35:7"] = "大";
+CTYPE["35:8"] = "都";
+CTYPE["35:9"] = "大";
+CTYPE["35:10"] = "选";
+CTYPE["35:11"] = "选";
+CTYPE["35:12"] = "选";
+CTYPE["35:13"] = "选";
+CTYPE["36:0"] = "都";
+CTYPE["36:1"] = "大";
+CTYPE["36:2"] = "大";
+CTYPE["36:3"] = "大";
+CTYPE["36:4"] = "大";
+CTYPE["36:5"] = "选";
+CTYPE["36:6"] = "选";
+CTYPE["36:7"] = "选";
+CTYPE["36:8"] = "选";
+CTYPE["36:9"] = "选";
+CTYPE["36:10"] = "都";
+CTYPE["36:11"] = "都";
+CTYPE["36:12"] = "都";
+CTYPE["36:13"] = "都";
+CTYPE["37:0"] = "都";
+CTYPE["37:1"] = "都";
+CTYPE["37:2"] = "都";
+CTYPE["37:3"] = "选";
+CTYPE["37:4"] = "都";
+CTYPE["37:5"] = "都";
+CTYPE["37:6"] = "都";
+CTYPE["37:7"] = "都";
+CTYPE["37:8"] = "都";
+CTYPE["37:9"] = "都";
+CTYPE["37:10"] = "都";
+CTYPE["37:11"] = "选";
+CTYPE["37:12"] = "选";
+CTYPE["37:13"] = "选";
+CTYPE["38:0"] = "都";
+CTYPE["38:1"] = "大";
+CTYPE["38:2"] = "大";
+CTYPE["38:3"] = "都";
+CTYPE["38:4"] = "大";
+CTYPE["38:5"] = "都";
+CTYPE["38:6"] = "大";
+CTYPE["38:7"] = "大";
+CTYPE["38:8"] = "大";
+CTYPE["38:9"] = "大";
+CTYPE["38:10"] = "大";
+CTYPE["38:11"] = "大";
+CTYPE["38:12"] = "都";
+CTYPE["38:13"] = "大";
+CTYPE["39:0"] = "都";
+CTYPE["39:1"] = "都";
+CTYPE["39:2"] = "都";
+CTYPE["39:3"] = "都";
+CTYPE["39:4"] = "选";
+CTYPE["39:5"] = "都";
+CTYPE["39:6"] = "选";
+CTYPE["39:7"] = "都";
+CTYPE["39:8"] = "选";
+CTYPE["39:9"] = "选";
+CTYPE["39:10"] = "都";
+CTYPE["39:11"] = "都";
+CTYPE["39:12"] = "选";
+CTYPE["40:0"] = "都";
+CTYPE["40:1"] = "选";
+CTYPE["40:2"] = "选";
+CTYPE["40:3"] = "大";
+CTYPE["40:4"] = "选";
+CTYPE["40:5"] = "都";
+CTYPE["40:6"] = "都";
+CTYPE["40:7"] = "大";
+CTYPE["40:8"] = "都";
+CTYPE["40:9"] = "大";
+CTYPE["40:10"] = "选";
+CTYPE["40:11"] = "选";
+CTYPE["40:12"] = "都";
+CTYPE["40:13"] = "选";
+/* ===== CTYPE-CONTENT-END ===== */
 
 /* =====================================================================
    计划
@@ -3133,7 +3761,7 @@ const LS = 'kaoyan2027_politics_v2';
 
 function blank(){
   return {v:3, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'', exam:'',
-          artStart:'', art:{}, quizLog:{}, days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
+          artStart:'', art:{}, skip:{}, quizLog:{}, days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
 }
 function load(){
   try{
@@ -3253,6 +3881,15 @@ function logQuiz(n, good){
   e.n += n; e.good += good;
   S.quizLog[t] = e; save();
 }
+
+/* ---------- 考点：题型标注 + 跳过 ---------- */
+const ctypeOf = key => CTYPE[key] || '';
+const isSkipped = key => !!S.skip[key];
+function toggleSkip(key){
+  if (S.skip[key]) delete S.skip[key]; else S.skip[key] = 1;
+  save();
+}
+const skipCount = () => Object.keys(S.skip || {}).length;
 const noteNoToday = () => examPassed() ? lifeSerial(todayStr())
                                        : (todayNo() >= 1 && todayNo() <= LOVE.length ? todayNo() : 0);
 
@@ -3285,6 +3922,7 @@ function dueCards(){
     if (diffDays(S.start, dateOf(x)) > diffDays(S.start, t)) continue;
     c.must.forEach((m,i) => {
       const key = x.d + ':' + i, cd = S.cards[key];
+      if (S.skip[key]) return;
       if (cd && cd.due <= t) out.push({key, d:x.d, i, q:m[0], a:m[1], lv:cd.lv, from:'Day '+x.d+' · '+x.sub});
     });
   }
@@ -3294,6 +3932,7 @@ function dueCards(){
     if (artOffset() < d - 1) continue;
     c.must.forEach((m,i) => {
       const key = 'a' + d + ':' + i, cd = S.cards[key];
+      if (S.skip[key]) return;
       if (cd && cd.due <= t) out.push({key, d, i, q:m[0], a:m[1], lv:cd.lv, from:'美术史 '+d+' · '+artPlanOf(d).sub});
     });
   }
@@ -3307,18 +3946,18 @@ function quizPool(){
     const c = CONTENT[x.d];
     if (!c || !c.must) continue;
     if (diffDays(S.start, dateOf(x)) > diffDays(S.start, t)) continue;
-    c.must.forEach((m,i) => items.push({key:x.d+':'+i, d:x.d, i, q:m[0], a:m[1], from:'Day '+x.d+' · '+x.sub}));
+    c.must.forEach((m,i) => { const k = x.d+':'+i; if (!S.skip[k]) items.push({key:k, d:x.d, i, q:m[0], a:m[1], from:'Day '+x.d+' · '+x.sub}); });
   }
   for (let d = 1; d <= ART_DAYS; d++){
     const c = ART_CONTENT[d];
     if (!c || !c.must) continue;
     if (artOffset() < d - 1) continue;
-    c.must.forEach((m,i) => items.push({key:'a'+d+':'+i, d, i, q:m[0], a:m[1], from:'美术史 '+d+' · '+artPlanOf(d).sub}));
+    c.must.forEach((m,i) => { const k = 'a'+d+':'+i; if (!S.skip[k]) items.push({key:k, d, i, q:m[0], a:m[1], from:'美术史 '+d+' · '+artPlanOf(d).sub}); });
   }
   return items;
 }
-const ratedCount = () => Object.keys(S.cards).length;
-const masteredCount = () => Object.values(S.cards).filter(c => (c.lv||0) >= 3).length;
+const ratedCount = () => Object.keys(S.cards).filter(k => !S.skip[k]).length;
+const masteredCount = () => Object.entries(S.cards).filter(([k,c]) => !S.skip[k] && (c.lv||0) >= 3).length;
 
 function badgeList(){
   const lv = notesEarned();
@@ -3894,6 +4533,13 @@ function viewMe(){
    + 'padding:0 14px;font-size:15px;background:#fff"><button class="btn line" id="artsave">保存</button></div>'
    + '<p class="focus" style="margin:10px 0 0;font-size:12.5px;color:var(--sub)">美术史 25 天一轮，从这里开始算第 1 轮第 1 天。</p>'
    + '</div>'
+   + '<div class="sec-title">考点筛选<span>已跳过 '+skipCount()+' 条</span></div>'
+   + '<div class="card">'
+   + '<div class="kv"><span>已跳过（不背、不进复习和抽测）</span><b>'+skipCount()+' 条</b></div>'
+   + (skipCount() ? '<div class="row-btn"><button class="btn line" data-unskip="1">全部恢复</button></div>' : '')
+   + '<p class="focus" style="margin:12px 0 0;font-size:12.5px;color:var(--sub)">在每天的「背这一天的内容」里，每条考点右边都能点「跳过」；'
+   + '标题上的蓝色／红色小标签表示它「只出选择题」还是「会出大题」。</p>'
+   + '</div>'
    + '<div class="sec-title">数据</div><div class="card">'
    + '<p class="focus" style="margin:0;font-size:13.5px;color:var(--sub)">记录只存在这台 iPad 上，<b>清理 Safari 数据会全丢</b>，建议每周导出一次备份。</p>'
    + '<div class="row-btn"><button class="btn rose" data-export="1">⬇️ 导出备份</button>'
@@ -3929,16 +4575,34 @@ function buildContentSheet(c, title, task, keyPrefix){
   let h = '<h3>'+title+'</h3><p class="hint">'+esc(task||'')+'　·　先自己想，再点开看答案</p>'
     + '<div class="sec-title" style="margin:4px 4px 8px">框架</div><div class="kframe">'+esc(c.frame)+'</div>';
   if (c.must && c.must.length){
+    const keys = c.must.map((m,i) => keyPrefix + i);
+    const skipN = keys.filter(isSkipped).length;
+    const hasType = keys.some(k => ctypeOf(k));
+    const bigN = keys.filter(k => !isSkipped(k) && ctypeOf(k) && ctypeOf(k) !== '选').length;
+    const selN = keys.filter(k => !isSkipped(k) && ctypeOf(k) === '选').length;
     h += '<div class="sec-title" style="margin:18px 4px 8px">必背点 · 自测'
        + '<button class="btn ghost sm" id="qaall">全部显示</button></div>'
-       + '<div class="card" style="padding:2px 15px;margin-bottom:0">'
+       + '<div class="filterbar" id="cflt">'
+       +   '<button data-cfilter="all" class="on">全部 '+(keys.length - skipN)+'</button>'
+       +   (hasType ? '<button data-cfilter="big">会出大题 '+bigN+'</button>'
+                    + '<button data-cfilter="sel">只出选择题 '+selN+'</button>' : '')
+       +   '<button data-cfilter="skip">已跳过 '+skipN+'</button>'
+       + '</div>'
+       + '<div class="card qalist" data-f="all" style="padding:2px 15px;margin-bottom:0">'
        + c.must.map((m,i)=>{
-           const key = keyPrefix + i;
-           return '<div class="qa" data-qa="'+key+'">'
-             + '<button class="q"><i>'+(i+1)+'</i><span>'+esc(m[0])+'</span><u>看答案</u></button>'
+           const key = keyPrefix + i, ty = ctypeOf(key), sk = isSkipped(key);
+           const tl = ty === '选' ? '选择题' : ty === '大' ? '大题' : ty === '都' ? '都考' : '';
+           const tc = ty === '选' ? 'ts' : ty === '大' ? 'tb' : 'td';
+           return '<div class="qa" data-qa="'+key+'" data-ty="'+(ty||'')+'" data-sk="'+(sk?1:0)+'">'
+             + '<div class="qh"><button class="q"><i>'+(i+1)+'</i>'
+             + (tl ? '<span class="typetag '+tc+'">'+tl+'</span>' : '')
+             + '<span>'+esc(m[0])+'</span><u>看答案</u></button>'
+             + '<button class="skipb'+(sk?' back':'')+'" data-skip="'+key+'">'+(sk?'恢复':'跳过')+'</button></div>'
              + '<div class="a">'+esc(m[1])+rateRow(key, cardOf(key))+'</div></div>';
          }).join('')
-       + '</div>';
+       + '</div>'
+       + '<p class="focus" style="margin:10px 4px 0;font-size:12.5px;color:var(--sub)">'
+       + '「跳过」的考点不再进复习队列和抽测，也不计入掌握率；点「恢复」可以加回来。</p>';
   }
   if (c.confuse && c.confuse.length){
     h += '<div class="sec-title" style="margin:18px 4px 8px">易混对比</div><div class="card" style="padding:2px 15px">'
@@ -3959,6 +4623,18 @@ function openArtContent(d){
   const x = artPlanOf(d);
   showSheet(buildContentSheet(ART_CONTENT[d], '美术史 第 '+d+' 天 · '+x.sub, x.task, 'a'+d+':'), bindContentSheet);
 }
+function refreshFilterCounts(){
+  const rows = Array.prototype.slice.call(document.querySelectorAll('.qalist .qa'));
+  if (!rows.length) return;
+  const sk = rows.filter(r => r.dataset.sk === '1').length;
+  const sel = rows.filter(r => r.dataset.sk !== '1' && r.dataset.ty === '选').length;
+  const big = rows.filter(r => r.dataset.sk !== '1' && r.dataset.ty && r.dataset.ty !== '选').length;
+  const set = (f, txt) => { const b = document.querySelector('[data-cfilter="'+f+'"]'); if (b) b.textContent = txt; };
+  set('all', '全部 ' + (rows.length - sk));
+  set('big', '会出大题 ' + big);
+  set('sel', '只出选择题 ' + sel);
+  set('skip', '已跳过 ' + sk);
+}
 function bindContentSheet(){
   document.querySelectorAll('.qa .q').forEach(q => q.onclick = () => {
     const box = q.parentElement; box.classList.toggle('open');
@@ -3974,6 +4650,21 @@ function bindContentSheet(){
     });
     all.textContent = anyClosed ? '全部收起' : '全部显示';
   };
+  document.querySelectorAll('[data-cfilter]').forEach(b => b.onclick = () => {
+    document.querySelectorAll('[data-cfilter]').forEach(o => o.classList.toggle('on', o === b));
+    const list = document.querySelector('.qalist');
+    if (list) list.dataset.f = b.dataset.cfilter;
+  });
+  document.querySelectorAll('[data-skip]').forEach(b => b.onclick = () => {
+    const key = b.dataset.skip;
+    toggleSkip(key);
+    const sk = isSkipped(key);
+    const row = document.querySelector('.qa[data-qa="'+key+'"]');
+    if (row){ row.dataset.sk = sk ? 1 : 0; if (sk) row.classList.remove('open'); }
+    b.textContent = sk ? '恢复' : '跳过';
+    b.classList.toggle('back', sk);
+    refreshFilterCounts();
+  });
   document.querySelectorAll('[data-rate]').forEach(b => b.onclick = () => {
     const cd = rateCard(b.dataset.key, +b.dataset.rate);
     const left = diffDays(todayStr(), cd.due);
@@ -4181,6 +4872,8 @@ function bind(){
   document.querySelectorAll('[data-plantab]').forEach(b => b.onclick = () => { PLAN_TAB = b.dataset.plantab; render(); });
   const qz = document.querySelector('[data-quiz]'); if (qz) qz.onclick = startQuiz;
   const cl = document.querySelector('[data-closing]'); if (cl) cl.onclick = openClosing;
+  const us = document.querySelector('[data-unskip]');
+  if (us) us.onclick = () => { if (confirm('把所有跳过的考点都恢复？')){ S.skip = {}; save(); render(); } };
   document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
   const nn = document.querySelector('[data-newnote]'); if (nn) nn.onclick = () => openNote(null);
   document.querySelectorAll('[data-delnote]').forEach(b => b.onclick = () => {
