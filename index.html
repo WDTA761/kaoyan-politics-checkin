@@ -6,12 +6,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="斐斐加油">
+<meta name="apple-mobile-web-app-title" content="一点点">
 <meta name="theme-color" content="#F6E3E9">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<title>斐斐的背诵手册</title>
+<title>斐斐的一点点</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -4731,9 +4731,12 @@ function viewMe(){
    + '<div class="row-btn"><button class="btn line" style="color:#C0392B" data-reset="1">清空全部记录</button></div>'
    + '</div>'
    + '<div class="sec-title">写给你</div><div class="card" style="background:linear-gradient(150deg,#FFF7FA,#FDEDF3);border-color:#F8DCE6">'
-   + '<p style="margin:0;font-size:14.5px;line-height:1.85;color:var(--ink2)">斐斐，这本小册子是我做的。<br>'
+   + '<p style="margin:0;font-size:14.5px;line-height:1.85;color:var(--ink2)">'
+   + '斐斐，这个「一点点」是我做的。<br>'
    + '我背不会马原，也帮不上你做题。我能做的，就是把你每天要背的东西整理好，'
    + '再在你想放弃的时候，给你一句话。<br><br>'
+   + '政治一点点，单词一点点，美术史一点点。<br>'
+   + '攒着攒着，就到岸了。<br><br>'
    + '你要上岸，我就先做岸。 —— 每天都在的人</p></div>';
 }
 
@@ -5154,7 +5157,7 @@ function download(name, text, type){
   document.body.appendChild(a); a.click();
   setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
-function exportData(){ download('背诵手册备份_' + todayStr().replace(/-/g,'') + '.json', JSON.stringify(S, null, 1)); }
+function exportData(){ download('一点点备份_' + todayStr().replace(/-/g,'') + '.json', JSON.stringify(S, null, 1)); }
 function importData(){
   const inp = document.createElement('input');
   inp.type = 'file'; inp.accept = '.json,application/json';
@@ -5183,7 +5186,7 @@ function copyReport(){
     if (life){ if (lifeDone(ds)) wd++; }
     else { const n = diffDays(S.start, ds)+1; if (n>=1 && n<=DAYS.length && isDone(n)) wd++; }
   }
-  const txt = '【'+(life?'陪伴打卡':'背诵手册')+'周报】'+md(mon)+'–'+md(t)+'\n'
+  const txt = '【一点点'+(life?'·陪伴打卡':'')+'周报】'+md(mon)+'–'+md(t)+'\n'
     + '本周打卡：'+wd+' 天（完成率 '+(wd/7*100).toFixed(0)+'%）\n'
     + (life
         ? '累计打卡：'+Object.keys(S.life).filter(lifeDone).length+' 天，连续 '+lifeStreak()+' 天\n'

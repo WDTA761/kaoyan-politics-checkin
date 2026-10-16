@@ -1,7 +1,7 @@
 {
-  "name": "斐斐的背诵手册",
-  "short_name": "斐斐加油",
-  "description": "2027考研政治背诵手册（上册）背诵计划与打卡",
+  "name": "斐斐的一点点",
+  "short_name": "一点点",
+  "description": "每天一点点：考研政治、美术史、英语单词的每日打卡，还有小纸条",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
