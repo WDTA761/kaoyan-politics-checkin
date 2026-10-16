@@ -244,6 +244,29 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 .qalist[data-f="big"] .qa[data-ty="选"]{display:none}
 .qalist[data-f="skip"] .qa[data-sk="0"]{display:none}
 .qalist:not([data-f="skip"]) .qa[data-sk="1"]{display:none}
+
+/* ---------- 英语单词 ---------- */
+.win{width:100%;min-height:50px;border:1.5px solid var(--line);border-radius:15px;padding:0 14px;
+  font-size:16px;background:#FDFAFB;margin-bottom:10px}
+.win:focus{outline:none;border-color:var(--pink);background:#fff}
+.bars{display:flex;gap:5px;align-items:flex-end;height:84px}
+.bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.bar i{width:100%;border-radius:5px 5px 2px 2px;min-height:3px;
+  background:linear-gradient(180deg,#9CBCEF,#5B84D8);transition:height .4s}
+.bar span{font-size:9.5px;color:var(--sub);margin-top:4px}
+.wordrow{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+  border-radius:16px;padding:13px 15px;margin-bottom:9px;box-shadow:var(--shadow)}
+.wordrow .wmain{flex:1;min-width:0}
+.wordrow .wmain b{display:block;font-size:17px;font-weight:800;letter-spacing:.2px;color:var(--ink)}
+.wordrow .wmain span{display:block;font-size:14.5px;color:var(--ink2);margin-top:2px}
+.wordrow .wmain i{display:block;font-style:normal;font-size:12.5px;color:var(--sub);margin-top:4px}
+.wordrow .wside{flex:0 0 auto;text-align:right}
+.wordrow .wside .wmeta{display:block;font-size:11px;color:var(--sub);margin-top:5px}
+.wtag{display:inline-block;font-size:11px;font-weight:800;border-radius:99px;padding:3px 9px}
+.wtag.new{background:#F1EDF7;color:#6C5CA8}
+.wtag.mid{background:#FFF6E5;color:#A8770F}
+.wtag.ok{background:var(--ok-bg);color:#1E7B47}
+.wdel{flex:0 0 auto;color:#DCC9CE;font-size:15px;font-weight:700;padding:6px 4px}
 .level{display:flex;gap:7px;margin-top:11px}
 .level button{flex:1;padding:9px 4px;border-radius:11px;font-size:13.5px;font-weight:700;min-height:42px}
 .level button[data-rate="0"],.level button[data-rq="0"]{background:#FDECEF;color:#C0392B}
@@ -272,7 +295,7 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 .rv-from{font-size:11.5px;color:var(--sub);font-weight:700;letter-spacing:.6px;margin-bottom:10px}
 .rv-q{font-size:19px;font-weight:800;line-height:1.55}
 .rv-a{margin-top:16px;padding:14px 15px;background:#FFFBF4;border-left:4px solid var(--gold);
-  border-radius:12px;font-size:15px;line-height:1.8;color:var(--ink2);animation:cardIn .28s both}
+  border-radius:12px;font-size:15px;line-height:1.8;color:var(--ink2);white-space:pre-line;animation:cardIn .28s both}
 .rv-done{text-align:center;padding:30px 10px}
 .rv-done .emo{font-size:52px}
 .rv-done .scorebig{font-size:44px;font-weight:900;line-height:1.1;margin:6px 0 2px;
@@ -427,6 +450,7 @@ nav button.on .ic{transform:translateY(-2px) scale(1.14)}
 
 <nav>
   <button data-tab="today" class="on"><span class="ic">☀️</span><span class="lb">今日</span></button>
+  <button data-tab="words"><span class="ic">🔤</span><span class="lb">单词</span></button>
   <button data-tab="plan"><span class="ic">📖</span><span class="lb">计划</span></button>
   <button data-tab="love"><span class="ic">💌</span><span class="lb" id="navLove">小纸条</span></button>
   <button data-tab="notes"><span class="ic">✏️</span><span class="lb">错题</span></button>
@@ -3760,8 +3784,9 @@ const BY_NO = {}; DAYS.forEach(x => BY_NO[x.d] = x);
 const LS = 'kaoyan2027_politics_v2';
 
 function blank(){
-  return {v:3, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'', exam:'',
-          artStart:'', art:{}, skip:{}, quizLog:{}, days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
+  return {v:4, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'', exam:'',
+          artStart:'', art:{}, skip:{}, quizLog:{}, words:[],
+          days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
 }
 function load(){
   try{
@@ -3855,6 +3880,7 @@ const togetherDays = () => S.together ? (diffDays(S.together, todayStr()) + 1) :
 const artStart = () => S.artStart || S.start;
 const artOffset = () => diffDays(artStart(), todayStr());
 const artStarted = () => artOffset() >= 0;
+const artHead = () => artStarted() ? ('第 ' + artRound() + ' 轮 · 第 ' + artDayNo() + ' / 25 天') : (md(artStart()) + ' 开始');
 const artRound = () => Math.floor(artOffset() / ART_DAYS) + 1;
 const artDayNo = () => { const o = artOffset(); return ((o % ART_DAYS) + ART_DAYS) % ART_DAYS + 1; };
 const artPlanOf = d => ART_PLAN[(d - 1) % ART_DAYS];
@@ -3935,6 +3961,12 @@ function dueCards(){
       if (S.skip[key]) return;
       if (cd && cd.due <= t) out.push({key, d, i, q:m[0], a:m[1], lv:cd.lv, from:'美术史 '+d+' · '+artPlanOf(d).sub});
     });
+  }
+  for (const w of words()){
+    const key = wordKey(w.id), cd = S.cards[key];
+    if (S.skip[key]) continue;
+    if (cd && cd.due <= t) out.push({key, d:0, i:0, q:w.en,
+      a: w.zh + (w.ex ? '\n' + w.ex : ''), lv:cd.lv, from:'单词 · '+(w.date||'')});
   }
   out.sort((p,q) => (p.lv - q.lv) || (p.d - q.d));
   return out;
@@ -4031,9 +4063,9 @@ function renderHeader(){
 }
 function render(){
   renderHeader();
-  const navs = isLife() ? ['today','mood','love','notes','me'] : ['today','plan','love','notes','me'];
-  const labels = isLife() ? {today:'今日', mood:'心情', love:WORD, notes:'碎碎念', me:'我的'}
-                          : {today:'今日', plan:'计划', love:WORD, notes:'错题', me:'我的'};
+  const navs = isLife() ? ['today','words','mood','love','notes','me'] : ['today','words','plan','love','notes','me'];
+  const labels = isLife() ? {today:'今日', words:'单词', mood:'心情', love:WORD, notes:'碎碎念', me:'我的'}
+                          : {today:'今日', words:'单词', plan:'计划', love:WORD, notes:'错题', me:'我的'};
   document.querySelectorAll('nav button').forEach((b,i) => {
     b.dataset.tab = navs[i];
     b.querySelector('.lb').textContent = labels[navs[i]];
@@ -4041,7 +4073,8 @@ function render(){
   if (navs.indexOf(TAB) < 0) TAB = 'today';
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === TAB));
   const v = document.getElementById('view');
-  v.innerHTML = TAB === 'today' ? viewToday() : TAB === 'plan' ? viewPlan() : TAB === 'mood' ? viewMood()
+  v.innerHTML = TAB === 'today' ? viewToday() : TAB === 'words' ? viewWords()
+              : TAB === 'plan' ? viewPlan() : TAB === 'mood' ? viewMood()
               : TAB === 'love' ? viewLove() : TAB === 'notes' ? viewNotes() : viewMe();
   bind();
   const top = () => { window.scrollTo(0,0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; };
@@ -4128,6 +4161,8 @@ function viewLifeToday(){
   }
 
   h += '<div class="sec-title">最近<span>心情与打卡</span></div>' + moodStrip(7);
+  h += '<div class="sec-title">英语单词<span>累计 '+words().length+' 个</span></div>';
+  h += wordCardToday();
   return h;
 }
 
@@ -4200,8 +4235,10 @@ function viewToday(){
       + '<li>想立刻开始，就点下面的按钮，把今天设为 Day 1。</li></ul>'
       + '<div class="row-btn"><button class="btn rose" data-restart="'+today+'">就从今天开始</button>'
       + '<button class="btn line" data-tab="plan">先看全部计划</button></div></div>'
-      + '<div class="sec-title">美术史<span>第 '+artRound()+' 轮 · 第 '+artDayNo()+' / 25 天</span></div>'
-      + artCard();
+      + '<div class="sec-title">美术史<span>'+artHead()+'</span></div>'
+      + artCard()
+      + '<div class="sec-title">英语单词<span>累计 '+words().length+' 个</span></div>'
+      + wordCardToday();
   }
   if (t > DAYS.length){
     return '<div class="card"><p class="day-task">计划走完啦 🎉</p>'
@@ -4241,8 +4278,10 @@ function viewToday(){
   h += '<div class="sec-title">'+(isDone(t)?'今天已经很棒了':'今天要背')+'</div>';
   h += dayCard(x, true);
   h += '<div class="row-btn"><button class="btn ghost" data-quiz="1">🎲 随机抽测 10 条（政治 + 美术史）</button></div>';
-  h += '<div class="sec-title">美术史<span>第 '+artRound()+' 轮 · 第 '+artDayNo()+' / 25 天</span></div>';
+  h += '<div class="sec-title">美术史<span>'+artHead()+'</span></div>';
   h += artCard();
+  h += '<div class="sec-title">英语单词<span>累计 '+words().length+' 个</span></div>';
+  h += wordCardToday();
   return h;
 }
 const STAGES = [
@@ -4379,6 +4418,118 @@ function viewLove(){
   }
   return h;
 }
+/* ---------- 英语单词 ---------- */
+const words = () => S.words || (S.words = []);
+const wordKey = id => 'w:' + id;
+function addWord(en, zh, ex){
+  const w = {id: 'w' + Date.now() + Math.floor(Math.random()*900 + 100),
+             en: en.trim(), zh: zh.trim(), ex: (ex||'').trim(), date: todayStr(), ts: Date.now()};
+  words().push(w); save(); return w;
+}
+function delWord(id){
+  S.words = words().filter(w => w.id !== id);
+  delete S.cards[wordKey(id)];
+  save();
+}
+const wordCard = w => ({key: wordKey(w.id), q: w.en,
+                        a: w.zh + (w.ex ? '\n' + w.ex : ''), from: '单词 · ' + (w.date||'')});
+const dueWords = () => { const t = todayStr();
+  return words().filter(w => { const c = S.cards[wordKey(w.id)]; return c && c.due <= t; }); };
+function wordStats(){
+  const ws = words(), t = todayStr();
+  return {total: ws.length,
+          mastered: ws.filter(w => (S.cards[wordKey(w.id)]||{}).lv >= 3).length,
+          todayNew: ws.filter(w => w.date === t).length,
+          due: dueWords().length};
+}
+function wordBars(){
+  const N = 14, data = []; let max = 1;
+  for (let i = N-1; i >= 0; i--){
+    const d = addDays(todayStr(), -i);
+    const n = words().filter(w => w.date === d).length;
+    if (n > max) max = n;
+    data.push({d, n});
+  }
+  return '<div class="bars">' + data.map(x =>
+    '<div class="bar" title="'+x.d+'：'+x.n+' 个"><i style="height:'+Math.round(x.n/max*100)+'%"></i>'
+    + '<span>'+Number(x.d.slice(8))+'</span></div>').join('') + '</div>'
+    + '<div style="font-size:11.5px;color:var(--sub);margin-top:9px;text-align:center">最近 14 天每天新增的单词</div>';
+}
+function wordCardToday(){
+  const st = wordStats();
+  return '<div class="card" style="border-color:#DCE6F8">'
+    + '<div class="day-head"><div class="day-no" style="background:linear-gradient(120deg,#7FA8E8,#4F79C8);'
+    + '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">单词</div>'
+    + '<div class="day-date">今天新增 '+st.todayNew+' 个 · 待复习 '+st.due+' 个</div></div>'
+    + '<p class="day-task">'+(st.total ? '累计 '+st.total+' 个，已掌握 '+st.mastered+' 个。' : '今天遇到的生词，记进来就会自动排复习。')+'</p>'
+    + '<div class="row-btn"><button class="btn big" style="background:linear-gradient(135deg,#7FA8E8,#4F79C8);color:#fff" data-addword="1">＋ 加单词</button></div>'
+    + '<div class="row-btn">'
+    + '<button class="btn line" data-wordreview="1">🔁 复习到期'+(st.due ? '（'+st.due+'）' : '')+'</button>'
+    + '<button class="btn line" data-wordquiz="1">🎲 抽测</button></div>'
+    + '</div>';
+}
+function viewWords(){
+  const ws = words().slice().sort((a,b) => b.ts - a.ts);
+  const st = wordStats();
+  let h = '<div class="grid2">'
+    + '<div class="stat"><b>'+st.total+'</b><span>累计单词</span></div>'
+    + '<div class="stat"><b>'+st.mastered+'</b><span>已掌握</span></div>'
+    + '<div class="stat"><b>'+st.todayNew+'</b><span>今天新增</span></div>'
+    + '<div class="stat"><b>'+st.due+'</b><span>今天待复习</span></div>'
+    + '</div>'
+    + '<div class="sec-title">新增统计<span>近 14 天</span></div><div class="card">'+wordBars()+'</div>'
+    + '<div class="row-btn"><button class="btn rose big" data-addword="1">＋ 添加单词</button></div>'
+    + '<div class="row-btn">'
+    + '<button class="btn'+(st.due ? '' : ' line')+'" style="'+(st.due ? 'background:linear-gradient(135deg,#7FA8E8,#4F79C8);color:#fff' : '')+'" data-wordreview="1">🔁 复习到期'+(st.due ? '（'+st.due+'）' : '')+'</button>'
+    + '<button class="btn line" data-wordquiz="1">🎲 抽测 10 个</button></div>';
+  if (!ws.length){
+    return h + '<div class="empty"><div>🔤</div>还没有单词<br>把今天阅读里遇到的新词记进来，'
+      + '系统会按 1 / 3 / 7 / 14 / 30 / 60 天安排复习</div>';
+  }
+  h += '<div class="sec-title">我的单词<span>'+ws.length+' 个</span></div>';
+  h += ws.map(w => {
+    const c = S.cards[wordKey(w.id)] || {}, lv = c.lv || 0;
+    const tag = lv >= 3 ? '<span class="wtag ok">已掌握</span>'
+              : lv >= 1 ? '<span class="wtag mid">复习中 '+lv+'</span>'
+              : '<span class="wtag new">新词</span>';
+    return '<div class="wordrow"><div class="wmain"><b>'+esc(w.en)+'</b>'
+      + '<span>'+esc(w.zh)+'</span>'
+      + (w.ex ? '<i>'+esc(w.ex)+'</i>' : '') + '</div>'
+      + '<div class="wside">'+tag+'<span class="wmeta">'+(c.due ? '下次 '+md(c.due) : '还没测过')+'</span></div>'
+      + '<button class="wdel" data-delword="'+w.id+'">✕</button></div>';
+  }).join('');
+  return h;
+}
+function openAddWord(){
+  const html = '<h3>添加单词</h3><p class="hint">英文 + 中文意思；例句可以不填。保存后自动进复习队列。</p>'
+    + '<input id="wEn" class="win" placeholder="英文，例如 abandon" autocapitalize="off" autocorrect="off" spellcheck="false">'
+    + '<input id="wZh" class="win" placeholder="中文，例如 放弃；抛弃">'
+    + '<input id="wEx" class="win" placeholder="例句（可不填）">'
+    + '<div class="row-btn"><button class="btn line" data-close="1">关闭</button>'
+    + '<button class="btn rose" id="wsave">保存</button></div>'
+    + '<div class="row-btn"><button class="btn ghost" id="wsave2" style="width:100%">保存并继续加下一个</button></div>'
+    + '<div style="text-align:center;font-size:12.5px;color:var(--sub);margin-top:10px" id="wcount"></div>';
+  showSheet(html, () => {
+    let n = 0;
+    const save1 = keep => {
+      const en = document.getElementById('wEn').value.trim();
+      const zh = document.getElementById('wZh').value.trim();
+      const ex = document.getElementById('wEx').value.trim();
+      if (!en || !zh){ alert('英文和中文都要填 🐾'); return; }
+      addWord(en, zh, ex);
+      n++;
+      if (keep){
+        ['wEn','wZh','wEx'].forEach(id => { document.getElementById(id).value = ''; });
+        document.getElementById('wEn').focus();
+        const el = document.getElementById('wcount');
+        if (el) el.textContent = '本次已添加 ' + n + ' 个';
+      } else { closeSheet(); render(); }
+    };
+    document.getElementById('wsave').onclick = () => save1(false);
+    document.getElementById('wsave2').onclick = () => save1(true);
+  });
+}
+
 function viewNotes(){
   const life = isLife();
   const title = life ? '碎碎念' : '错题 / 易混点';
@@ -4500,6 +4651,7 @@ function viewMe(){
            : '<div class="kv"><span>已建档复习卡片</span><b>'+ratedCount()+' 张</b></div>')
    + '<div class="kv"><span>新增碎碎念</span><b>'+weekNotes+' 条</b></div>'
    + '<div class="kv"><span>美术史累计打卡</span><b>'+artCount()+' 天（第 '+artRound()+' 轮）</b></div>'
+   + '<div class="kv"><span>英语单词</span><b>'+words().length+' 个（已掌握 '+wordStats().mastered+'）</b></div>'
    + '<div class="row-btn"><button class="btn line" data-report="1">📋 生成并复制周报</button></div>'
    + '</div>'
    + '<div class="sec-title">模式</div><div class="card">'
@@ -4693,6 +4845,26 @@ function startQuiz(){
   RI = 0; RSTAT = {0:0,1:0,2:0};
   renderReview();
 }
+function startWordReview(){
+  const ws = dueWords();
+  if (!ws.length){ alert('现在没有到期的单词，先加几个新词吧 🐾'); return; }
+  QUIZ = false;
+  RQ = ws.map(wordCard); RI = 0; RSTAT = {0:0,1:0,2:0};
+  renderReview();
+}
+function startWordQuiz(){
+  const pool = words().filter(w => !S.skip[wordKey(w.id)]).map(wordCard);
+  if (pool.length < 2){ alert('先加几个单词再来抽测 🐾'); return; }
+  for (let i = pool.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+  }
+  const picked = pool.slice(0, Math.min(10, pool.length)).map((c,i) =>
+    (i % 3 === 2) ? {key: c.key, q: c.a, a: c.q, from: '单词 · 看中文写英文'} : c);
+  QUIZ = 'word';
+  RQ = picked; RI = 0; RSTAT = {0:0,1:0,2:0};
+  renderReview();
+}
 function renderReview(){
   let m = document.getElementById('reviewbox');
   if (!m){ m = document.createElement('div'); m.id = 'reviewbox'; document.body.appendChild(m); }
@@ -4774,7 +4946,7 @@ function showSheet(inner, after){
   const m = document.getElementById('modal');
   m.innerHTML = '<div class="mask" id="mask"><div class="sheet">'+inner+'</div></div>';
   document.getElementById('mask').onclick = e => { if (e.target.id === 'mask') closeSheet(); };
-  document.querySelectorAll('[data-close]').forEach(b => b.onclick = closeSheet);
+  document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => { closeSheet(); render(); });
   if (after) after();
 }
 function closeSheet(){ document.getElementById('modal').innerHTML = ''; }
@@ -4872,6 +5044,12 @@ function bind(){
   document.querySelectorAll('[data-plantab]').forEach(b => b.onclick = () => { PLAN_TAB = b.dataset.plantab; render(); });
   const qz = document.querySelector('[data-quiz]'); if (qz) qz.onclick = startQuiz;
   const cl = document.querySelector('[data-closing]'); if (cl) cl.onclick = openClosing;
+  const aw = document.querySelector('[data-addword]'); if (aw) aw.onclick = openAddWord;
+  const wr = document.querySelector('[data-wordreview]'); if (wr) wr.onclick = startWordReview;
+  const wq = document.querySelector('[data-wordquiz]'); if (wq) wq.onclick = startWordQuiz;
+  document.querySelectorAll('[data-delword]').forEach(b => b.onclick = () => {
+    if (confirm('删掉这个单词？')){ delWord(b.dataset.delword); render(); }
+  });
   const us = document.querySelector('[data-unskip]');
   if (us) us.onclick = () => { if (confirm('把所有跳过的考点都恢复？')){ S.skip = {}; save(); render(); } };
   document.querySelectorAll('[data-note]').forEach(b => b.onclick = () => openNote(+b.dataset.note));
