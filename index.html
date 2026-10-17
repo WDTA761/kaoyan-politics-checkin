@@ -249,6 +249,20 @@ main{padding:16px 14px 10px;max-width:900px;margin:0 auto;position:relative;z-in
 .win{width:100%;min-height:50px;border:1.5px solid var(--line);border-radius:15px;padding:0 14px;
   font-size:16px;background:#FDFAFB;margin-bottom:10px}
 .win:focus{outline:none;border-color:var(--pink);background:#fff}
+/* 单词四选一 */
+.wq-en{font-size:30px;font-weight:800;letter-spacing:.5px;color:var(--ink);text-align:center;
+  margin:8px 0 20px;word-break:break-word}
+.wopts{display:flex;flex-direction:column;gap:10px}
+.wopt{padding:15px 16px;border-radius:15px;background:#FDFAFB;border:1.5px solid var(--line);
+  font-size:16px;font-weight:600;text-align:left;line-height:1.5;transition:.15s;min-height:54px}
+.wopt:active{transform:scale(.985)}
+.wopt.ok{background:linear-gradient(180deg,#F0FBF5,#E7F7EE);border-color:#A5DEBF;color:#1E7B47;font-weight:800}
+.wopt.no{background:#FDECEF;border-color:#F3C6D5;color:#B3374F}
+.wopt[disabled]{opacity:1;cursor:default}
+.wfb{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:700;line-height:1.7}
+.wfb.ok{background:var(--ok-bg);color:#1E7B47}
+.wfb.no{background:#FDECEF;color:#B3374F}
+.wfbex{display:block;font-size:13px;font-weight:500;color:var(--sub);margin-top:6px}
 .bars{display:flex;gap:5px;align-items:flex-end;height:84px}
 .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
 .bar i{width:100%;border-radius:5px 5px 2px 2px;min-height:3px;
@@ -4020,13 +4034,7 @@ function dueCards(){
       if (cd && cd.due <= t) out.push({key, d, i, q:m[0], a:m[1], lv:cd.lv, from:'美术史 '+d+' · '+artPlanOf(d).sub});
     });
   }
-  for (const w of words()){
-    if (!w.passed) continue;                       // 没通过的只走「每日检测」，不进长期复习
-    const key = wordKey(w.id), cd = S.cards[key];
-    if (S.skip[key]) continue;
-    if (cd && cd.due <= t) out.push({key, wid: w.id, d:0, i:0, q:w.en,
-      a: w.zh + (w.ex ? '\n' + w.ex : ''), lv:cd.lv, from:'单词 · '+(w.date||'')});
-  }
+  /* 单词不进这个队列 —— 单词一律在「单词」页做四选一（看英文选中文） */
   out.sort((p,q) => (p.lv - q.lv) || (p.d - q.d));
   return out;
 }
@@ -4953,14 +4961,24 @@ function startQuiz(){
   RI = 0; RSTAT = {0:0,1:0,2:0};
   renderReview();
 }
-function startWordReview(){
-  const ws = dueWords();
-  if (!ws.length){ alert('现在没有需要长期复习的单词 🐾'); return; }
-  QUIZ = 'srs';
-  RQ = ws.map(wordCard); RI = 0; RSTAT = {0:0,1:0,2:0};
-  renderReview();
+/* ===== 单词测试：一律「看英文选中文」四选一 ===== */
+let WQ = [], WI = 0, WSTAT = {ok:0, bad:0}, WMODE = 'test';
+
+function shuffleArr(a){
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
 }
-/* 每日检测：昨天及以前加的、还没通过的词（没通过的会滚到明天和新词一起测） */
+function buildWordQuestions(list, mode){
+  const pool = words().filter(w => !S.skip[wordKey(w.id)] && w.zh);
+  return list.map(w => {
+    const cands = shuffleArr(Array.from(new Set(pool.map(x => x.zh).filter(z => z !== w.zh))));
+    const opts = shuffleArr(cands.slice(0, 3).concat([w.zh]));
+    return {id: w.id, en: w.en, zh: w.zh, ex: w.ex, opts, mode};
+  });
+}
 function startWordTest(){
   const q = dailyTestQueue();
   if (!q.length){
@@ -4969,31 +4987,83 @@ function startWordTest(){
       : '现在没有要检测的单词，先去加几个吧 🐾');
     return;
   }
-  RQ = q.map((w,i) => {
-    const base = {key: wordKey(w.id), wid: w.id, test: true,
-      from: '第 ' + ((w.tests||0) + 1) + ' 次检测' + (w.tests ? '（上次没过）' : '')};
-    return (i % 3 === 2) ? Object.assign(base, {q: w.zh, a: w.en, from: base.from + ' · 中译英'})
-                         : Object.assign(base, {q: w.en, a: w.zh + (w.ex ? '\n' + w.ex : '')});
-  });
-  QUIZ = 'test';
-  RI = 0; RSTAT = {0:0,1:0,2:0};
-  renderReview();
+  WMODE = 'test';
+  WQ = buildWordQuestions(shuffleArr(q.slice()), 'test');
+  WI = 0; WSTAT = {ok:0, bad:0};
+  renderWordQuiz();
 }
 function startWordQuiz(){
   const pool = words().filter(w => !S.skip[wordKey(w.id)]);
   if (pool.length < 2){ alert('先加几个单词再来抽测 🐾'); return; }
-  for (let i = pool.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    const t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+  if (pool.length < 4) alert('单词还不多，选项凑不满 4 个，先这样测 🐾');
+  WMODE = 'quiz';
+  WQ = buildWordQuestions(shuffleArr(pool.slice()).slice(0, Math.min(10, pool.length)), 'quiz');
+  WI = 0; WSTAT = {ok:0, bad:0};
+  renderWordQuiz();
+}
+function startWordReview(){
+  const ws = dueWords();
+  if (!ws.length){ alert('现在没有需要长期复习的单词 🐾'); return; }
+  WMODE = 'srs';
+  WQ = buildWordQuestions(shuffleArr(ws.slice()), 'srs');
+  WI = 0; WSTAT = {ok:0, bad:0};
+  renderWordQuiz();
+}
+function renderWordQuiz(){
+  let m = document.getElementById('reviewbox');
+  if (!m){ m = document.createElement('div'); m.id = 'reviewbox'; document.body.appendChild(m); }
+  const close = () => { m.innerHTML = ''; render(); };
+
+  if (WI >= WQ.length){
+    const ok = WSTAT.ok, bad = WSTAT.bad, pct = Math.round(ok / WQ.length * 100);
+    logQuiz(WQ.length, ok);
+    const line = WMODE === 'test'
+      ? (bad === 0 ? '全过了，斐斐你今天超厉害。' : '没过的 ' + bad + ' 个，明天会和新词一起再测，别急。')
+      : (bad === 0 ? '全对了，稳。' : '错的还会再碰到，别急。');
+    m.innerHTML = '<div class="review"><div class="rv-done">'
+      + '<div class="emo">'+(bad === 0 ? '🎉' : pct >= 60 ? '🌿' : '💪')+'</div>'
+      + '<h2>'+(WMODE === 'test' ? '检测完成' : WMODE === 'quiz' ? '抽测结束' : '复习完成')+'</h2>'
+      + '<div class="scorebig">'+pct+'%</div>'
+      + '<p>一共 ' + WQ.length + ' 个：对了 ' + ok + ' · 错了 ' + bad + '<br>' + line + '</p>'
+      + '<button class="btn rose big" id="wqend">回到今天</button></div></div>';
+    document.getElementById('wqend').onclick = close;
+    return;
   }
-  RQ = pool.slice(0, Math.min(10, pool.length)).map((w,i) => {
-    const base = {key: wordKey(w.id), wid: w.id, from: '抽测'};
-    return (i % 3 === 2) ? Object.assign(base, {a: w.en, q: w.zh, from: '抽测 · 中译英'})
-                         : Object.assign(base, {q: w.en, a: w.zh + (w.ex ? '\n' + w.ex : '')});
+
+  const c = WQ[WI];
+  const label = c.mode === 'test' ? '📝 今日检测' : c.mode === 'quiz' ? '🎲 随机抽测' : '🔁 长期复习';
+  m.innerHTML = '<div class="review">'
+    + '<div class="rv-top"><button class="close" id="wqclose">✕</button>'
+    + '<div class="rv-prog"><i style="width:'+(WI/WQ.length*100).toFixed(1)+'%"></i></div>'
+    + '<div class="rv-num">'+(WI+1)+'/'+WQ.length+'</div></div>'
+    + '<div class="rvmode">'+label+' · 看英文选中文</div>'
+    + '<div class="rv-card">'
+    + '<div class="wq-en">'+esc(c.en)+'</div>'
+    + '<div class="wopts">'
+    + c.opts.map((o,i) => '<button class="wopt" data-opt="'+i+'">'+esc(o)+'</button>').join('')
+    + '</div><div id="wfb"></div></div></div>';
+  document.getElementById('wqclose').onclick = close;
+
+  document.querySelectorAll('[data-opt]').forEach(b => b.onclick = () => {
+    const picked = c.opts[+b.dataset.opt];
+    const ok = (picked === c.zh);
+    rateWord(c.id, ok ? 2 : 0);
+    WSTAT[ok ? 'ok' : 'bad']++;
+    document.querySelectorAll('[data-opt]').forEach(x => {
+      const v = c.opts[+x.dataset.opt];
+      x.disabled = true;
+      if (v === c.zh) x.classList.add('ok');
+      else if (x === b) x.classList.add('no');
+    });
+    document.getElementById('wfb').innerHTML =
+      '<div class="wfb ' + (ok ? 'ok' : 'no') + '">'
+      + (ok ? '✓ 对了' : '✗ 错了，正确答案是：' + esc(c.zh))
+      + (c.ex ? '<span class="wfbex">' + esc(c.ex) + '</span>' : '')
+      + '</div>'
+      + '<button class="btn rose big" id="wnext" style="width:100%;margin-top:14px">'
+      + (WI + 1 >= WQ.length ? '看结果' : '下一题') + '</button>';
+    document.getElementById('wnext').onclick = () => { WI++; renderWordQuiz(); };
   });
-  QUIZ = 'word';
-  RI = 0; RSTAT = {0:0,1:0,2:0};
-  renderReview();
 }
 function renderReview(){
   let m = document.getElementById('reviewbox');
