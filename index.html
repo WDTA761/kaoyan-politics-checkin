@@ -4115,7 +4115,9 @@ function toggleReviewed(n){
 }
 const examDay = () => S.exam || EXAM_DEFAULT;
 const lifeFrom = () => addDays(examDay(), 1);          /* 考完的第二天，开始陪伴模式 */
-const daysLeft = () => Math.max(0, diffDays(todayStr(), examDay()));
+/* 倒计时按「初试第一天」算（考试两天：S.exam 存最后一天） */
+const examFirst = () => addDays(examDay(), -1);
+const daysLeft = () => Math.max(0, diffDays(todayStr(), examFirst()));
 const examPassed = () => diffDays(lifeFrom(), todayStr()) >= 0;
 
 /* ---------- 模式：study（考研期）/ life（考后陪伴） ---------- */
