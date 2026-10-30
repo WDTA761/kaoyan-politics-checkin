@@ -444,6 +444,125 @@ nav button.on .ic{transform:translateY(-2px) scale(1.14)}
   *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 @media (min-width:700px){ .day-task{font-size:19.5px} .cel{max-width:470px} }
+
+/* ================= 奖杯展柜 ================= */
+.trophyWrap{position:relative;border-radius:22px;padding:14px 12px 16px;
+  background:linear-gradient(180deg,#FFFCF7 0%,#FFF4EA 46%,#FDE9F1 100%);
+  border:1px solid rgba(217,176,122,.30);
+  box-shadow:0 16px 30px -18px rgba(140,60,95,.40),0 1px 0 #fff inset}
+.trophyWrap .hd{display:flex;align-items:baseline;gap:8px;margin-bottom:11px}
+.trophyWrap .hd b{font-size:13.5px;color:#7E2C4B}
+.trophyWrap .hd span{margin-left:auto;font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
+.tshelf{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.tslot{position:relative;border-radius:16px;padding:10px 6px 9px;text-align:center;
+  background:rgba(255,255,255,.55);border:1px dashed rgba(217,176,122,.45);
+  transition:transform .15s ease,box-shadow .18s ease}
+.tslot .cap{width:78%;margin:0 auto;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.55);border:1px solid rgba(217,176,122,.28);font-size:18px;color:#C9A9B6;
+  position:relative}
+.tslot .cap .mask{position:relative;display:grid;place-items:center;width:100%;height:100%}
+.tslot .cap .mask::before{content:'';position:absolute;width:124%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,250,.96) 0%, rgba(255,246,244,.70) 40%, rgba(255,246,244,0) 68%)}
+.tslot .cap .mask{width:100%;height:100%;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 38%, #FFFEFC 0%, #FFF6F2 62%, #FBE6EE 100%);
+  box-shadow:inset 0 -6px 12px rgba(210,150,175,.20)}
+.tslot .cap img{width:112%;margin:-6%;display:block}
+.tslot .nm{margin-top:7px;font-size:11px;font-weight:800;color:#8A6B78}
+.tslot .dt{margin-top:2px;font-size:9.5px;color:var(--sub)}
+.tslot.got{background:linear-gradient(180deg,#FFFEFB,#FFF4E8 55%,#FDEBF2);
+  border-style:solid;border-color:rgba(217,176,122,.55);
+  box-shadow:0 10px 20px -14px rgba(150,70,100,.55)}
+.tslot.got .cap{border:0;background:transparent}
+.tslot.got .nm{color:#7E2C4B}
+.tslot.got::after{content:'已入柜';position:absolute;top:6px;right:7px;font-size:8.5px;color:#fff;
+  background:linear-gradient(180deg,#D9738F,#A93A63);padding:1px 5px;border-radius:999px}
+.tslot.ready{background:linear-gradient(180deg,#FFFDF7,#FFEFE0 60%,#FDE7F0);
+  border-style:solid;border-color:rgba(217,176,122,.7);
+  box-shadow:0 0 0 2px rgba(231,192,138,.30),0 10px 22px -12px rgba(169,58,99,.5);
+  animation:readyPulse 2.4s ease-in-out infinite}
+@keyframes readyPulse{0%,100%{box-shadow:0 0 0 2px rgba(231,192,138,.25),0 10px 22px -12px rgba(169,58,99,.45)}
+  50%{box-shadow:0 0 0 5px rgba(231,192,138,.16),0 14px 26px -12px rgba(169,58,99,.55)}}
+.tslot.ready .cap{font-size:22px}
+.tslot.pop{animation:popIn .62s cubic-bezier(.2,.9,.25,1.2)}
+@keyframes popIn{0%{transform:scale(1)}34%{transform:scale(1.08)}70%{transform:scale(.98)}100%{transform:scale(1)}}
+
+/* 全屏：领取特效 / 陈列 */
+.tfx{position:fixed;inset:0;z-index:960;display:none;place-items:center;overflow:hidden;
+  background:radial-gradient(70% 52% at 50% 42%, #FFF3E2 0%, #FCE1EA 42%, #F6CFDF 72%, #E9A9C4 100%)}
+.tfx.on{display:grid}
+.tfx .veil{position:absolute;inset:0;background:#fff;opacity:0;animation:tfxVeil .5s ease-out .04s 1}
+@keyframes tfxVeil{0%{opacity:.85}100%{opacity:0}}
+.tfx .halo{position:absolute;width:120vmin;height:120vmin;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,236,196,.9) 0%, rgba(255,214,226,.5) 34%, transparent 66%);
+  transform:scale(.2);opacity:0;animation:tfxHalo 1.5s cubic-bezier(.2,.8,.2,1) .1s 1 forwards}
+@keyframes tfxHalo{0%{transform:scale(.2);opacity:0}28%{opacity:1}100%{transform:scale(1.9);opacity:0}}
+.tfx .ring{position:absolute;width:62vmin;height:62vmin;border-radius:50%;border:2px solid rgba(231,192,138,.62);
+  transform:scale(.3);opacity:0;animation:tfxRing 1.7s ease-out .16s 2}
+@keyframes tfxRing{0%{transform:scale(.3);opacity:.9}100%{transform:scale(1.65);opacity:0}}
+.tfx .cupWrap{position:relative;display:grid;place-items:center;transform:scale(.4);opacity:0;
+  animation:tfxCup 1.15s cubic-bezier(.16,.9,.2,1.1) .08s forwards}
+@keyframes tfxCup{0%{transform:scale(.34) translateY(30px);opacity:0}
+  62%{transform:scale(1.07) translateY(-8px);opacity:1}80%{transform:scale(.98)}100%{transform:scale(1);opacity:1}}
+.tfx .cupWrap .mask{position:relative;display:grid;place-items:center}
+.tfx .cupWrap .mask::before{content:'';position:absolute;width:124%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,250,.95) 0%, rgba(255,246,244,.66) 40%, rgba(255,246,244,0) 68%)}
+.tfx .cupWrap .mask{width:min(84vw,404px);aspect-ratio:1;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 38%, #FFFEFC 0%, #FFF5F1 60%, #FBE4ED 100%);
+  box-shadow:0 26px 46px -22px rgba(150,70,100,.55), inset 0 -10px 20px rgba(210,150,175,.22)}
+.tfx .cupWrap img{width:112%;margin:-6%;display:block}
+.tfx .txt{position:absolute;bottom:16vh;left:0;right:0;text-align:center;pointer-events:none;padding:0 16px}
+.tfx .k{font-size:10.5px;letter-spacing:.32em;color:#C99A5E;font-weight:800;opacity:0;animation:tfxRise .6s ease-out .5s forwards}
+.tfx .day{font-size:38px;font-weight:900;color:#8B3055;line-height:1.1;margin-top:5px;opacity:0;
+  transform:translateY(14px);animation:tfxRise .7s cubic-bezier(.2,.9,.25,1.1) .64s forwards}
+.tfx .day em{font-style:normal;font-size:13px;color:var(--sub);font-weight:700;margin-left:6px}
+.tfx .line{font-size:12px;color:#7E5A66;margin-top:8px;line-height:1.9;opacity:0;animation:tfxRise .7s ease-out .86s forwards}
+@keyframes tfxRise{to{opacity:1;transform:none}}
+.tfx .take{position:absolute;bottom:calc(9vh + env(safe-area-inset-bottom));left:50%;
+  opacity:0;animation:tfxTake .55s cubic-bezier(.2,.9,.25,1.1) 1.1s forwards;
+  border:0;height:46px;padding:0 28px;border-radius:15px;font-size:13.5px;font-weight:800;color:#fff;
+  background:linear-gradient(180deg,#D9738F,#A93A63);box-shadow:0 12px 22px -10px rgba(169,58,99,.65)}
+@keyframes tfxTake{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+.tfx .skip{position:absolute;top:calc(12px + env(safe-area-inset-top));right:12px;border:0;background:transparent;
+  color:#B08396;font-size:12px;padding:10px;opacity:0;animation:tfxRise .4s ease-out 1.3s forwards}
+.tfx .dust{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tfx .dt{position:absolute;border-radius:50%;background:#F6D9A6;opacity:0;animation:tfxDust var(--dd,4s) linear var(--dl,0s) infinite}
+@keyframes tfxDust{0%{opacity:0;transform:translateY(18vh) scale(.6)}12%{opacity:.95}
+  78%{opacity:.45}100%{opacity:0;transform:translateY(-92vh) scale(1.1)}}
+
+.tShow{position:fixed;inset:0;z-index:955;display:none;
+  background:radial-gradient(120% 70% at 50% -6%, #FFFFFF 0%, #FFF6F9 26%, #FCE3EE 58%, #F2C6DA 100%);overflow:hidden}
+.tShow.on{display:grid;place-items:center}
+.tShow .lamp{position:absolute;top:0;left:50%;transform:translateX(-50%);width:70vmin;height:46vh;pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,246,222,.95), rgba(255,236,214,.45) 34%, rgba(255,236,214,0) 78%);
+  clip-path:polygon(44% 0,56% 0,96% 100%,4% 100%);filter:blur(10px);opacity:.9}
+.tShow .dome{position:absolute;left:50%;bottom:18.2vh;transform:translateX(-50%);
+  width:min(94vw,470px);height:min(94vw,470px);border-radius:50% 50% 46% 46%/56% 56% 44% 44%;
+  background:linear-gradient(160deg, rgba(255,255,255,.26), rgba(255,255,255,.06) 40%, rgba(255,240,247,.10) 72%, rgba(255,255,255,.18));
+  border:1.5px solid rgba(255,255,255,.9);
+  box-shadow:inset 0 8px 26px rgba(255,255,255,.85), inset 0 -14px 26px rgba(210,150,175,.18),
+    0 10px 30px -12px rgba(150,70,100,.28);pointer-events:none}
+.tShow .dome::after{content:'';position:absolute;left:8%;right:8%;top:6%;height:26%;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(255,255,255,.9), transparent 72%);filter:blur(3px)}
+.tShow .ring{position:absolute;left:50%;bottom:17.6vh;transform:translateX(-50%);width:min(92vw,462px);height:17px;
+  border-radius:50%;border:2px solid rgba(217,176,122,.55);box-shadow:0 0 0 1px rgba(255,255,255,.6) inset}
+.tShow .cup{position:absolute;left:50%;bottom:21vh;transform:translateX(-50%);width:min(70vw,352px);
+  transition:transform .16s ease-out}
+.tShow .cup .mask{position:relative;display:grid;place-items:center}
+.tShow .cup .mask::before{content:'';position:absolute;width:130%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,250,.95) 0%, rgba(255,246,244,.62) 40%, rgba(255,246,244,0) 68%)}
+.tShow .cup .mask{width:100%;aspect-ratio:1;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 38%, #FFFEFC 0%, #FFF5F1 60%, #FBE4ED 100%);
+  box-shadow:0 26px 46px -22px rgba(150,70,100,.5), inset 0 -10px 20px rgba(210,150,175,.2)}
+.tShow .cup img{width:112%;margin:-6%;display:block}
+.tShow .plate{position:absolute;left:50%;bottom:8vh;transform:translateX(-50%);text-align:center;width:min(80vw,360px)}
+.tShow .plate .ln{width:56px;height:1px;background:linear-gradient(90deg,transparent,#D9B07A,transparent);margin:0 auto 10px}
+.tShow .plate .t{font-size:18px;font-weight:800;letter-spacing:.12em;color:#7E2C4B}
+.tShow .plate .s{margin-top:6px;font-size:9.5px;letter-spacing:.3em;color:#B08A99}
+.tShow .plate .d{margin-top:8px;font-size:10px;color:#9B7D88;letter-spacing:.14em}
+.tShow .close{position:absolute;top:calc(12px + env(safe-area-inset-top));left:12px;border:0;background:rgba(255,255,255,.75);
+  color:#9B6B7D;width:40px;height:40px;border-radius:14px;font-size:15px;box-shadow:0 6px 14px -8px rgba(150,70,100,.4)}
+.tFly{position:fixed;z-index:970;pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -3951,7 +4070,7 @@ const snapKey = d => SNAP + d;
 function blank(){
   return {v:4, polv:0, start:START_DEFAULT, nick:NICK_DEFAULT, mode:'auto', together:'', exam:'',
           artStart:'', art:{}, skip:{}, quizLog:{}, words:[], lastExport:'',
-          days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}};
+          days:{}, notes:[], revs:{}, cards:{}, log:{}, life:{}, trophies:{}};
 }
 /* 从最近 8 天的快照里找一份可用的 */
 function fromSnap(){
@@ -4958,6 +5077,11 @@ function viewMe(){
       '<div class="sec-title">打卡热力图<span>近 8 周</span></div>'
       + '<div class="card"><div class="heat">'+heatmap()+'</div>'
       + '<div style="font-size:11.5px;color:var(--sub);margin-top:10px">格子越深，那天学得越多</div></div>')
+    + '<div class="sec-title">奖杯展柜<span>'+trophyGot()+' / 3</span></div>'
+    + '<div class="trophyWrap">'
+    + '<div class="hd"><b>我的奖杯展柜</b><span>连续打卡解锁</span></div>'
+    + '<div class="tshelf">' + trophySlots() + '</div>'
+    + '</div>'
    + '<div class="sec-title">徽章<span>'+bl.filter(b=>b.ok).length+' / '+bl.length+'</span></div>'
    + '<div class="card"><div class="badges">'
    + bl.map(b => '<div class="badge'+(b.ok?' got':'')+'"><span class="e">'+b.e+'</span><span class="t">'+b.t+'</span></div>').join('')
@@ -5594,6 +5718,153 @@ save();          /* 首次打开也立刻写一份本机快照 */
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
+
+/* ================= 奖杯展柜 ================= */
+var TROPHY_DEFS = [
+  {id:'d15', name:'第 15 天', need:15, days_text:'连续 15 天'},
+  {id:'d30', name:'第 30 天', need:30, days_text:'连续 30 天'},
+  {id:'d49', name:'第 49 天', need:49, days_text:'连续 49 天'}
+];
+function trophies(){ if(!S.trophies) S.trophies = {}; return S.trophies; }
+function trophyGot(){ return TROPHY_DEFS.filter(function(d){ return trophies()[d.id]; }).length; }
+function trophySlots(){
+  var today = todayNo();
+  return TROPHY_DEFS.map(function(d){
+    var got = trophies()[d.id];
+    var ready = !got && today >= d.need;
+    var cls = got ? 'got' : (ready ? 'ready' : '');
+    var inner = got
+      ? '<div class="cap"><div class="mask"><img src="trophy.png" alt=""></div></div>'
+        + '<div class="nm">'+d.name+'</div><div class="dt">'+((got.date||'').replace(/-/g,'/'))+'</div>'
+      : (ready
+        ? '<div class="cap">🏆</div><div class="nm">'+d.name+'</div><div class="dt">点我领取</div>'
+        : '<div class="cap">🔒</div><div class="nm">'+d.name+'</div><div class="dt">'+d.days_text+'</div>');
+    return '<div class="tslot '+cls+'" data-trophy="'+d.id+'">'+inner+'</div>';
+  }).join('');
+}
+function openTrophyFx(def){
+  var fx = document.getElementById('tFx');
+  document.getElementById('tFxDay').innerHTML = def.name + '<em>/ 49</em>';
+  document.getElementById('tFxLine').innerHTML = '斐斐，你已经连着 '+def.need+' 天没断了。<br>这只奖杯先替你收着，49 天那天还有更大的。';
+  var dust = document.getElementById('tDust');
+  if (!dust.dataset.b){
+    for (var i=0;i<30;i++){
+      var t = document.createElement('i'); t.className='dt';
+      var sz=(3+Math.random()*6).toFixed(1);
+      t.style.width=sz+'px'; t.style.height=sz+'px';
+      t.style.left=(Math.random()*100)+'%'; t.style.bottom=(-10+Math.random()*18)+'%';
+      t.style.background=['#F6D9A6','#FFFFFF','#F4A8BE'][i%3];
+      t.style.setProperty('--dd',(3.2+Math.random()*3).toFixed(2)+'s');
+      t.style.setProperty('--dl',(Math.random()*3).toFixed(2)+'s');
+      dust.appendChild(t);
+    }
+    dust.dataset.b='1';
+  }
+  fx.dataset.def = def.id;
+  fx.classList.add('on');
+}
+function openTrophyShow(def){
+  var sh=document.getElementById('tShow');
+  document.getElementById('tShowTitle').textContent = def.name;
+  var g=trophies()[def.id];
+  document.getElementById('tShowDate').textContent = g && g.date ? g.date.replace(/-/g,'/') : '';
+  sh.dataset.def = def.id;
+  sh.classList.add('on');
+  var cup=document.getElementById('tShowCup');
+  cup.style.transform='translateX(-50%)';
+}
+document.addEventListener('click', function(e){
+  var s = document.getElementById('tSkip');
+  if (e.target.closest && e.target.closest('#tSkip')){ document.getElementById('tFx').classList.remove('on'); return; }
+  if (e.target.closest && e.target.closest('#tShowClose')){ document.getElementById('tShow').classList.remove('on'); return; }
+  var takeEl = e.target.closest && e.target.closest('#tTake');
+  if (takeEl){
+    var fx=document.getElementById('tFx');
+    var def = TROPHY_DEFS.filter(function(d){ return d.id===fx.dataset.def; })[0] || TROPHY_DEFS[0];
+    var img = fx.querySelector('.cupWrap img');
+    var r1 = img.getBoundingClientRect();
+    var idx = TROPHY_DEFS.indexOf(def);
+    var slotEl = document.querySelectorAll('.tslot')[idx];
+    if (slotEl){
+      var r2 = slotEl.getBoundingClientRect();
+      var ghost=document.createElement('div');
+      ghost.className='tFly';
+      ghost.style.left=r1.left+'px'; ghost.style.top=r1.top+'px';
+      ghost.style.width=r1.width+'px'; ghost.style.height=r1.height+'px';
+      ghost.innerHTML='<img src="trophy.png" style="width:100%;display:block">';
+      document.body.appendChild(ghost);
+      var dx=(r2.left+r2.width/2)-(r1.left+r1.width/2);
+      var dy=(r2.top+r2.height/2)-(r1.top+r1.height/2);
+      ghost.animate([
+        {transform:'translate(0,0) scale(1)',opacity:1},
+        {transform:'translate('+dx*.55+'px,'+dy*.55+'px) scale(.5) rotate(-12deg)',opacity:.95,offset:.7},
+        {transform:'translate('+dx+'px,'+dy+'px) scale(.1) rotate(-22deg)',opacity:0}
+      ],{duration:700,easing:'cubic-bezier(.3,.1,.2,1)'}).onfinish=function(){ ghost.remove(); };
+    }
+    trophies()[def.id] = { date: todayStr() };
+    save();
+    fx.classList.remove('on');
+    setTimeout(function(){
+      render();
+      var s2=document.querySelector('.tslot.got'); if(s2) s2.classList.add('pop');
+      if (typeof toast === 'function') { try{ toast('第 '+def.need+' 天大奖已入柜'); }catch(err){} }
+    }, 620);
+    return;
+  }
+  var slot = e.target.closest && e.target.closest('[data-trophy]');
+  if (slot){
+    var id = slot.getAttribute('data-trophy');
+    var def2 = TROPHY_DEFS.filter(function(d){ return d.id===id; })[0];
+    if (!def2) return;
+    if (trophies()[id]) openTrophyShow(def2);
+    else if (todayNo() >= def2.need) openTrophyFx(def2);
+    else { try{ toast('还差 '+(def2.need-todayNo())+' 天，连续打卡就能解锁'); }catch(err){} }
+  }
+});
+/* 陈列里拖动＝转台感 */
+(function(){
+  var cup = document.getElementById('tShowCup');
+  if (!cup) return;
+  var drag=false,lx=0,cur=0;
+  cup.addEventListener('pointerdown', function(ev){ drag=true; lx=ev.clientX; cup.setPointerCapture(ev.pointerId); });
+  cup.addEventListener('pointermove', function(ev){
+    if(!drag) return;
+    cur += (ev.clientX-lx)*0.3; lx=ev.clientX;
+    cur=Math.max(-24,Math.min(24,cur));
+    cup.style.transform='translateX(-50%) rotateY('+cur.toFixed(1)+'deg)';
+  });
+  cup.addEventListener('pointerup', function(){ drag=false; });
+})();
 </script>
+
+<!-- 奖杯：领取特效 / 陈列 -->
+<div class="tfx" id="tFx">
+  <div class="veil"></div><div class="halo"></div>
+  <div class="ring"></div><div class="ring" style="animation-delay:.85s"></div>
+  <div class="cupWrap"><div class="mask"><img src="trophy.png" alt="奖杯"></div></div>
+  <div class="dust" id="tDust"></div>
+  <div class="txt">
+    <div class="k">ACHIEVEMENT UNLOCKED</div>
+    <div class="day" id="tFxDay">第 15 天<em>/ 49</em></div>
+    <div class="line" id="tFxLine">斐斐，你已经连着 15 天没断了。<br>这只奖杯先替你收着，49 天那天还有更大的。</div>
+  </div>
+  <button class="take" id="tTake">🏆 收下</button>
+  <button class="skip" id="tSkip">跳过</button>
+</div>
+
+<div class="tShow" id="tShow">
+  <div class="lamp"></div>
+  <div class="dome"></div>
+  <div class="ring"></div>
+  <div class="cup" id="tShowCup"><div class="mask"><img src="trophy.png" alt="奖杯"></div></div>
+  <div class="plate">
+    <div class="ln"></div>
+    <div class="t" id="tShowTitle">第 15 天</div>
+    <div class="s">ACHIEVEMENT</div>
+    <div class="d" id="tShowDate"></div>
+  </div>
+  <button class="close" id="tShowClose">✕</button>
+</div>
+
 </body>
 </html>
