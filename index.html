@@ -3998,6 +3998,38 @@ if (S.polv !== 2){
 /* 2026-10-30 第二次：政治打卡全部清零，从今天重新算，和美术史同一天起跑
    （只清政治：卡片只留 a 开头和 w 开头的，美术史打卡、单词、小纸条、心情都不动） */
 if ((S.polv || 0) !== 4){
+  /* 清零前先留存旧成就（自包含计算，不依赖后面才定义的函数），徽章/小纸条不被没收 */
+  if (!S.legacy){
+    var lg = {dn: 0, st: 0, ms: 0, notes: 0};
+    try{
+      var olds = S.days || {};
+      var dates = [];
+      Object.keys(olds).forEach(function (k) {
+        var d = olds[k];
+        if (d && d.steps && d.steps.morning && d.steps.main && d.steps.night) {
+          lg.dn++;
+          if (d.doneDate) dates.push(d.doneDate);
+        }
+      });
+      lg.notes = lg.dn;
+      dates.sort();
+      var run = 0, best = 0, prevT = 0;
+      dates.forEach(function (ds) {
+        var t = Date.parse(ds);
+        if (!isNaN(t)) {
+          run = (prevT && Math.round((t - prevT) / 86400000) === 1) ? run + 1 : 1;
+          prevT = t;
+          if (run > best) best = run;
+        }
+      });
+      lg.st = best;
+      var cs = S.cards || {};
+      Object.keys(cs).forEach(function (k) {
+        if (k.charAt(0) !== 'a' && k.charAt(0) !== 'w' && (cs[k].lv || 0) >= 4) lg.ms++;
+      });
+    }catch(e){}
+    S.legacy = lg;
+  }
   S.polv = 4;
   S.start = '2026-10-16';   /* 跟美术史同一天起跑：今天 = 第 15 天 */
   S.days = {};
@@ -4118,7 +4150,8 @@ function lifeStreak(){
 function notesEarned(){
   let n = DAYS.filter(x => x.d <= LOVE.length && isDone(x.d)).length;
   Object.keys(S.life).forEach(d => { if (lifeDone(d)) n++; });
-  return n;
+  const lg = (S.legacy && S.legacy.notes) || 0;
+  return Math.max(n, lg);   /* 清零后不回收已经收下的小纸条 */
 }
 /* 陪伴模式当天的纸条序号（考后第 d 天 → 68 + d + 1；提前手动切模式也不会算出负数） */
 function lifeSerial(date){
@@ -4260,7 +4293,10 @@ function badgeList(){
       {e:'🍀', t:'在一起 100 天', ok: togetherDays() >= 100}
     ];
   }
-  const dn = doneCount(), st = streak(), ms = masteredCount();
+  const LG = S.legacy || {};
+  const dn = Math.max(doneCount(), LG.dn || 0);
+  const st = Math.max(streak(), LG.st || 0);
+  const ms = Math.max(masteredCount(), LG.ms || 0);
   return [
     {e:'🌱', t:'开始第一步', ok: dn >= 1},
     {e:'🔥', t:'连续 3 天', ok: st >= 3},
